@@ -1,0 +1,51 @@
+-----------TODO
+-Implement a dialog box for the settings and setup window that notifies the user that they have
+	modified the settings and asks if they would like to save them.
+-When the message WM_DISPLAYCHANGE is sent to the main window all monitor should be checked to make
+	sure they're still valid.
+-Make the monitor list in the settings window not resizable
+-Make the output rectangles not flimmer (probably caused by drawing to the same DC from different threads at the same time)
+-The program seems to run threads even when multithreading is not activated
+-Fix the warnings
+-The output threads should not allocate memory at every update
+-Function GetPixelFromArr() sometimes throws access reading violation exception at shutdown
+-Implement an option for what side of the monitor is the first to be sent output to.
+-The functions for gettings pixels should follow the same naming standard.
+-Class SerialHandler should be rewritten
+-Implement SAL notation
+-RegistryHandler should not throw std::wstrings
+-The settings windows should maybe throw exceptions instead of returning false
+
+------------MAYBE
+-Class SerialHandler should not be static
+-Might be good to implement an abstract class that all window classes will inherit from
+-The position of the monitors should automatically be aligned depending on the amount of monitors selected.
+-Selecting "use primary monitor only" should clear the settings object of all other monitors
+-Save the view options to registry
+-Implement an option to only use the primary monitor and use faster methods for displaying the monitor
+-Implement the settings and setup window in the main window
+-SettingsWnd should have one general function for creating controls.
+-Fetch pixel data using multithreading
+-The multithreading seems to crash sometimes when stopping the update threads.
+-Implement a settings that lets the user switch between high quality and low quality blt-mode for displaying the monitor
+
+
+-----------DONE
+-SettingsWnd should not clear already selected monitors
+-Implement an option for multithreading
+-MainWnd should not be a static class.
+-The dynamic arrays containing the pixel data should only be allocated once.
+-The parts of the application responsible for the window and calculating/displaying should run on different threads to prevent the main window from lagging.
+-Lock the main window when opening a settings window
+-Fix a setting for the baud rate
+(IMPORTANT)-Fix release build
+-Implement an option to change direction (clock-wise/counter clock--wise) for calculating and displaying the outputs.
+-Fix the bottom leds
+-The calculations for the output values should write to the same buffer
+
+
+-----------SCRAPPED
+-MainWnd::UpdateThread::OutputThread::DisplayOutput() should not draw to the window directly, but rather to a memory DC.
+-Function DisplayHandler::DisplayMonitors should not use StretchBlt() to paint directly
+	from the monitor DC, use GetDIBits/SetDIBits instead.
+-Replace all hard-coded strings with the macrot TEXT()
