@@ -1,0 +1,106 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ambii", "Ambii\Ambii.vcxproj", "{59D0855E-2F75-4A04-9C5E-63F1732AA263}"
+EndProject
+Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+		Test|x64 = Test|x64
+		Test|x86 = Test|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Debug|x64.ActiveCfg = Debug|x64
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Debug|x64.Build.0 = Debug|x64
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Debug|x86.ActiveCfg = Debug|Win32
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Debug|x86.Build.0 = Debug|Win32
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Release|x64.ActiveCfg = Release|x64
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Release|x64.Build.0 = Release|x64
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Release|x86.ActiveCfg = Release|Win32
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Release|x86.Build.0 = Release|Win32
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Test|x64.ActiveCfg = Test|x64
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Test|x64.Build.0 = Test|x64
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Test|x86.ActiveCfg = Test|x64
+		{59D0855E-2F75-4A04-9C5E-63F1732AA263}.Test|x86.Build.0 = Test|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D4D1261-8216-42BE-8B39-0F1B57B96132}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal
