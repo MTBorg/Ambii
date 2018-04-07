@@ -34,7 +34,8 @@ private:
 	BOOL InitLedsRight(CONST INT x, CONST INT y);
 	BOOL InitLedsTop(CONST INT x, CONST INT y);
 	BOOL InitLedsBottom(CONST INT x, CONST INT y);
-	BOOL InitPosition(CONST INT x, CONST INT y);
+	BOOL InitPositionHorz(CONST INT x, CONST INT y);
+	BOOL InitPositionVert(CONST INT x, CONST INT y);
 public:
 	VOID Show();
 	VOID Hide();

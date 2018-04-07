@@ -60,7 +60,8 @@ BOOL MonitorTab::InitControls() {
 	InitLedsRight(0, 25);
 	InitLedsTop(0, 50);
 	InitLedsBottom(0, 75);
-	InitPosition(0, 125);
+	InitPositionHorz(0, 125);
+	InitPositionVert(0, 150);
 
 	return TRUE;
 }
@@ -226,10 +227,10 @@ BOOL MonitorTab::InitLedsBottom(CONST INT x, CONST INT y) {
 
 	@return TRUE if the controls are successfully created, otherwise FALSE.
 */
-BOOL MonitorTab::InitPosition(CONST INT x, CONST INT y) {
+BOOL MonitorTab::InitPositionHorz(CONST INT x, CONST INT y) {
 	CONST UINT8 textWidth = 110;
 	HWND hText = CreateWindow(
-		WC_STATIC, L"Position (0 is left-most): ",
+		WC_STATIC, L"Horizontal position: ",
 		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
 		x, y,
 		textWidth, 30,
@@ -251,6 +252,39 @@ BOOL MonitorTab::InitPosition(CONST INT x, CONST INT y) {
 	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
 	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT, m_monitor->GetPosX(), FALSE);
+
+	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
+}
+
+/*
+	//TODO: Comment
+*/
+BOOL MonitorTab::InitPositionVert(CONST INT x, CONST INT y) {
+	CONST UINT8 textWidth = 110;
+
+	HWND hText = CreateWindow(
+		WC_STATIC, L"Vertical position: ",
+		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
+		x, y,
+		textWidth, 30,
+		m_hDisplayCtrl,
+		NULL,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+	HWND hEdit = CreateWindow(
+		WC_EDIT, L"",
+		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
+		x + textWidth + 5, y,
+		25, 18,
+		m_hDisplayCtrl,
+		(HMENU)m_CONTROL_ID::POSITION_VERT_EDIT,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT, m_monitor->GetPosY(), FALSE);
 
 	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
 }
@@ -293,6 +327,9 @@ BOOL MonitorTab::GetSettings(){
 	UINT posX = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT, &getSuccess, FALSE);
 	resultSuccess &= getSuccess;
 
+	UINT posY = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
 	//If the input is valid
 	if (resultSuccess) {
 		m_monitor->SetLeftLeds(nLedsLeft);
@@ -300,6 +337,7 @@ BOOL MonitorTab::GetSettings(){
 		m_monitor->SetTopLeds(nLedsTop);
 		m_monitor->SetBottomLeds(nLedsBottom);
 		m_monitor->SetPosX(posX);
+		m_monitor->SetPosY(posY);
 		return TRUE;
 	}
 	else {
@@ -318,5 +356,6 @@ BOOL MonitorTab::Modified() {
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_RIGHT_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT), EM_GETMODIFY, NULL, NULL) ||
-		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT), EM_GETMODIFY, NULL, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT), EM_GETMODIFY, NULL, NULL) ||
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT), EM_GETMODIFY, NULL, NULL);
 }
