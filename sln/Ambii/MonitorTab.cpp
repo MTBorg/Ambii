@@ -1,14 +1,16 @@
 /*
 	MonitorTab.cpp
 
-	Source file for class MonitorTab
+	Source file for class MonitorTab.
 
-	@author: Martin Terneborg
+	@author: Martin Terneborg.
 */
 
 #include "MonitorTab.h"
 
 #include <CommCtrl.h>
+
+#define TEXTLINE_HEIGHT 17
 
 /*
 	Creates the monitor tab.
@@ -56,12 +58,14 @@ BOOL MonitorTab::Create(CONST HWND hTabCtrl, Monitor * CONST monitor) {
 */
 BOOL MonitorTab::InitControls() {
 
+	CONST UINT8 textSize = 110;
+
 	InitLedsLeft(0, 0);
 	InitLedsRight(0, 25);
 	InitLedsTop(0, 50);
 	InitLedsBottom(0, 75);
-	InitPositionHorz(0, 125);
-	InitPositionVert(0, 150);
+	InitPositionHorz(0, 125, textSize, TEXTLINE_HEIGHT);
+	InitPositionVert(0, 150, textSize, TEXTLINE_HEIGHT);
 
 	return TRUE;
 }
@@ -220,20 +224,20 @@ BOOL MonitorTab::InitLedsBottom(CONST INT x, CONST INT y) {
 }
 
 /*
-	Initializes the position text and edit control for the position setting.
+	Initializes the position text and edit control for the horizontal position setting.
 
 	@param x: The horizontal position.
 	@param y: The vertical position.
+	@param textHeight: The height of the text and edit control.
 
 	@return TRUE if the controls are successfully created, otherwise FALSE.
 */
-BOOL MonitorTab::InitPositionHorz(CONST INT x, CONST INT y) {
-	CONST UINT8 textWidth = 110;
+BOOL MonitorTab::InitPositionHorz(CONST INT x, CONST INT y, CONST UINT textWidth, CONST UINT textHeight) {
 	HWND hText = CreateWindow(
 		WC_STATIC, L"Horizontal position: ",
 		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
 		x, y,
-		textWidth, 30,
+		textWidth, textHeight,
 		m_hDisplayCtrl,
 		NULL,
 		GetModuleHandle(NULL),
@@ -244,7 +248,7 @@ BOOL MonitorTab::InitPositionHorz(CONST INT x, CONST INT y) {
 		WC_EDIT, L"",
 		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
 		x + textWidth + 5, y,
-		25, 18,
+		25, textHeight,
 		m_hDisplayCtrl,
 		(HMENU)m_CONTROL_ID::POSITION_HORZ_EDIT,
 		GetModuleHandle(NULL),
@@ -257,16 +261,20 @@ BOOL MonitorTab::InitPositionHorz(CONST INT x, CONST INT y) {
 }
 
 /*
-	//TODO: Comment
-*/
-BOOL MonitorTab::InitPositionVert(CONST INT x, CONST INT y) {
-	CONST UINT8 textWidth = 110;
+	Initializes the position text and edit control for the vertical position setting.
 
+	@param x: The horizontal position.
+	@param y: The vertical position.
+	@param textHeight: The height of the text and edit control.
+
+	@return TRUE if the controls are successfully created, otherwise FALSE.
+*/
+BOOL MonitorTab::InitPositionVert(CONST INT x, CONST INT y, CONST UINT textWidth, CONST UINT textHeight) {
 	HWND hText = CreateWindow(
 		WC_STATIC, L"Vertical position: ",
 		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
 		x, y,
-		textWidth, 30,
+		textWidth, textHeight,
 		m_hDisplayCtrl,
 		NULL,
 		GetModuleHandle(NULL),
@@ -277,7 +285,7 @@ BOOL MonitorTab::InitPositionVert(CONST INT x, CONST INT y) {
 		WC_EDIT, L"",
 		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
 		x + textWidth + 5, y,
-		25, 18,
+		25, textHeight,
 		m_hDisplayCtrl,
 		(HMENU)m_CONTROL_ID::POSITION_VERT_EDIT,
 		GetModuleHandle(NULL),
