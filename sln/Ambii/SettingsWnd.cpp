@@ -160,7 +160,8 @@ BOOL SettingsWnd::GetSettings(CONST HWND hWnd, Settings * CONST settings) {
 				selectedMonitors.at(i).SetRightLeds(oldMonitor.GetRightLeds());
 				selectedMonitors.at(i).SetTopLeds(oldMonitor.GetTopLeds());
 				selectedMonitors.at(i).SetBottomLeds(oldMonitor.GetBottomLeds());
-				selectedMonitors.at(i).SetPosition(oldMonitor.GetPosition());
+				selectedMonitors.at(i).SetPosX(oldMonitor.GetPosX());
+				selectedMonitors.at(i).SetPosY(oldMonitor.GetPosY());
 				break;
 			}
 		}

@@ -13,7 +13,7 @@
 */
 Monitor::Monitor()
 	: m_displayDeviceName(L""), m_monitorName(L""), m_hMonitor(NULL),
-	m_nPosition(0), m_nLedsLeft(0), m_nLedsRight(0), m_nLedsTop(0), m_nLedsBottom(0)
+	m_posX(0), m_posY(0), m_nLedsLeft(0), m_nLedsRight(0), m_nLedsTop(0), m_nLedsBottom(0)
 {
 
 }

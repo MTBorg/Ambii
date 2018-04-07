@@ -250,7 +250,7 @@ VOID OutputThread::DisplayLeftLeds(CONST RGBQUAD * CONST arrOutputs) CONST {
 	for (UINT i = 0; i < m_rMonitor.GetLeftLeds(); i++) {
 		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
 		SelectObject(hdcWnd, hBrush);
-		UINT x = m_rMonitor.GetPosition() * clientRect.right / m_rSettings.m_usedMonitors.size();
+		UINT x = m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size();
 
 		UINT y;
 		if (m_rSettings.m_bClockwise == TRUE) {
@@ -284,7 +284,7 @@ VOID OutputThread::DisplayRightLeds(CONST RGBQUAD * CONST arrOutputs) CONST {
 	for (UINT i = 0; i < m_rMonitor.GetRightLeds(); i++) {
 		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
 		SelectObject(hdcWnd, hBrush);
-		UINT x = (m_rMonitor.GetPosition() + 1) * clientRect.right / m_rSettings.m_usedMonitors.size();
+		UINT x = (m_rMonitor.GetPosX() + 1) * clientRect.right / m_rSettings.m_usedMonitors.size();
 
 		UINT y;
 		if (m_rSettings.m_bClockwise == TRUE) {

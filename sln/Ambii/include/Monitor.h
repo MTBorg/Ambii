@@ -3,7 +3,7 @@
 
 	Header file for class Monitor
 
-	@author Martin Terneborg
+	@author: Martin Terneborg.
 */
 
 #ifndef MONITOR_H
@@ -20,7 +20,7 @@ private:
 	HMONITOR m_hMonitor;
 	std::wstring m_displayDeviceName;
 	std::wstring m_monitorName;
-	UINT8 m_nPosition = 0; //The position of the monitor (0 is left-most)
+	UINT8 m_posX = 0, m_posY = 0; //The horizontal and position of the monitor in the position of the setup (left to right and top to bottom)
 	UINT m_nLedsLeft = 0, m_nLedsRight = 0;
 	UINT m_nLedsTop = 0, m_nLedsBottom = 0;
 
@@ -31,7 +31,8 @@ public:
 	Monitor();
 
 	//Set-functions
-	inline VOID SetPosition(UINT8 position) { m_nPosition = position; };
+	inline VOID SetPosX(UINT8 posX) { m_posX = posX; };
+	inline VOID SetPosY(UINT8 posY) { m_posY = posY; };
 	inline VOID SetLeftLeds(UINT nLeds) { m_nLedsLeft = nLeds; };
 	inline VOID SetRightLeds(UINT nLeds) { m_nLedsRight = nLeds; };
 	inline VOID SetTopLeds(UINT nLeds) { m_nLedsTop = nLeds; };
@@ -41,7 +42,8 @@ public:
 	inline VOID SetMonitorHandle(CONST HMONITOR hMonitor) {if (hMonitor != NULL) m_hMonitor = hMonitor;};
 
 	//Get-functions
-	inline UINT8 GetPosition() CONST { return m_nPosition; };
+	inline UINT8 GetPosX() CONST { return m_posX; };
+	inline UINT8 GetPosY() CONST { return m_posY; };
 	inline UINT GetLeftLeds() CONST { return m_nLedsLeft; };
 	inline UINT GetRightLeds() CONST { return m_nLedsRight; };
 	inline UINT GetTopLeds() CONST { return m_nLedsTop; };

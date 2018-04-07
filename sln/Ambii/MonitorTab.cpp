@@ -245,12 +245,12 @@ BOOL MonitorTab::InitPosition(CONST INT x, CONST INT y) {
 		x + textWidth + 5, y,
 		25, 18,
 		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::POSITION_EDIT,
+		(HMENU)m_CONTROL_ID::POSITION_HORZ_EDIT,
 		GetModuleHandle(NULL),
 		NULL);
 	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
 	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
-	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_EDIT, m_monitor->GetPosition(), FALSE);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT, m_monitor->GetPosX(), FALSE);
 
 	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
 }
@@ -290,7 +290,7 @@ BOOL MonitorTab::GetSettings(){
 	UINT nLedsBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT, &getSuccess, FALSE);
 	resultSuccess &= getSuccess;
 
-	UINT nPosition = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_EDIT, &getSuccess, FALSE);
+	UINT posX = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT, &getSuccess, FALSE);
 	resultSuccess &= getSuccess;
 
 	//If the input is valid
@@ -299,7 +299,7 @@ BOOL MonitorTab::GetSettings(){
 		m_monitor->SetRightLeds(nLedsRight);
 		m_monitor->SetTopLeds(nLedsTop);
 		m_monitor->SetBottomLeds(nLedsBottom);
-		m_monitor->SetPosition(nPosition);
+		m_monitor->SetPosX(posX);
 		return TRUE;
 	}
 	else {
@@ -318,5 +318,5 @@ BOOL MonitorTab::Modified() {
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_RIGHT_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT), EM_GETMODIFY, NULL, NULL) ||
-		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_EDIT), EM_GETMODIFY, NULL, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT), EM_GETMODIFY, NULL, NULL);
 }

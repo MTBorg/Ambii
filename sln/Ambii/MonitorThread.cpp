@@ -89,7 +89,7 @@ VOID MonitorThread::DisplayMonitor() {
 
 	//Display the screen
 	SetStretchBltMode(hdcWnd, STRETCH_HALFTONE);
-	StretchDIBits(hdcWnd, m_rMonitor.GetPosition() * clientRect.right / m_rSettings.m_usedMonitors.size(), 0,
+	StretchDIBits(hdcWnd, m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size(), 0,
 		clientRect.right / m_rSettings.m_usedMonitors.size(), clientRect.bottom, //Width and height of destination
 		0, 0,
 		m_rMonitor.GetWidth(), m_rMonitor.GetHeight(), //Width and height of source

@@ -22,7 +22,8 @@ CONST LPCWSTR RegistryHandler::m_valueNames::NAME_MONITOR = L"Monitor name";
 CONST LPCWSTR RegistryHandler::m_valueNames::NAME_DISPLAYDEVICE = L"Display device name";
 CONST LPCWSTR RegistryHandler::m_valueNames::REFRESHRATE = L"Maximum refresh rate";
 CONST LPCWSTR RegistryHandler::m_valueNames::SAMPLESIZE = L"Sample size";
-CONST LPCWSTR RegistryHandler::m_valueNames::POSITION = L"Position";
+CONST LPCWSTR RegistryHandler::m_valueNames::POSITION_HORZ = L"Horizontal Position";
+CONST LPCWSTR RegistryHandler::m_valueNames::POSITION_VERT = L"Vertical Position";
 CONST LPCWSTR RegistryHandler::m_valueNames::MULTITHREADING = L"Multithreading";
 CONST LPCWSTR RegistryHandler::m_valueNames::USEONLYPRIMARY = L"Use only primary monitor";
 CONST LPCWSTR RegistryHandler::m_valueNames::PORTNUM = L"Port number";
@@ -83,7 +84,8 @@ VOID RegistryHandler::StoreMonitor(CONST HKEY hKeyApp, CONST Monitor& monitor) {
 		StoreValueDWord(hKeyMonitor, m_valueNames::LEDS_RIGHT, monitor.GetRightLeds());
 		StoreValueDWord(hKeyMonitor, m_valueNames::LEDS_TOP, monitor.GetTopLeds());
 		StoreValueDWord(hKeyMonitor, m_valueNames::LEDS_BOTTOM, monitor.GetBottomLeds());
-		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION, monitor.GetPosition());
+		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_HORZ, monitor.GetPosX());
+		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_VERT, monitor.GetPosY());
 
 		//Close retrieved handle
 		RegCloseKey(hKeyMonitor);
@@ -268,7 +270,7 @@ Monitor RegistryHandler::GetMonitor(CONST HKEY hKeyApp, CONST LPCWSTR monitorKey
 		monitor.SetBottomLeds(GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::LEDS_BOTTOM));
 
 		//Get the position
-		monitor.SetPosition((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION));
+		monitor.SetPosX((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_HORZ));
 	}
 	catch (std::wstring errorMsg) {
 		throw wstring(L"Exception in function GetMonitor. Exception: \n") + errorMsg;

@@ -23,7 +23,8 @@ private:
 		LEDS_RIGHT_EDIT,
 		LEDS_TOP_EDIT,
 		LEDS_BOTTOM_EDIT,
-		POSITION_EDIT
+		POSITION_HORZ_EDIT,
+		POSITION_VERT_EDIT
 	};
 	HWND m_hDisplayCtrl;
 	Monitor * m_monitor;

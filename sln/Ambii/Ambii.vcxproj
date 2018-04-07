@@ -225,6 +225,7 @@
     <ClInclude Include="include\Thread.h" />
     <ClInclude Include="include\UpdateThread.h" />
     <ClInclude Include="include\WndMain.h" />
+    <ClInclude Include="SetupGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Monitor.cpp" />
@@ -235,6 +236,7 @@
     <ClCompile Include="RegistryHandler.cpp" />
     <ClCompile Include="SerialHandler.cpp" />
     <ClCompile Include="SettingsWnd.cpp" />
+    <ClCompile Include="SetupGUI.cpp" />
     <ClCompile Include="SetupWnd.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="UpdateThread.cpp" />
