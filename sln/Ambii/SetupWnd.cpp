@@ -13,6 +13,7 @@
 CONST LPCWSTR SetupWnd::m_TITLE = L"Setup";
 
 #define GUI_HEIGHT 300
+#define TAB_HEIGHT 300
 #define BUTTON_HEIGHT 30
 #define BUTTON_WIDTH 100
 
@@ -118,7 +119,7 @@ BOOL SetupWnd::Create(CONST HWND hWndParent, std::vector<Monitor>& selectedMonit
 		m_TITLE, m_TITLE,
 		(WS_VISIBLE | WS_OVERLAPPEDWINDOW) ^ (WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX),
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		500, 600,
+		500, TAB_HEIGHT + GUI_HEIGHT + BUTTON_WIDTH,
 		hWndParent,
 		NULL,
 		GetModuleHandle(NULL),
@@ -155,7 +156,8 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 		RECT clientRect;
 		GetClientRect(hWndParent, &clientRect);
 		
-		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, GUI_HEIGHT);
+		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
+		InitMonitorWnd(hWndParent, 0, 0 + TAB_HEIGHT, clientRect.right, GUI_HEIGHT);
 		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, clientRect.bottom - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
 	catch (LPCWSTR str){
@@ -219,15 +221,13 @@ VOID SetupWnd::InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y, CONS
 VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selectedMonitors, CONST UINT width, CONST UINT height) {
 	RECT clientRect;
 	GetClientRect(hWndParent, &clientRect);
-
-	CONST UINT8 bottomMargin = 40;
 	
 	HWND hTabCtrl = CreateWindowEx(
 		WS_EX_STATICEDGE,
 		WC_TABCONTROL, L"Monitors",
 		WS_CHILD | WS_VISIBLE | TCS_FOCUSONBUTTONDOWN,
 		0, 0,
-		width, height - bottomMargin,
+		width, height,
 		hWndParent,
 		(HMENU)m_CONTROLS_ID::TAB_CTRL,
 		GetModuleHandle(NULL),
@@ -261,6 +261,27 @@ VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selected
 	if (selectedMonitors.size() > 0) {
 		m_monitorTabs.at(0).Show();
 	}
+}
+
+/*
+	//TODO: Comment
+*/
+VOID SetupWnd::InitMonitorWnd(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height) {
+	HWND hWndWindow = CreateWindow(
+		WC_STATIC,
+		L"",
+		WS_CHILD | WS_VISIBLE | WS_BORDER,
+		x, y,
+		width, height,
+		hWndParent,
+		NULL,
+		GetModuleHandle(NULL),
+		NULL);
+
+	if (hWndWindow == NULL) {
+		throw L"Exception in function InitMonitorWnd. Exception: Failed to create window control (NULL handle).";
+	}
+	
 }
 
 /*

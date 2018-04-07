@@ -36,6 +36,7 @@ private:
 		std::vector<Monitor>& selectedMonitors, CONST UINT width, CONST UINT height);
 	VOID InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y,
 		CONST INT width, CONST INT height);
+	VOID InitMonitorWnd(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height);
 public:
 	BOOL Create(CONST HWND hWndParent, 
 		std::vector<Monitor>& selectedMonitors);
