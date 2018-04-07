@@ -33,7 +33,7 @@ private:
 	VOID InitControls(CONST HWND hWndParent,
 		std::vector<Monitor>& selectedMonitors);
 	VOID InitTabCtrl(CONST HWND hWndParent,
-		std::vector<Monitor>& selectedMonitors);
+		std::vector<Monitor>& selectedMonitors, CONST UINT width, CONST UINT height);
 	VOID InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y,
 		CONST INT width, CONST INT height);
 public:

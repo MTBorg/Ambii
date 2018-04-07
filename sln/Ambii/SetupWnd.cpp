@@ -12,6 +12,10 @@
 
 CONST LPCWSTR SetupWnd::m_TITLE = L"Setup";
 
+#define GUI_HEIGHT 300
+#define BUTTON_HEIGHT 30
+#define BUTTON_WIDTH 100
+
 /*
 	The window's message procedure.
 
@@ -114,7 +118,7 @@ BOOL SetupWnd::Create(CONST HWND hWndParent, std::vector<Monitor>& selectedMonit
 		m_TITLE, m_TITLE,
 		(WS_VISIBLE | WS_OVERLAPPEDWINDOW) ^ (WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX),
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		500, 300,
+		500, 600,
 		hWndParent,
 		NULL,
 		GetModuleHandle(NULL),
@@ -148,12 +152,11 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 	InitCommonControlsEx(&icc);*/
 
 	try {
-		CONST UINT width = 100, height = 30;
 		RECT clientRect;
 		GetClientRect(hWndParent, &clientRect);
 		
-		InitTabCtrl(hWndParent, selectedMonitors);
-		InitButtons(hWndParent, clientRect.right / 2 - width, clientRect.bottom - height, width, height);
+		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, GUI_HEIGHT);
+		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, clientRect.bottom - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
 	catch (LPCWSTR str){
 		throw str;
@@ -208,10 +211,12 @@ VOID SetupWnd::InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y, CONS
 
 	@param hWndParent: A handle to the parent (setup) window.
 	@param selectedMonitors: A reference to a vector containing all currently selected monitors.
+	@param width: The width of the tab control.
+	@param height: The height of the tab control.
 
 	@throw String "Failed to create tab control!", if tab control not successfully created
 */
-VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selectedMonitors) {
+VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selectedMonitors, CONST UINT width, CONST UINT height) {
 	RECT clientRect;
 	GetClientRect(hWndParent, &clientRect);
 
@@ -222,7 +227,7 @@ VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selected
 		WC_TABCONTROL, L"Monitors",
 		WS_CHILD | WS_VISIBLE | TCS_FOCUSONBUTTONDOWN,
 		0, 0,
-		clientRect.right, clientRect.bottom - bottomMargin,
+		width, height - bottomMargin,
 		hWndParent,
 		(HMENU)m_CONTROLS_ID::TAB_CTRL,
 		GetModuleHandle(NULL),
