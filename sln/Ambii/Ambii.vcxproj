@@ -221,11 +221,11 @@
     <ClInclude Include="include\SerialHandler.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SettingsWnd.h" />
+    <ClInclude Include="include\SetupGUI.h" />
     <ClInclude Include="include\SetupWnd.h" />
     <ClInclude Include="include\Thread.h" />
     <ClInclude Include="include\UpdateThread.h" />
     <ClInclude Include="include\WndMain.h" />
-    <ClInclude Include="SetupGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Monitor.cpp" />

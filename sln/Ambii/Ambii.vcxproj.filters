@@ -59,7 +59,7 @@
     <ClInclude Include="include\WndMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SetupGUI.h">
+    <ClInclude Include="include\SetupGUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
