@@ -221,7 +221,6 @@
     <ClInclude Include="include\SerialHandler.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SettingsWnd.h" />
-    <ClInclude Include="include\SetupGUI.h" />
     <ClInclude Include="include\SetupWnd.h" />
     <ClInclude Include="include\Thread.h" />
     <ClInclude Include="include\UpdateThread.h" />
@@ -236,7 +235,6 @@
     <ClCompile Include="RegistryHandler.cpp" />
     <ClCompile Include="SerialHandler.cpp" />
     <ClCompile Include="SettingsWnd.cpp" />
-    <ClCompile Include="SetupGUI.cpp" />
     <ClCompile Include="SetupWnd.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="UpdateThread.cpp" />

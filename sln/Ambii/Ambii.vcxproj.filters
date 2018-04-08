@@ -59,9 +59,6 @@
     <ClInclude Include="include\WndMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\SetupGUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Monitor.cpp">
@@ -101,9 +98,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WndMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SetupGUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
