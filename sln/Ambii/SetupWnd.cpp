@@ -155,9 +155,14 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 	try {
 		RECT clientRect;
 		GetClientRect(hWndParent, &clientRect);
-		
+
 		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
-		InitMonitorWnd(hWndParent, 0, 0 + TAB_HEIGHT, clientRect.right, GUI_HEIGHT);
+		HWND hGUIWnd = SetupGUI::Create(hWndParent, 0, 0 + TAB_HEIGHT, clientRect.right, GUI_HEIGHT, selectedMonitors);
+
+		if (hGUIWnd == NULL) {
+			throw L"Exception in function InitControls. Failed to initialize setup GUI (NULL handle).";
+		}
+
 		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, clientRect.bottom - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
 	catch (LPCWSTR str){
@@ -261,27 +266,6 @@ VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selected
 	if (selectedMonitors.size() > 0) {
 		m_monitorTabs.at(0).Show();
 	}
-}
-
-/*
-	//TODO: Comment
-*/
-VOID SetupWnd::InitMonitorWnd(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height) {
-	HWND hWndWindow = CreateWindow(
-		WC_STATIC,
-		L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER,
-		x, y,
-		width, height,
-		hWndParent,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-
-	if (hWndWindow == NULL) {
-		throw L"Exception in function InitMonitorWnd. Exception: Failed to create window control (NULL handle).";
-	}
-	
 }
 
 /*
