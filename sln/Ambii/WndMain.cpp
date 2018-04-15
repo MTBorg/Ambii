@@ -21,7 +21,7 @@ CONST LPCWSTR WndMain::m_APP_TITLE = L"Ambii";
 	Default constructor.
 */
 WndMain::WndMain()
-	: m_pUpdateThread(NULL), m_hUpdateThread(NULL)
+	: m_setupWnd(m_settings.m_usedMonitors), m_pUpdateThread(NULL), m_hUpdateThread(NULL)
 {
 
 }

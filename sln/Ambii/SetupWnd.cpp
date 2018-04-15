@@ -10,14 +10,23 @@
 
 #include <CommCtrl.h>
 
-#include "SetupGUI.h"
-
 CONST LPCWSTR SetupWnd::m_TITLE = L"Setup";
 
 #define TAB_HEIGHT 300
 #define GUI_HEIGHT 300
 #define BUTTON_HEIGHT 30
 #define BUTTON_WIDTH 100
+
+/*
+	Overloaded constructor.
+
+	@param selectedMonitors: A reference to the vector containing all currently selected monitors, used to initialize the setup GUI.
+*/
+SetupWnd::SetupWnd(CONST std::vector<Monitor>& selectedMonitors)
+	: m_setupGUI(selectedMonitors)
+{
+
+}
 
 /*
 	The window's message procedure.
@@ -78,7 +87,7 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		}
 		break;
 	case WM_PAINT:
-		SetupGUI::Draw(hWnd, pObj->m_monitorTabs);
+		pObj->m_setupGUI.Draw(hWnd);
 		break;
 	case WM_CLOSE: 
 		BOOL bModified;
@@ -169,8 +178,6 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 		GetClientRect(hWndParent, &clientRect);
 
 		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
-
-		//SetupGUI::Create(hWndParent, 0, TAB_HEIGHT, clientRect.right, GUI_HEIGHT, selectedMonitors);
 
 		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}

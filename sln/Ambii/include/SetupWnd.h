@@ -11,6 +11,7 @@
 #include <Windows.h>
 #include <vector>
 
+#include "SetupGUI.h"
 #include "Monitor.h"
 #include "MonitorTab.h"
 
@@ -26,6 +27,7 @@ private:
 		CANCEL_BUTTON
 	};
     std::vector<MonitorTab> m_monitorTabs;
+	SetupGUI m_setupGUI;
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg,
 		WPARAM lParam, LPARAM wParam);
@@ -37,6 +39,7 @@ private:
 	VOID InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y,
 		CONST INT width, CONST INT height);
 public:
+	SetupWnd(CONST std::vector<Monitor>& selectedMonitors);
 	BOOL Create(CONST HWND hWndParent, 
 		std::vector<Monitor>& selectedMonitors);
 };
