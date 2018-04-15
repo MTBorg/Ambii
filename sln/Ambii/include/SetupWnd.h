@@ -13,7 +13,6 @@
 
 #include "Monitor.h"
 #include "MonitorTab.h"
-#include "SetupGUI.h"
 
 /*
 	Class for the setup window where the user can edit the monitor setup.

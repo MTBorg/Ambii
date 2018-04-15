@@ -12,7 +12,6 @@
 
 CONST LPCWSTR SetupWnd::m_TITLE = L"Setup";
 
-#define GUI_HEIGHT 300
 #define TAB_HEIGHT 300
 #define BUTTON_HEIGHT 30
 #define BUTTON_WIDTH 100
@@ -119,7 +118,7 @@ BOOL SetupWnd::Create(CONST HWND hWndParent, std::vector<Monitor>& selectedMonit
 		m_TITLE, m_TITLE,
 		(WS_VISIBLE | WS_OVERLAPPEDWINDOW) ^ (WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX),
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		500, TAB_HEIGHT + GUI_HEIGHT + BUTTON_WIDTH,
+		500, TAB_HEIGHT + BUTTON_HEIGHT,
 		hWndParent,
 		NULL,
 		GetModuleHandle(NULL),
@@ -156,12 +155,7 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 		RECT clientRect;
 		GetClientRect(hWndParent, &clientRect);
 
-		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
-		HWND hGUIWnd = SetupGUI::Create(hWndParent, 0, 0 + TAB_HEIGHT, clientRect.right, GUI_HEIGHT, selectedMonitors);
-
-		if (hGUIWnd == NULL) {
-			throw L"Exception in function InitControls. Failed to initialize setup GUI (NULL handle).";
-		}
+		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT - BUTTON_HEIGHT);
 
 		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, clientRect.bottom - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
