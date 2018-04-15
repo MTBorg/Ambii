@@ -9,10 +9,19 @@
 #define MONITOR_BORDER_WIDTH 4
 
 /*
+	Overloaded constructor.
+
+	@param selectedMonitors: A reference to a vector containing all currently selected monitors.
+*/
+SetupGUI::SetupGUI(CONST std::vector<Monitor>& selectedMonitors)
+	: m_selectedMonitors(selectedMonitors) {
+
+}
+
+/*
 	TODO: Comment
 */
-HWND SetupGUI::Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height,
-	CONST std::vector<Monitor>& selectedMonitors) {
+HWND SetupGUI::Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height) {
 	HWND hStatic = CreateWindow(
 		WC_STATIC, L"",
 		WS_CHILD | WS_VISIBLE | WS_BORDER,
