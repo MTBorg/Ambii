@@ -38,7 +38,7 @@ HWND SetupGUI::Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST U
 /*
 	//TODO: Comment
 */
-VOID SetupGUI::Draw(CONST HWND hWndParent, CONST std::vector<MonitorTab>& monitorTabs) {
+VOID SetupGUI::Draw(CONST HWND hWndParent) {
 	HDC hdc = GetDC(hWndParent);
 
 	ReleaseDC(hWndParent, hdc);

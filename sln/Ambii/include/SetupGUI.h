@@ -21,7 +21,7 @@ public:
 	//Default constructor
 	SetupGUI(CONST std::vector<Monitor>& m_selectedMonitors);
 
-	VOID Draw(CONST HWND hWndParent, CONST std::vector<MonitorTab>& monitorTabs);
+	VOID Draw(CONST HWND hWndParent);
 	HWND Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height);
 };
 
