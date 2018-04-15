@@ -10,9 +10,12 @@
 
 #include <CommCtrl.h>
 
+#include "SetupGUI.h"
+
 CONST LPCWSTR SetupWnd::m_TITLE = L"Setup";
 
 #define TAB_HEIGHT 300
+#define GUI_HEIGHT 300
 #define BUTTON_HEIGHT 30
 #define BUTTON_WIDTH 100
 
@@ -118,7 +121,7 @@ BOOL SetupWnd::Create(CONST HWND hWndParent, std::vector<Monitor>& selectedMonit
 		m_TITLE, m_TITLE,
 		(WS_VISIBLE | WS_OVERLAPPEDWINDOW) ^ (WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX),
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		500, TAB_HEIGHT + BUTTON_HEIGHT,
+		500, TAB_HEIGHT + GUI_HEIGHT + BUTTON_HEIGHT,
 		hWndParent,
 		NULL,
 		GetModuleHandle(NULL),
@@ -127,6 +130,13 @@ BOOL SetupWnd::Create(CONST HWND hWndParent, std::vector<Monitor>& selectedMonit
 	if (hWnd == NULL) {
 		return FALSE;
 	}
+
+	//Readjust the window size to account for the caption bar and all controls for all control
+	RECT wndRect, clientRect;
+	GetWindowRect(hWnd, &wndRect);
+	GetClientRect(hWnd, &clientRect);
+	UINT captionHeight = (wndRect.bottom - wndRect.top) - (clientRect.bottom - clientRect.top); //Calculate the height of the caption bar
+	SetWindowPos(hWnd, NULL, NULL, NULL, wndRect.right - wndRect.left, wndRect.bottom - wndRect.top + captionHeight, SWP_NOMOVE | SWP_NOZORDER);
 
 	InitControls(hWnd, selectedMonitors);
 
@@ -155,9 +165,11 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 		RECT clientRect;
 		GetClientRect(hWndParent, &clientRect);
 
-		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT - BUTTON_HEIGHT);
+		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
 
-		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, clientRect.bottom - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		SetupGUI::Create(hWndParent, 0, TAB_HEIGHT, clientRect.right, GUI_HEIGHT, selectedMonitors);
+
+		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
 	catch (LPCWSTR str){
 		throw str;

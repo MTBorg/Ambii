@@ -2,12 +2,12 @@
 	//TODO: Comment
 */
 
-#include <CommCtrl.h>
-
 #include "SetupGUI.h"
 
+#include <CommCtrl.h>
+
 /*
-	//TODO: Comment
+	TODO: Comment
 */
 HWND SetupGUI::Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height,
 	CONST std::vector<Monitor>& selectedMonitors) {
@@ -24,11 +24,13 @@ HWND SetupGUI::Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST U
 	if (!CreateMonitors(hWndParent, selectedMonitors)) {
 		throw L"Exception in function SetupGUI::Create. Failed to initialize monitors.";
 	}
+
+	return hStatic;
 }
 
 /*
 	//TODO: Comment
 */
 BOOL SetupGUI::CreateMonitors(CONST HWND hWndParent, CONST std::vector<Monitor>& selectedMonitors) {
-
+	return TRUE;
 }

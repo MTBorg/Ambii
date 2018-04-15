@@ -1,3 +1,6 @@
+/*
+	//TODO: Comment
+*/
 #ifndef SETUPGUI_H
 #define SETUPGUI_H
 
@@ -6,6 +9,9 @@
 
 #include "Monitor.h"
 
+/*
+	//TODO: Comment
+*/
 class SetupGUI {
 private:
 	static BOOL CreateMonitors(CONST HWND hWndParent, CONST std::vector<Monitor>& selectedMonitors);
