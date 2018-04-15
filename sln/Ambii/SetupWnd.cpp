@@ -77,6 +77,9 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 			break;
 		}
 		break;
+	case WM_PAINT:
+		SetupGUI::Draw(hWnd, pObj->m_monitorTabs);
+		break;
 	case WM_CLOSE: 
 		BOOL bModified;
 		bModified = FALSE;
@@ -167,7 +170,7 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 
 		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
 
-		SetupGUI::Create(hWndParent, 0, TAB_HEIGHT, clientRect.right, GUI_HEIGHT, selectedMonitors);
+		//SetupGUI::Create(hWndParent, 0, TAB_HEIGHT, clientRect.right, GUI_HEIGHT, selectedMonitors);
 
 		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
