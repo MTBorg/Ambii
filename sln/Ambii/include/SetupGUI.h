@@ -8,10 +8,10 @@
 
 class SetupGUI {
 private:
-	BOOL CreateMonitors(CONST HWND hWndParent, std::vector<Monitor>& selectedMonitors);
+	static BOOL CreateMonitors(CONST HWND hWndParent, CONST std::vector<Monitor>& selectedMonitors);
 public:
-	HWND Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height,
-		std::vector<Monitor>& selectedMonitors);
+	static HWND Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height,
+		CONST std::vector<Monitor>& selectedMonitors);
 };
 
 #endif
