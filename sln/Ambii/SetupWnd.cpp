@@ -80,6 +80,7 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 				pObj->m_monitorTabs.at(i).Hide();
 			}
 			pObj->m_monitorTabs.at(TabCtrl_GetCurSel(GetDlgItem(hWnd, m_CONTROLS_ID::TAB_CTRL))).Show();
+			UpdateWindow(hWnd);
 			break;
 		case TCN_SELCHANGING:
 			return FALSE; //This is necessary in order to be able to switch tab
