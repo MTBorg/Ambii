@@ -87,7 +87,9 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		}
 		break;
 	case WM_PAINT: //IMPORTANT: This paint message causes the tabs in the setup window to behave weird
-		pObj->m_setupGUI.Draw(hWnd);
+		RECT clientRect;
+		GetClientRect(hWnd, &clientRect);
+		pObj->m_setupGUI.Draw(hWnd, 0, TAB_HEIGHT, clientRect.right, GUI_HEIGHT);
 		break;
 	case WM_CLOSE: 
 		BOOL bModified;
@@ -179,7 +181,7 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 
 		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
 
-		//InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
 	catch (LPCWSTR str){
 		throw str;

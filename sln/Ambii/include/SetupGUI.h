@@ -16,12 +16,13 @@
 class SetupGUI {
 private:
 	CONST std::vector<Monitor>& m_selectedMonitors;
-	VOID DrawMonitor(CONST HDC& hdc, CONST Monitor& monitor, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height);
+	VOID DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height);
 public:
 	//Default constructor
 	SetupGUI(CONST std::vector<Monitor>& m_selectedMonitors);
 
-	VOID Draw(CONST HWND hWndParent);
+	VOID Draw(CONST HWND hWndParent, CONST UINT x, CONST UINT y,
+		CONST UINT width, CONST UINT height);
 	HWND Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height);
 };
 
