@@ -24,7 +24,11 @@ private:
 		LEDS_TOP_EDIT,
 		LEDS_BOTTOM_EDIT,
 		POSITION_HORZ_EDIT,
-		POSITION_VERT_EDIT
+		POSITION_VERT_EDIT,
+		POSITION_LEFT_EDIT,
+		POSITION_RIGHT_EDIT,
+		POSITION_TOP_EDIT,
+		POSITION_BOTTOM_EDIT
 	};
 	HWND m_hDisplayCtrl;
 	Monitor * m_monitor;
@@ -34,6 +38,10 @@ private:
 	BOOL InitLedsRight(CONST INT x, CONST INT y);
 	BOOL InitLedsTop(CONST INT x, CONST INT y);
 	BOOL InitLedsBottom(CONST INT x, CONST INT y);
+	BOOL InitPosLeft(CONST UINT x, CONST UINT y);
+	BOOL InitPosRight(CONST UINT x, CONST UINT y);
+	BOOL InitPosTop(CONST UINT x, CONST UINT y);
+	BOOL InitPosBottom(CONST UINT x, CONST UINT y);
 	BOOL InitPositionHorz(CONST INT x, CONST INT y, CONST UINT textWidth, CONST UINT textHeight);
 	BOOL InitPositionVert(CONST INT x, CONST INT y, CONST UINT textWidth, CONST UINT textHeight);
 public:

@@ -65,7 +65,7 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 				monitorTab = (MonitorTab*)tcItem.lParam;
 
 				if (!monitorTab->GetSettings()) { //TODO: Try/Catch statement
-					MessageBox(hWnd, L"Invalid Input!", L"Error", MB_ICONERROR); //TODO: Give better error message
+					//MessageBox(hWnd, L"Invalid Input!", L"Error", MB_ICONERROR); //TODO: This freezes the program //TODO: Give better error message
 					break;
 				}
 			}
@@ -87,7 +87,7 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 			break;
 		}
 		break;
-	case WM_PAINT: //IMPORTANT: This paint message causes the tabs in the setup window to behave weird
+	case WM_PAINT:
 		RECT clientRect;
 		GetClientRect(hWnd, &clientRect);
 		pObj->m_setupGUI.Draw(hWnd, 0, TAB_HEIGHT, clientRect.right, GUI_HEIGHT);
@@ -146,14 +146,14 @@ BOOL SetupWnd::Create(CONST HWND hWndParent, std::vector<Monitor>& selectedMonit
 		return FALSE;
 	}
 
-	//Readjust the window size to account for the caption bar and all controls for all control
+	//Readjust the window size to account for the caption bar and for all controls
 	RECT wndRect, clientRect;
 	GetWindowRect(hWnd, &wndRect);
 	GetClientRect(hWnd, &clientRect);
 	UINT captionHeight = (wndRect.bottom - wndRect.top) - (clientRect.bottom - clientRect.top); //Calculate the height of the caption bar
 	SetWindowPos(hWnd, NULL, NULL, NULL, wndRect.right - wndRect.left, wndRect.bottom - wndRect.top + captionHeight, SWP_NOMOVE | SWP_NOZORDER);
 
-	InitControls(hWnd, selectedMonitors);
+	InitControls(hWnd, selectedMonitors);	
 
 	UpdateWindow(hWnd);
 	ShowWindow(hWnd, SW_SHOW);

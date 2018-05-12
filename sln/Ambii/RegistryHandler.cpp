@@ -24,6 +24,10 @@ CONST LPCWSTR RegistryHandler::m_valueNames::REFRESHRATE = L"Maximum refresh rat
 CONST LPCWSTR RegistryHandler::m_valueNames::SAMPLESIZE = L"Sample size";
 CONST LPCWSTR RegistryHandler::m_valueNames::POSITION_HORZ = L"Horizontal Position";
 CONST LPCWSTR RegistryHandler::m_valueNames::POSITION_VERT = L"Vertical Position";
+CONST LPCWSTR RegistryHandler::m_valueNames::POSITION_LEFT = L"Left side position";
+CONST LPCWSTR RegistryHandler::m_valueNames::POSITION_RIGHT = L"Right side Position";
+CONST LPCWSTR RegistryHandler::m_valueNames::POSITION_TOP = L"Top side position";
+CONST LPCWSTR RegistryHandler::m_valueNames::POSITION_BOTTOM = L"Bottom side position";
 CONST LPCWSTR RegistryHandler::m_valueNames::MULTITHREADING = L"Multithreading";
 CONST LPCWSTR RegistryHandler::m_valueNames::USEONLYPRIMARY = L"Use only primary monitor";
 CONST LPCWSTR RegistryHandler::m_valueNames::PORTNUM = L"Port number";
@@ -86,6 +90,10 @@ VOID RegistryHandler::StoreMonitor(CONST HKEY hKeyApp, CONST Monitor& monitor) {
 		StoreValueDWord(hKeyMonitor, m_valueNames::LEDS_BOTTOM, monitor.GetBottomLeds());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_HORZ, monitor.GetPosX());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_VERT, monitor.GetPosY());
+		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_LEFT, monitor.GetPosLeft());
+		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_RIGHT, monitor.GetPosRight());
+		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_TOP, monitor.GetPosTop());
+		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_BOTTOM, monitor.GetPosBottom());
 
 		//Close retrieved handle
 		RegCloseKey(hKeyMonitor);
@@ -269,8 +277,13 @@ Monitor RegistryHandler::GetMonitor(CONST HKEY hKeyApp, CONST LPCWSTR monitorKey
 		monitor.SetTopLeds(GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::LEDS_TOP));
 		monitor.SetBottomLeds(GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::LEDS_BOTTOM));
 
-		//Get the position
+		//Get the positions
 		monitor.SetPosX((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_HORZ));
+		monitor.SetPosY((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_VERT));
+		monitor.SetPosLeft((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_LEFT));
+		monitor.SetPosRight((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_RIGHT));
+		monitor.SetPosTop((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_TOP));
+		monitor.SetPosBottom((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_BOTTOM));
 	}
 	catch (std::wstring errorMsg) {
 		throw wstring(L"Exception in function GetMonitor. Exception: \n") + errorMsg;

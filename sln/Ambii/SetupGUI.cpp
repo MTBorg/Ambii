@@ -19,23 +19,6 @@ SetupGUI::SetupGUI(CONST std::vector<Monitor>& selectedMonitors)
 }
 
 /*
-	TODO: Comment
-*/
-HWND SetupGUI::Create(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height) {
-	HWND hStatic = CreateWindow(
-		WC_STATIC, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER,
-		x, y,
-		width, height,
-		hWndParent,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-
-	return hStatic;
-}
-
-/*
 	//TODO: Comment
 */
 VOID SetupGUI::Draw(CONST HWND hWndParent, CONST UINT x, CONST UINT y,
@@ -70,8 +53,8 @@ VOID SetupGUI::Draw(CONST HWND hWndParent, CONST UINT x, CONST UINT y,
 	UINT monitorHeight = height / yMax;
 	for (UINT i = 0; i < m_selectedMonitors.size(); i++) {
 		DrawMonitor(hdcMem, m_selectedMonitors.at(i),
-				monitorWidth * m_selectedMonitors.at(i).GetPosX(), monitorHeight * m_selectedMonitors.at(i).GetPosY(),
-				monitorWidth, monitorHeight);
+			monitorWidth * m_selectedMonitors.at(i).GetPosX(), monitorHeight * m_selectedMonitors.at(i).GetPosY(),
+			monitorWidth, monitorHeight);
 	}
 
 	BitBlt(hdc, x, y, width, height, hdcMem, 0, 0, SRCCOPY);
@@ -102,4 +85,3 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	
 	DrawText(hdc, monitor.GetMonitorName().c_str(), lstrlen(monitor.GetMonitorName().c_str()), &monitorRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
-

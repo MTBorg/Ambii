@@ -12,6 +12,11 @@
 
 #define TEXTLINE_HEIGHT 17
 
+#define EDITTEXT_POSITION_LEFT L"Left side position:"
+#define EDITTEXT_POSITION_RIGHT L"Right side position:"
+#define EDITTEXT_POSITION_TOP L"Top side position:"
+#define EDITTEXT_POSITION_BOTTOM L"Bottom side position:"
+
 /*
 	Creates the monitor tab.
 
@@ -64,6 +69,10 @@ BOOL MonitorTab::InitControls() {
 	InitLedsRight(0, 25);
 	InitLedsTop(0, 50);
 	InitLedsBottom(0, 75);
+	InitPosLeft(150, 0);
+	InitPosRight(150, 20);
+	InitPosTop(150, 40);
+	InitPosBottom(150, 60);
 	InitPositionHorz(0, 125, textSize, TEXTLINE_HEIGHT);
 	InitPositionVert(0, 150, textSize, TEXTLINE_HEIGHT);
 
@@ -338,6 +347,18 @@ BOOL MonitorTab::GetSettings(){
 	UINT posY = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT, &getSuccess, FALSE);
 	resultSuccess &= getSuccess;
 
+	UINT posLeft = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_LEFT_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posRight = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posTop = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
 	//If the input is valid
 	if (resultSuccess) {
 		m_monitor->SetLeftLeds(nLedsLeft);
@@ -346,6 +367,10 @@ BOOL MonitorTab::GetSettings(){
 		m_monitor->SetBottomLeds(nLedsBottom);
 		m_monitor->SetPosX(posX);
 		m_monitor->SetPosY(posY);
+		m_monitor->SetPosLeft(posLeft);
+		m_monitor->SetPosRight(posRight);
+		m_monitor->SetPosTop(posTop);
+		m_monitor->SetPosBottom(posBottom);
 		return TRUE;
 	}
 	else {
@@ -365,5 +390,157 @@ BOOL MonitorTab::Modified() {
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT), EM_GETMODIFY, NULL, NULL) ||
-		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT), EM_GETMODIFY, NULL, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT), EM_GETMODIFY, NULL, NULL) ||
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_LEFT_EDIT), EM_GETMODIFY, NULL, NULL) || 
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT), EM_GETMODIFY, NULL, NULL) ||
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT), EM_GETMODIFY, NULL, NULL) ||
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT), EM_GETMODIFY, NULL, NULL);
+}
+
+/*
+	//TODO: Comment
+*/
+BOOL MonitorTab::InitPosLeft(CONST UINT x, CONST UINT y) {
+	HDC hdcMem = CreateCompatibleDC(NULL);
+	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
+	SIZE size;
+	GetTextExtentPoint32(hdcMem, EDITTEXT_POSITION_LEFT, lstrlen(EDITTEXT_POSITION_LEFT), &size);
+	DeleteDC(hdcMem);
+
+	HWND hText = CreateWindow(
+		WC_STATIC, EDITTEXT_POSITION_LEFT,
+		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
+		x, y,
+		size.cx, 20,
+		m_hDisplayCtrl,
+		NULL,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+	HWND hEdit = CreateWindow(
+		WC_EDIT, L"",
+		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
+		x + size.cx + 5, y,
+		50, 20,
+		m_hDisplayCtrl,
+		(HMENU)m_CONTROL_ID::POSITION_LEFT_EDIT,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_LEFT_EDIT, m_monitor->GetPosLeft(), FALSE);
+
+	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
+}
+
+/*
+	//TODO: Comment
+*/
+BOOL MonitorTab::InitPosRight(CONST UINT x, CONST UINT y) {
+	HDC hdcMem = CreateCompatibleDC(NULL);
+	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
+	SIZE size;
+	GetTextExtentPoint32(hdcMem, EDITTEXT_POSITION_RIGHT, lstrlen(EDITTEXT_POSITION_RIGHT), &size);
+	DeleteDC(hdcMem);
+
+	HWND hText = CreateWindow(
+		WC_STATIC, EDITTEXT_POSITION_RIGHT,
+		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
+		x, y,
+		size.cx, 20,
+		m_hDisplayCtrl,
+		NULL,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+	HWND hEdit = CreateWindow(
+		WC_EDIT, L"",
+		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
+		x + size.cx + 5, y,
+		50, 20,
+		m_hDisplayCtrl,
+		(HMENU)m_CONTROL_ID::POSITION_RIGHT_EDIT,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT, m_monitor->GetPosRight(), FALSE);
+
+	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
+}
+
+/*
+	//TODO: Comment
+*/
+BOOL MonitorTab::InitPosTop(CONST UINT x, CONST UINT y) {
+	HDC hdcMem = CreateCompatibleDC(NULL);
+	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
+	SIZE size;
+	GetTextExtentPoint32(hdcMem, EDITTEXT_POSITION_TOP, lstrlen(EDITTEXT_POSITION_TOP), &size);
+	DeleteDC(hdcMem);
+
+	HWND hText = CreateWindow(
+		WC_STATIC, EDITTEXT_POSITION_TOP,
+		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
+		x, y,
+		size.cx, 20,
+		m_hDisplayCtrl,
+		NULL,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+	HWND hEdit = CreateWindow(
+		WC_EDIT, L"",
+		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
+		x + size.cx + 5, y,
+		50, 20,
+		m_hDisplayCtrl,
+		(HMENU)m_CONTROL_ID::POSITION_TOP_EDIT,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT, m_monitor->GetPosTop(), FALSE);
+
+	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
+}
+
+/*
+	//TODO: Comment
+*/
+BOOL MonitorTab::InitPosBottom(CONST UINT x, CONST UINT y) {
+	HDC hdcMem = CreateCompatibleDC(NULL);
+	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
+	SIZE size;
+	GetTextExtentPoint32(hdcMem, EDITTEXT_POSITION_BOTTOM, lstrlen(EDITTEXT_POSITION_BOTTOM), &size);
+	DeleteDC(hdcMem);
+
+	HWND hText = CreateWindow(
+		WC_STATIC, EDITTEXT_POSITION_BOTTOM,
+		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
+		x, y,
+		size.cx, 20,
+		m_hDisplayCtrl,
+		NULL,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+	HWND hEdit = CreateWindow(
+		WC_EDIT, L"",
+		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
+		x + size.cx + 5, y,
+		50, 20,
+		m_hDisplayCtrl,
+		(HMENU)m_CONTROL_ID::POSITION_BOTTOM_EDIT,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, m_monitor->GetPosBottom(), FALSE);
+
+	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
 }

@@ -23,6 +23,7 @@ private:
 	UINT8 m_posX = 0, m_posY = 0; //The horizontal and position of the monitor in the position of the setup (left to right and top to bottom)
 	UINT m_nLedsLeft = 0, m_nLedsRight = 0;
 	UINT m_nLedsTop = 0, m_nLedsBottom = 0;
+	UINT m_posLeft = 0, m_posRight = 0, m_posTop = 0, m_posBottom = 0;
 
 	static BOOL CALLBACK GetMonitorProc(HMONITOR hMonitor, HDC hdcMonitor,
 		LPRECT lprcMonitor, LPARAM dwData);
@@ -33,6 +34,10 @@ public:
 	//Set-functions
 	inline VOID SetPosX(UINT8 posX) { m_posX = posX; };
 	inline VOID SetPosY(UINT8 posY) { m_posY = posY; };
+	inline VOID SetPosLeft(UINT8 posLeft) { m_posLeft = posLeft; };
+	inline VOID SetPosRight(UINT8 posRight) { m_posRight = posRight; };
+	inline VOID SetPosTop(UINT8 posTop) { m_posTop = posTop; };
+	inline VOID SetPosBottom(UINT8 posBottom) { m_posBottom = posBottom; };
 	inline VOID SetLeftLeds(UINT nLeds) { m_nLedsLeft = nLeds; };
 	inline VOID SetRightLeds(UINT nLeds) { m_nLedsRight = nLeds; };
 	inline VOID SetTopLeds(UINT nLeds) { m_nLedsTop = nLeds; };
@@ -44,6 +49,10 @@ public:
 	//Get-functions
 	inline UINT8 GetPosX() CONST { return m_posX; };
 	inline UINT8 GetPosY() CONST { return m_posY; };
+	inline UINT8 GetPosLeft() CONST { return m_posLeft; };
+	inline UINT8 GetPosRight() CONST { return m_posRight; };
+	inline UINT8 GetPosTop() CONST { return m_posTop; };
+	inline UINT8 GetPosBottom() CONST { return m_posBottom; };
 	inline UINT GetLeftLeds() CONST { return m_nLedsLeft; };
 	inline UINT GetRightLeds() CONST { return m_nLedsRight; };
 	inline UINT GetTopLeds() CONST { return m_nLedsTop; };
