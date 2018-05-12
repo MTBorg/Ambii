@@ -12,10 +12,26 @@
 
 #define TEXTLINE_HEIGHT 17
 
+#define EDITTEXT_LEDS_LEFT L"LEDs left:"
+#define EDITTEXT_LEDS_RIGHT L"LEDs right:"
+#define EDITTEXT_LEDS_TOP L"LEDs top:"
+#define EDITTEXT_LEDS_BOTTOM L"LEDs bottom:"
+#define EDITTEXT_POSITION_HORZ L"Horizontal position:"
+#define EDITTEXT_POSITION_VERT L"Vertical position:"
 #define EDITTEXT_POSITION_LEFT L"Left side position:"
 #define EDITTEXT_POSITION_RIGHT L"Right side position:"
 #define EDITTEXT_POSITION_TOP L"Top side position:"
 #define EDITTEXT_POSITION_BOTTOM L"Bottom side position:"
+
+#define POSITION_TEXT_X 150
+#define POSITION_EDIT_X 250
+#define POSITION_EDIT_WIDTH 25
+#define LED_TEXT_X 0
+#define LED_EDIT_X 65
+#define LED_EDIT_WIDTH 50
+
+HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x, CONST UINT y);
+HWND InitEditCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height, CONST HMENU id);
 
 /*
 	Creates the monitor tab.
@@ -57,253 +73,80 @@ BOOL MonitorTab::Create(CONST HWND hTabCtrl, Monitor * CONST monitor) {
 }
 
 /*
-	Initialzies the controls of the monitor tab.
+	Initializes the controls of the monitor tab.
 
 	@return TRUE if all controls were created successfully, otherwise FALSE.
 */
 BOOL MonitorTab::InitControls() {
 
-	CONST UINT8 textSize = 110;
-
-	InitLedsLeft(0, 0);
-	InitLedsRight(0, 25);
-	InitLedsTop(0, 50);
-	InitLedsBottom(0, 75);
-	InitPosLeft(150, 0);
-	InitPosRight(150, 20);
-	InitPosTop(150, 40);
-	InitPosBottom(150, 60);
-	InitPositionHorz(0, 125, textSize, TEXTLINE_HEIGHT);
-	InitPositionVert(0, 150, textSize, TEXTLINE_HEIGHT);
-
-	return TRUE;
-}
-
-/*
-	Initializes the "LEDs left: " text and edit control.
-
-	@param x: horizontal position.
-	@param y: vertical position.
-
-	@return TRUE if the controls are successfully created, otherwise FALSE.
-*/
-BOOL MonitorTab::InitLedsLeft(CONST INT x, CONST INT y) {
-	CONST UINT8 textWidth = 50;
-
-	HWND hText = CreateWindow(
-		WC_STATIC, L"LEDs left: ",
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		textWidth, 25,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | ES_NUMBER | WS_BORDER,
-		x + textWidth + 5, y,
-		25, 18,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::LEDS_LEFT_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)3, NULL);
+	//LEDs
+	//////////////////////////////////////////////////
+	//Left
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_LEDS_LEFT, LED_TEXT_X, 0 * TEXTLINE_HEIGHT);
+	HWND hLedsLeft = InitEditCtrl(m_hDisplayCtrl, LED_EDIT_X, 0 * TEXTLINE_HEIGHT, LED_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::LEDS_LEFT_EDIT);
+	SendMessage(hLedsLeft, EM_SETLIMITTEXT, 3, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_LEFT_EDIT, m_monitor->GetLeftLeds(), FALSE);
 
-	if (hEdit == NULL) {
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
-/*
-	Initializes the "LEDs right" text and edit control.
-
-	@param x: The horizontal position.
-	@param y: The vertical position.
-
-	@return TRUE if the controls are successfully created, otherwise FALSE.
-*/
-BOOL MonitorTab::InitLedsRight(CONST INT x, CONST INT y) {
-	CONST UINT8 textWidth = 55;
-	HWND hText = CreateWindow(
-		WC_STATIC, L"LEDs right: ",
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		textWidth, 25,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER ,
-		x + textWidth + 5, y,
-		25, 18,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::LEDS_RIGHT_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)3, NULL);
+	//Right
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_LEDS_RIGHT, LED_TEXT_X, 1 * TEXTLINE_HEIGHT);
+	HWND hLedsRight = InitEditCtrl(m_hDisplayCtrl, LED_EDIT_X, 1 * TEXTLINE_HEIGHT, LED_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::LEDS_RIGHT_EDIT);
+	SendMessage(hLedsLeft, EM_SETLIMITTEXT, 3, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_RIGHT_EDIT, m_monitor->GetRightLeds(), FALSE);
 
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
-}
-
-/*
-	Initializes the "LEDs top" text and edit control.
-
-	@param x: The horizontal position.
-	@param y: The vertical position.
-
-	@return TRUE if the controls are successfully created, otherwise FALSE.
-*/
-BOOL MonitorTab::InitLedsTop(CONST INT x, CONST INT y) {
-	CONST INT textWidth = 55;
-	HWND hText = CreateWindow(
-		WC_STATIC, L"LEDs top: ",
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		textWidth, 25,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + textWidth + 5, y,
-		25, 18,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::LEDS_TOP_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)3, NULL);
+	//Top
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_LEDS_TOP, LED_TEXT_X, 2 * TEXTLINE_HEIGHT);
+	HWND hLedsTop = InitEditCtrl(m_hDisplayCtrl, LED_EDIT_X, 2 * TEXTLINE_HEIGHT, LED_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::LEDS_TOP_EDIT);
+	SendMessage(hLedsLeft, EM_SETLIMITTEXT, 3, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT, m_monitor->GetTopLeds(), FALSE);
 
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
-}
-
-/*
-	Initializes the "LEDs bottom" text and edit control.
-
-	@param x: The horizontal position.
-	@param y: The vertical position.
-
-	@return TRUE if the controls are successfully created, otherwise FALSE.
-*/
-BOOL MonitorTab::InitLedsBottom(CONST INT x, CONST INT y) {
-	CONST UINT8 textWidth = 70;
-	HWND hText = CreateWindow(
-		WC_STATIC, L"LEDs bottom: ",
-		WS_CHILD | WS_VISIBLE| SS_SIMPLE,
-		x, y,
-		100, 18,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + textWidth + 5, y,
-		25, 18,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::LEDS_BOTTOM_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)3, NULL);
+	//Bottom
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_LEDS_BOTTOM, LED_TEXT_X, 3 * TEXTLINE_HEIGHT);
+	HWND hLedsBottom = InitEditCtrl(m_hDisplayCtrl, LED_EDIT_X, 3 * TEXTLINE_HEIGHT, LED_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::LEDS_BOTTOM_EDIT);
+	SendMessage(hLedsLeft, EM_SETLIMITTEXT, 3, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT, m_monitor->GetBottomLeds(), FALSE);
+	////////////////////////////////////////////////
 
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
-}
 
-/*
-	Initializes the position text and edit control for the horizontal position setting.
 
-	@param x: The horizontal position.
-	@param y: The vertical position.
-	@param textHeight: The height of the text and edit control.
+	//Positions
+	////////////////////////////////////////////
+	//Left
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_POSITION_LEFT, POSITION_TEXT_X, 0 * TEXTLINE_HEIGHT);
+	HWND hPosLeft = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 0 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_LEFT_EDIT);
+	SendMessage(hPosLeft, EM_SETLIMITTEXT, 2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_LEFT_EDIT, m_monitor->GetPosLeft(), FALSE);
 
-	@return TRUE if the controls are successfully created, otherwise FALSE.
-*/
-BOOL MonitorTab::InitPositionHorz(CONST INT x, CONST INT y, CONST UINT textWidth, CONST UINT textHeight) {
-	HWND hText = CreateWindow(
-		WC_STATIC, L"Horizontal position: ",
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		textWidth, textHeight,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+	//Right
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_POSITION_RIGHT, POSITION_TEXT_X, 1 * TEXTLINE_HEIGHT);
+	HWND hPosRight = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 1 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_RIGHT_EDIT);
+	SendMessage(hPosRight, EM_SETLIMITTEXT, 2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT, m_monitor->GetPosRight(), FALSE);
 
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + textWidth + 5, y,
-		25, textHeight,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::POSITION_HORZ_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
+	//Top
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_POSITION_TOP, POSITION_TEXT_X, 2 * TEXTLINE_HEIGHT);
+	HWND hPosTop = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 2 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_TOP_EDIT);
+	SendMessage(hPosTop, EM_SETLIMITTEXT, 2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT, m_monitor->GetPosTop(), FALSE);
+
+	//Bottom
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_POSITION_BOTTOM, POSITION_TEXT_X, 3 * TEXTLINE_HEIGHT);
+	HWND hPosBottom = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 3 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_BOTTOM_EDIT);
+	SendMessage(hPosBottom, EM_SETLIMITTEXT, 2, NULL);
+	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, m_monitor->GetPosBottom(), FALSE);
+
+	//Horizontal
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_POSITION_HORZ, POSITION_TEXT_X, 4 * TEXTLINE_HEIGHT);
+	HWND hPosHorz = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 4 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_HORZ_EDIT);
+	SendMessage(hPosHorz, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT, m_monitor->GetPosX(), FALSE);
 
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
-}
-
-/*
-	Initializes the position text and edit control for the vertical position setting.
-
-	@param x: The horizontal position.
-	@param y: The vertical position.
-	@param textHeight: The height of the text and edit control.
-
-	@return TRUE if the controls are successfully created, otherwise FALSE.
-*/
-BOOL MonitorTab::InitPositionVert(CONST INT x, CONST INT y, CONST UINT textWidth, CONST UINT textHeight) {
-	HWND hText = CreateWindow(
-		WC_STATIC, L"Vertical position: ",
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		textWidth, textHeight,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + textWidth + 5, y,
-		25, textHeight,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::POSITION_VERT_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
+	//Vertical
+	InitTextCtrl(m_hDisplayCtrl, EDITTEXT_POSITION_VERT, POSITION_TEXT_X, 5 * TEXTLINE_HEIGHT);
+	HWND hPosVert = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 5 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_VERT_EDIT);
+	SendMessage(hPosVert, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT, m_monitor->GetPosY(), FALSE);
-
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
+	////////////////////////////////////////////////////
+	return TRUE;
 }
 
 /*
@@ -400,118 +243,8 @@ BOOL MonitorTab::Modified() {
 /*
 	//TODO: Comment
 */
-BOOL MonitorTab::InitPosLeft(CONST UINT x, CONST UINT y) {
-	HDC hdcMem = CreateCompatibleDC(NULL);
-	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
-	SIZE size;
-	GetTextExtentPoint32(hdcMem, EDITTEXT_POSITION_LEFT, lstrlen(EDITTEXT_POSITION_LEFT), &size);
-	DeleteDC(hdcMem);
-
-	HWND hText = CreateWindow(
-		WC_STATIC, EDITTEXT_POSITION_LEFT,
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		size.cx, 20,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + size.cx + 5, y,
-		50, 20,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::POSITION_LEFT_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
-	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_LEFT_EDIT, m_monitor->GetPosLeft(), FALSE);
-
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
-}
-
-/*
-	//TODO: Comment
-*/
-BOOL MonitorTab::InitPosRight(CONST UINT x, CONST UINT y) {
-	HDC hdcMem = CreateCompatibleDC(NULL);
-	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
-	SIZE size;
-	GetTextExtentPoint32(hdcMem, EDITTEXT_POSITION_RIGHT, lstrlen(EDITTEXT_POSITION_RIGHT), &size);
-	DeleteDC(hdcMem);
-
-	HWND hText = CreateWindow(
-		WC_STATIC, EDITTEXT_POSITION_RIGHT,
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		size.cx, 20,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + size.cx + 5, y,
-		50, 20,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::POSITION_RIGHT_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
-	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT, m_monitor->GetPosRight(), FALSE);
-
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
-}
-
-/*
-	//TODO: Comment
-*/
-BOOL MonitorTab::InitPosTop(CONST UINT x, CONST UINT y) {
-	HDC hdcMem = CreateCompatibleDC(NULL);
-	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
-	SIZE size;
-	GetTextExtentPoint32(hdcMem, EDITTEXT_POSITION_TOP, lstrlen(EDITTEXT_POSITION_TOP), &size);
-	DeleteDC(hdcMem);
-
-	HWND hText = CreateWindow(
-		WC_STATIC, EDITTEXT_POSITION_TOP,
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		size.cx, 20,
-		m_hDisplayCtrl,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + size.cx + 5, y,
-		50, 20,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::POSITION_TOP_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
-	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT, m_monitor->GetPosTop(), FALSE);
-
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
-}
-
-/*
-	//TODO: Comment
-*/
-BOOL MonitorTab::InitPosBottom(CONST UINT x, CONST UINT y) {
+CONST HWND MonitorTab::InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x, CONST UINT y) {
+	//Create a DC in memory to hold the font
 	HDC hdcMem = CreateCompatibleDC(NULL);
 	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
 	SIZE size;
@@ -519,28 +252,34 @@ BOOL MonitorTab::InitPosBottom(CONST UINT x, CONST UINT y) {
 	DeleteDC(hdcMem);
 
 	HWND hText = CreateWindow(
-		WC_STATIC, EDITTEXT_POSITION_BOTTOM,
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
+		WC_STATIC,
+		text,
+		WS_CHILD | WS_VISIBLE,
 		x, y,
-		size.cx, 20,
-		m_hDisplayCtrl,
+		size.cx, size.cy,
+		hWndParent,
 		NULL,
 		GetModuleHandle(NULL),
 		NULL);
 	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
 
+	return hText;
+}
+
+/*
+	//TODO: Comment
+*/
+CONST HWND MonitorTab::InitEditCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height, CONST HMENU id) {
 	HWND hEdit = CreateWindow(
 		WC_EDIT, L"",
 		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + size.cx + 5, y,
-		50, 20,
-		m_hDisplayCtrl,
-		(HMENU)m_CONTROL_ID::POSITION_BOTTOM_EDIT,
+		x, y,
+		width, height,
+		hWndParent,
+		id,
 		GetModuleHandle(NULL),
 		NULL);
 	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)2, NULL);
-	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, m_monitor->GetPosBottom(), FALSE);
 
-	return (hEdit != NULL) && (hText != NULL); //Return TRUE if both controls were created successfully
+	return hEdit;
 }

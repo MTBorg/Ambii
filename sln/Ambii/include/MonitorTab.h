@@ -34,16 +34,8 @@ private:
 	Monitor * m_monitor;
 
 	BOOL InitControls();
-	BOOL InitLedsLeft(CONST INT x, CONST INT y);
-	BOOL InitLedsRight(CONST INT x, CONST INT y);
-	BOOL InitLedsTop(CONST INT x, CONST INT y);
-	BOOL InitLedsBottom(CONST INT x, CONST INT y);
-	BOOL InitPosLeft(CONST UINT x, CONST UINT y);
-	BOOL InitPosRight(CONST UINT x, CONST UINT y);
-	BOOL InitPosTop(CONST UINT x, CONST UINT y);
-	BOOL InitPosBottom(CONST UINT x, CONST UINT y);
-	BOOL InitPositionHorz(CONST INT x, CONST INT y, CONST UINT textWidth, CONST UINT textHeight);
-	BOOL InitPositionVert(CONST INT x, CONST INT y, CONST UINT textWidth, CONST UINT textHeight);
+	CONST HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x, CONST UINT y);
+	CONST HWND InitEditCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height, CONST HMENU id);
 public:
 	VOID Show();
 	VOID Hide();
