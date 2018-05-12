@@ -28,7 +28,11 @@ private:
 		POSITION_LEFT_EDIT,
 		POSITION_RIGHT_EDIT,
 		POSITION_TOP_EDIT,
-		POSITION_BOTTOM_EDIT
+		POSITION_BOTTOM_EDIT,
+		CLOCKWISE_LEFT,
+		CLOCKWISE_RIGHT,
+		CLOCKWISE_TOP,
+		CLOCKWISE_BOTTOM
 	};
 	HWND m_hDisplayCtrl;
 	Monitor * m_monitor;
@@ -36,6 +40,7 @@ private:
 	BOOL InitControls();
 	CONST HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x, CONST UINT y);
 	CONST HWND InitEditCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height, CONST HMENU id);
+	CONST HWND MonitorTab::InitCheckboxCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST LPCWSTR text, CONST HMENU id);
 public:
 	VOID Show();
 	VOID Hide();

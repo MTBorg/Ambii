@@ -33,6 +33,11 @@ CONST LPCWSTR RegistryHandler::m_valueNames::USEONLYPRIMARY = L"Use only primary
 CONST LPCWSTR RegistryHandler::m_valueNames::PORTNUM = L"Port number";
 CONST LPCWSTR RegistryHandler::m_valueNames::BAUDRATE = L"Baud Rate";
 CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE = L"Clockwise";
+CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_LEFT = L"Left side clockwise";
+CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_RIGHT = L"Right side clockwise";
+CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_TOP = L"Top side clockwise";
+CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_BOTTOM = L"Bottom side clockwise";
+
 
 /*
 	Stores the monitor specified by parameter monitor in the registry.
@@ -94,6 +99,12 @@ VOID RegistryHandler::StoreMonitor(CONST HKEY hKeyApp, CONST Monitor& monitor) {
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_RIGHT, monitor.GetPosRight());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_TOP, monitor.GetPosTop());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_BOTTOM, monitor.GetPosBottom());
+
+		StoreValueBool(hKeyMonitor, m_valueNames::CLOCKWISE_LEFT, monitor.GetClockwiseLeft());
+		StoreValueBool(hKeyMonitor, m_valueNames::CLOCKWISE_RIGHT, monitor.GetClockwiseRight());
+		StoreValueBool(hKeyMonitor, m_valueNames::CLOCKWISE_TOP, monitor.GetClockwiseTop());
+		StoreValueBool(hKeyMonitor, m_valueNames::CLOCKWISE_BOTTOM, monitor.GetClockwiseBottom());
+
 
 		//Close retrieved handle
 		RegCloseKey(hKeyMonitor);
@@ -284,6 +295,13 @@ Monitor RegistryHandler::GetMonitor(CONST HKEY hKeyApp, CONST LPCWSTR monitorKey
 		monitor.SetPosRight((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_RIGHT));
 		monitor.SetPosTop((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_TOP));
 		monitor.SetPosBottom((UINT8)GetValueDWord(hKeyApp, monitorKeyName, m_valueNames::POSITION_BOTTOM));
+
+		//Get clockwise-booleans
+		monitor.SetClockwiseLeft(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::CLOCKWISE_LEFT));
+		monitor.SetClockwiseTop(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::CLOCKWISE_RIGHT));
+		monitor.SetClockwiseRight(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::CLOCKWISE_TOP));
+		monitor.SetClockwiseBottom(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::CLOCKWISE_BOTTOM));
+
 	}
 	catch (std::wstring errorMsg) {
 		throw wstring(L"Exception in function GetMonitor. Exception: \n") + errorMsg;

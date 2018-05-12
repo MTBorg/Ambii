@@ -24,6 +24,7 @@ private:
 	UINT m_nLedsLeft = 0, m_nLedsRight = 0;
 	UINT m_nLedsTop = 0, m_nLedsBottom = 0;
 	UINT m_posLeft = 0, m_posRight = 0, m_posTop = 0, m_posBottom = 0;
+	BOOL m_clockwiseLeft = FALSE, m_clockwiseRight = FALSE, m_clockwiseTop = FALSE, m_clockwiseBottom = FALSE;
 
 	static BOOL CALLBACK GetMonitorProc(HMONITOR hMonitor, HDC hdcMonitor,
 		LPRECT lprcMonitor, LPARAM dwData);
@@ -32,6 +33,10 @@ public:
 	Monitor();
 
 	//Set-functions
+	inline VOID SetClockwiseLeft(BOOL bClockwise) { m_clockwiseLeft = bClockwise; };
+	inline VOID SetClockwiseRight(BOOL bClockwise) { m_clockwiseRight = bClockwise; };
+	inline VOID SetClockwiseTop(BOOL bClockwise) { m_clockwiseTop = bClockwise; };
+	inline VOID SetClockwiseBottom(BOOL bClockwise) { m_clockwiseBottom = bClockwise; };
 	inline VOID SetPosX(UINT8 posX) { m_posX = posX; };
 	inline VOID SetPosY(UINT8 posY) { m_posY = posY; };
 	inline VOID SetPosLeft(UINT8 posLeft) { m_posLeft = posLeft; };
@@ -47,6 +52,10 @@ public:
 	inline VOID SetMonitorHandle(CONST HMONITOR hMonitor) {if (hMonitor != NULL) m_hMonitor = hMonitor;};
 
 	//Get-functions
+	inline BOOL GetClockwiseLeft() CONST { return m_clockwiseLeft; };
+	inline BOOL GetClockwiseRight() CONST { return m_clockwiseRight; };
+	inline BOOL GetClockwiseTop() CONST { return m_clockwiseTop; };
+	inline BOOL GetClockwiseBottom() CONST { return m_clockwiseBottom; };
 	inline UINT8 GetPosX() CONST { return m_posX; };
 	inline UINT8 GetPosY() CONST { return m_posY; };
 	inline UINT8 GetPosLeft() CONST { return m_posLeft; };

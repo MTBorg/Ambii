@@ -22,6 +22,10 @@
 #define EDITTEXT_POSITION_RIGHT L"Right side position:"
 #define EDITTEXT_POSITION_TOP L"Top side position:"
 #define EDITTEXT_POSITION_BOTTOM L"Bottom side position:"
+#define EDITTEXT_CLOCKWISE_LEFT L"Left side clockwise"
+#define EDITTEXT_CLOCKWISE_RIGHT L"Right side clockwise"
+#define EDITTEXT_CLOCKWISE_TOP L"Top side clockwise"
+#define EDITTEXT_CLOCKWISE_BOTTOM L"Bottom side clockwise"
 
 #define POSITION_TEXT_X 150
 #define POSITION_EDIT_X 250
@@ -29,6 +33,7 @@
 #define LED_TEXT_X 0
 #define LED_EDIT_X 65
 #define LED_EDIT_WIDTH 50
+#define CLOCKWISE_X 300
 
 /*
 	Creates the monitor tab.
@@ -106,7 +111,6 @@ BOOL MonitorTab::InitControls() {
 	////////////////////////////////////////////////
 
 
-
 	//Positions
 	////////////////////////////////////////////
 	//Left
@@ -145,6 +149,23 @@ BOOL MonitorTab::InitControls() {
 	SendMessage(hPosVert, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT, m_monitor->GetPosY(), FALSE);
 	////////////////////////////////////////////////////
+
+	//Clockwise-checkboxes
+	////////////////////////////
+	HWND hCbClockwiseLeft = InitCheckboxCtrl(m_hDisplayCtrl, CLOCKWISE_X, 0 * TEXTLINE_HEIGHT, EDITTEXT_CLOCKWISE_LEFT, (HMENU)m_CONTROL_ID::CLOCKWISE_LEFT);
+	SendMessage(hCbClockwiseLeft, BM_SETCHECK ,m_monitor->GetClockwiseLeft() ? BST_CHECKED : BST_UNCHECKED, NULL);
+
+	HWND hCbClockwiseRight = InitCheckboxCtrl(m_hDisplayCtrl, CLOCKWISE_X, 1 * TEXTLINE_HEIGHT, EDITTEXT_CLOCKWISE_RIGHT, (HMENU)m_CONTROL_ID::CLOCKWISE_RIGHT);
+	SendMessage(hCbClockwiseRight, BM_SETCHECK, m_monitor->GetClockwiseRight() ? BST_CHECKED : BST_UNCHECKED, NULL);
+
+	HWND hCbClockwiseTop = InitCheckboxCtrl(m_hDisplayCtrl, CLOCKWISE_X, 2 * TEXTLINE_HEIGHT, EDITTEXT_CLOCKWISE_TOP, (HMENU)m_CONTROL_ID::CLOCKWISE_TOP);
+	SendMessage(hCbClockwiseTop, BM_SETCHECK, m_monitor->GetClockwiseTop() ? BST_CHECKED : BST_UNCHECKED, NULL);
+
+	HWND hCbClockwiseBottom = InitCheckboxCtrl(m_hDisplayCtrl, CLOCKWISE_X, 3 * TEXTLINE_HEIGHT, EDITTEXT_CLOCKWISE_BOTTOM, (HMENU)m_CONTROL_ID::CLOCKWISE_BOTTOM);
+	SendMessage(hCbClockwiseBottom, BM_SETCHECK, m_monitor->GetClockwiseBottom() ? BST_CHECKED : BST_UNCHECKED, NULL);
+	//////////////////////////////////////////
+
+
 	return TRUE;
 }
 
@@ -201,11 +222,16 @@ BOOL MonitorTab::GetSettings() {
 	UINT posBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, &getSuccess, FALSE);
 	resultSuccess &= getSuccess;
 
+	DWORD clockwiseLeft = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_LEFT), BM_GETCHECK, NULL, NULL);
+	DWORD clockwiseRight = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_RIGHT), BM_GETCHECK, NULL, NULL);
+	DWORD clockwiseTop = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_TOP), BM_GETCHECK, NULL, NULL);
+	DWORD clockwiseBottom = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_BOTTOM), BM_GETCHECK, NULL, NULL);
+
 	//Make sure that no position is the same as any other
-	BOOL equalCheck = equalCheck = ((posLeft == posRight) || (posLeft == posTop) || (posLeft == posBottom)) && (posLeft != 0);
-	equalCheck |= ((posRight == posTop) || (posRight == posBottom)) && (posLeft != 0);
+	BOOL equalCheck = ((posLeft == posRight) || (posLeft == posTop) || (posLeft == posBottom)) && (posLeft != 0);
+	equalCheck |= ((posRight == posTop) || (posRight == posBottom)) && (posRight != 0);
 	equalCheck |= (posTop == posBottom) && (posTop != 0);
-	if (!equalCheck) { //TODO: This should not just return FALSE
+	if (equalCheck) { //TODO: This should not just return FALSE
 		return FALSE;
 	}
 
@@ -221,6 +247,10 @@ BOOL MonitorTab::GetSettings() {
 		m_monitor->SetPosRight(posRight);
 		m_monitor->SetPosTop(posTop);
 		m_monitor->SetPosBottom(posBottom);
+		m_monitor->SetClockwiseLeft(clockwiseLeft);
+		m_monitor->SetClockwiseRight(clockwiseRight);
+		m_monitor->SetClockwiseTop(clockwiseTop);
+		m_monitor->SetClockwiseBottom(clockwiseBottom);
 		return TRUE;
 	}
 	else {
@@ -289,4 +319,29 @@ CONST HWND MonitorTab::InitEditCtrl(CONST HWND hWndParent, CONST UINT x, CONST U
 	SendMessage(hEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
 
 	return hEdit;
+}
+
+/*
+	TODO: Comment
+*/
+CONST HWND MonitorTab::InitCheckboxCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST LPCWSTR text, CONST HMENU id) {
+	//Create a DC in memory to hold the font
+	HDC hdcMem = CreateCompatibleDC(NULL);
+	SelectObject(hdcMem, (HBRUSH)GetStockObject(DEFAULT_GUI_FONT));
+	SIZE size;
+	GetTextExtentPoint32(hdcMem, EDITTEXT_POSITION_BOTTOM, lstrlen(EDITTEXT_POSITION_BOTTOM), &size);
+	DeleteDC(hdcMem);
+
+	HWND hCheckbox = CreateWindow(
+		WC_BUTTON, text,
+		WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX | BS_LEFTTEXT,
+		x, y,
+		size.cx + 2 *GetSystemMetrics(SM_CXMENUCHECK), size.cy,
+		hWndParent,
+		id,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hCheckbox, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+	return hCheckbox;
 }
