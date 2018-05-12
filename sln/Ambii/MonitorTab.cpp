@@ -168,7 +168,7 @@ VOID MonitorTab::Hide() {
 
 	@return TRUE if all settings are retrieved successfully, otherwise FALSE.
 */
-BOOL MonitorTab::GetSettings(){
+BOOL MonitorTab::GetSettings() {
 	BOOL resultSuccess = TRUE, getSuccess = TRUE;
 
 	UINT nLedsLeft = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_LEFT_EDIT, &getSuccess, FALSE);
@@ -200,6 +200,14 @@ BOOL MonitorTab::GetSettings(){
 
 	UINT posBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, &getSuccess, FALSE);
 	resultSuccess &= getSuccess;
+
+	//Make sure that no position is the same as any other
+	BOOL equalCheck = equalCheck = ((posLeft == posRight) || (posLeft == posTop) || (posLeft == posBottom)) && (posLeft != 0);
+	equalCheck |= ((posRight == posTop) || (posRight == posBottom)) && (posLeft != 0);
+	equalCheck |= (posTop == posBottom) && (posTop != 0);
+	if (!equalCheck) { //TODO: This should not just return FALSE
+		return FALSE;
+	}
 
 	//If the input is valid
 	if (resultSuccess) {
