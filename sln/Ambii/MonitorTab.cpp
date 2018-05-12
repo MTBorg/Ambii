@@ -30,9 +30,6 @@
 #define LED_EDIT_X 65
 #define LED_EDIT_WIDTH 50
 
-HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x, CONST UINT y);
-HWND InitEditCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height, CONST HMENU id);
-
 /*
 	Creates the monitor tab.
 
@@ -78,6 +75,8 @@ BOOL MonitorTab::Create(CONST HWND hTabCtrl, Monitor * CONST monitor) {
 	@return TRUE if all controls were created successfully, otherwise FALSE.
 */
 BOOL MonitorTab::InitControls() {
+
+	//TODO: Implement error checking when returning the handles for the controls
 
 	//LEDs
 	//////////////////////////////////////////////////
