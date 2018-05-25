@@ -5,8 +5,13 @@
 #include "SetupGUI.h"
 
 #include <CommCtrl.h>
+#include <Strsafe.h>
 
 #define MONITOR_BORDER_WIDTH 4
+
+#define FILENAME_ARROW L"\\Arrow.bmp"
+#define BMP_ARROW_WIDTH 100
+#define BMP_ARROW_HEIGHT 100
 
 /*
 	Overloaded constructor.
@@ -15,7 +20,6 @@
 */
 SetupGUI::SetupGUI(CONST std::vector<Monitor>& selectedMonitors)
 	: m_selectedMonitors(selectedMonitors) {
-
 }
 
 /*
@@ -59,8 +63,8 @@ VOID SetupGUI::Draw(CONST HWND hWndParent, CONST UINT x, CONST UINT y,
 
 	BitBlt(hdc, x, y, width, height, hdcMem, 0, 0, SRCCOPY);
 
-	DeleteObject(hBmp);
 	DeleteDC(hdcMem);
+	DeleteObject(hBmp);
 	ReleaseDC(hWndParent, hdc);
 }
 
@@ -82,6 +86,34 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	Rectangle(hdc, x, y, x + width, y + MONITOR_BORDER_WIDTH); //Top edge
 	Rectangle(hdc, x, y + height - MONITOR_BORDER_WIDTH, x + width, y + height); //Bottom edge
 	Rectangle(hdc, x + width - MONITOR_BORDER_WIDTH, y, x + width, y + height); //Right edge
-	
+
+	HBITMAP hBmpArrow = LoadBMPFromCD(FILENAME_ARROW);
+	if (hBmpArrow == NULL) {
+		//TODO: Throw exception
+	}
+	HDC hdcBmp = CreateCompatibleDC(hdc);
+	SelectObject(hdcBmp, hBmpArrow);
+
+	BitBlt(hdc, 0, 0, BMP_ARROW_WIDTH, BMP_ARROW_HEIGHT, hdcBmp, 0, 0, SRCCOPY);
+
+	DeleteDC(hdcBmp);
+	DeleteObject(hBmpArrow);
+
+	DeleteObject(hBrush);
+
 	DrawText(hdc, monitor.GetMonitorName().c_str(), lstrlen(monitor.GetMonitorName().c_str()), &monitorRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+}
+
+/*
+	//TODO: Comment
+*/
+CONST HBITMAP SetupGUI::LoadBMPFromCD(CONST LPCWSTR fileName) {
+	WCHAR buffer[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, buffer);
+
+	if (StringCchCat(buffer, MAX_PATH, fileName) != S_OK) {
+		throw L"Exception in function LoadBMPFromCD. Error: Failed to concatenate file path strings.";
+	}
+
+	return (HBITMAP)LoadImage(NULL, buffer, IMAGE_BITMAP, NULL, NULL, LR_LOADFROMFILE); 
 }
