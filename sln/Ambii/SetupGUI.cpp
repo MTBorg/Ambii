@@ -10,8 +10,14 @@
 #define MONITOR_BORDER_WIDTH 4
 
 #define FILENAME_ARROW L"\\Arrow.bmp"
-#define BMP_ARROW_WIDTH 100
-#define BMP_ARROW_HEIGHT 100
+#define FILENAME_LED L"\\LED.bmp"
+
+#define BMP_LED_DISPLAY_WIDTH 20
+#define BMP_LED_DISPLAY_HEIGHT 20
+
+VOID RotateBitmap(CONST HDC hdc, HBITMAP hBmp, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height) {
+
+}
 
 /*
 	Overloaded constructor.
@@ -91,13 +97,59 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	if (hBmpArrow == NULL) {
 		//TODO: Throw exception
 	}
-	HDC hdcBmp = CreateCompatibleDC(hdc);
-	SelectObject(hdcBmp, hBmpArrow);
+	HDC hdcBmpArrow = CreateCompatibleDC(hdc);
+	SelectObject(hdcBmpArrow, hBmpArrow);
+	BITMAP bmpArrow;
+	GetObject(hBmpArrow, sizeof(BITMAP), &bmpArrow);
 
-	BitBlt(hdc, 0, 0, BMP_ARROW_WIDTH, BMP_ARROW_HEIGHT, hdcBmp, 0, 0, SRCCOPY);
+	HBITMAP hBmpLED = LoadBMPFromCD(FILENAME_LED);
+	if (hBmpLED == NULL) {
+		//TODO: Throw exception
+	}
+	HDC hdcBmpLED = CreateCompatibleDC(hdc);
+	SelectObject(hdcBmpLED, hBmpLED);
+	BITMAP bmpLED;
+	GetObject(hBmpLED, sizeof(BITMAP), &bmpLED);
 
-	DeleteDC(hdcBmp);
+	//LEFT side
+	for (UINT i = 0; i < monitor.GetLeftLeds(); i++) {
+		StretchBlt(hdc, x, i * height / monitor.GetLeftLeds(), BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT, hdcBmpLED, 0, 0, bmpLED.bmWidth, bmpLED.bmHeight, SRCCOPY);
+	}
+
+	//RIGHT side
+	for (UINT i = 0; i < monitor.GetRightLeds(); i++) {
+			StretchBlt(hdc,
+				x + width - BMP_LED_DISPLAY_WIDTH, monitor.GetClockwiseRight() ? (y + height - i * height / monitor.GetRightLeds() - BMP_LED_DISPLAY_HEIGHT) : (i * height / monitor.GetRightLeds()),
+				BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT,
+				hdcBmpLED,
+				0, 0,
+				bmpLED.bmWidth, bmpLED.bmHeight,
+				SRCCOPY);
+	}
+
+	//TOP side
+	//TODO: Implement
+
+	//BOTTOM side
+	//TODO: Implement
+
+	/*if (monitor.GetClockwiseLeft()) {
+		rotPt[0] = { LONG(x), LONG(i * height / monitor.GetLeftLeds() + height / monitor.GetLeftLeds()) };
+		rotPt[1] = { LONG(x), LONG(i * height / monitor.GetLeftLeds()) };
+		rotPt[2] = { LONG(x + 10), LONG(i * height / monitor.GetLeftLeds() + height / monitor.GetLeftLeds()) };
+	}
+	else {
+		rotPt[0] = { LONG(x + 10), LONG(i * height / monitor.GetLeftLeds()) };
+		rotPt[1] = { LONG(x + 10), LONG(i * height / monitor.GetLeftLeds() + height / monitor.GetLeftLeds()) };
+		rotPt[2] = { LONG(x), LONG(i * height / monitor.GetLeftLeds()) };
+	}*/
+	//PlgBlt(hdc, rotPt, hdcBmpArrow, 0, 0, bmpArrow.bmWidth, bmpArrow.bmHeight, NULL, NULL, NULL);
+
+
+	DeleteDC(hdcBmpArrow);
 	DeleteObject(hBmpArrow);
+	DeleteDC(hdcBmpLED);
+	DeleteObject(hBmpLED);
 
 	DeleteObject(hBrush);
 
