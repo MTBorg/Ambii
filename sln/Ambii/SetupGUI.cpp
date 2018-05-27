@@ -18,10 +18,6 @@
 #define BMP_ARROW_DISPLAY_WIDTH 20
 #define ARROW_MARGIN 20
 
-VOID RotateBitmap(CONST HDC hdc, HBITMAP hBmp, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height) {
-
-}
-
 /*
 	Overloaded constructor.
 
