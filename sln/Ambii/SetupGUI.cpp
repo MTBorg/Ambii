@@ -14,6 +14,9 @@
 
 #define BMP_LED_DISPLAY_WIDTH 20
 #define BMP_LED_DISPLAY_HEIGHT 20
+#define BMP_ARROW_DISPLAY_HEIGHT 20
+#define BMP_ARROW_DISPLAY_WIDTH 20
+#define ARROW_MARGIN 20
 
 VOID RotateBitmap(CONST HDC hdc, HBITMAP hBmp, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height) {
 
@@ -111,9 +114,31 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	BITMAP bmpLED;
 	GetObject(hBmpLED, sizeof(BITMAP), &bmpLED);
 
+	POINT rotPt[3];
+
 	//LEFT side
 	for (UINT i = 0; i < monitor.GetLeftLeds(); i++) {
-		StretchBlt(hdc, x, i * height / monitor.GetLeftLeds(), BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT, hdcBmpLED, 0, 0, bmpLED.bmWidth, bmpLED.bmHeight, SRCCOPY);
+		StretchBlt(hdc,
+			x, i * height / monitor.GetLeftLeds(),
+			BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT,
+			hdcBmpLED,
+			0, 0,
+			bmpLED.bmWidth, bmpLED.bmHeight,
+			SRCCOPY);
+	}
+	if (monitor.GetLeftLeds()) {
+		if (monitor.GetClockwiseLeft()) {
+			rotPt[0] = { LONG(x + ARROW_MARGIN), LONG(y + height / 2 + BMP_ARROW_DISPLAY_HEIGHT / 2) };
+			rotPt[1] = { LONG(x + ARROW_MARGIN), LONG(y + height / 2 - BMP_ARROW_DISPLAY_HEIGHT / 2) };
+			rotPt[2] = { LONG(x + ARROW_MARGIN + BMP_ARROW_DISPLAY_HEIGHT), LONG(y + height / 2 + BMP_ARROW_DISPLAY_HEIGHT / 2) };
+		}
+		else {
+			rotPt[0] = { LONG(x + ARROW_MARGIN + BMP_ARROW_DISPLAY_HEIGHT), LONG(y + height / 2 - BMP_ARROW_DISPLAY_HEIGHT / 2) };
+			rotPt[1] = { LONG(x + ARROW_MARGIN + BMP_ARROW_DISPLAY_HEIGHT), LONG(y + height / 2 + BMP_ARROW_DISPLAY_HEIGHT / 2) };
+			rotPt[2] = { LONG(x + ARROW_MARGIN), LONG(y + height / 2 - BMP_ARROW_DISPLAY_HEIGHT / 2) };
+		}
+
+		PlgBlt(hdc, rotPt, hdcBmpArrow, 0, 0, bmpArrow.bmWidth, bmpArrow.bmHeight, NULL, NULL, NULL);
 	}
 
 	//RIGHT side
@@ -126,25 +151,67 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 				bmpLED.bmWidth, bmpLED.bmHeight,
 				SRCCOPY);
 	}
+	if (monitor.GetRightLeds()) {
+		if (monitor.GetClockwiseRight()) {
+			rotPt[0] = { LONG(x + width - ARROW_MARGIN), LONG(y + height / 2 - BMP_ARROW_DISPLAY_HEIGHT / 2) };
+			rotPt[1] = { LONG(x + width - ARROW_MARGIN), LONG(y + height / 2 + BMP_ARROW_DISPLAY_HEIGHT / 2) };
+			rotPt[2] = { LONG(x + width - ARROW_MARGIN - BMP_ARROW_DISPLAY_WIDTH), LONG(y + height / 2 - BMP_ARROW_DISPLAY_HEIGHT / 2) };
+		}
+		else {
+			rotPt[0] = { LONG(x + width - BMP_ARROW_DISPLAY_HEIGHT - ARROW_MARGIN), LONG(y + height / 2 + BMP_ARROW_DISPLAY_HEIGHT / 2) };
+			rotPt[1] = { LONG(x + width - BMP_ARROW_DISPLAY_HEIGHT - ARROW_MARGIN), LONG(y + height / 2 - BMP_ARROW_DISPLAY_HEIGHT / 2) };
+			rotPt[2] = { LONG(x + width - ARROW_MARGIN), LONG(y + height / 2 + BMP_ARROW_DISPLAY_HEIGHT / 2) };
+		}
+		PlgBlt(hdc, rotPt, hdcBmpArrow, 0, 0, bmpArrow.bmWidth, bmpArrow.bmHeight, NULL, NULL, NULL);
+	}
 
 	//TOP side
-	//TODO: Implement
+	for (UINT i = 0; i < monitor.GetTopLeds(); i++) {
+		StretchBlt(hdc,
+			monitor.GetClockwiseTop() ? x + i * width / monitor.GetTopLeds() : x + width - i * width / monitor.GetTopLeds(), y,
+			BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT,
+			hdcBmpLED,
+			0, 0,
+			bmpLED.bmWidth, bmpLED.bmHeight,
+			SRCCOPY);
+	}	
+	if (monitor.GetTopLeds()) {
+		if (monitor.GetClockwiseTop()) {
+			rotPt[0] = { LONG(x + width / 2 - BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + ARROW_MARGIN)};
+			rotPt[1] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + ARROW_MARGIN)};
+			rotPt[2] = { LONG(x + width / 2 - BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + ARROW_MARGIN + BMP_ARROW_DISPLAY_HEIGHT) };
+		}
+		else {
+			rotPt[0] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + ARROW_MARGIN + BMP_LED_DISPLAY_HEIGHT) };
+			rotPt[1] = { LONG(x + width / 2 - BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + ARROW_MARGIN + BMP_LED_DISPLAY_HEIGHT) };
+			rotPt[2] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + ARROW_MARGIN) };
+		}
+		PlgBlt(hdc, rotPt, hdcBmpArrow, 0, 0, bmpArrow.bmWidth, bmpArrow.bmHeight, NULL, NULL, NULL);
+	}
 
 	//BOTTOM side
-	//TODO: Implement
-
-	/*if (monitor.GetClockwiseLeft()) {
-		rotPt[0] = { LONG(x), LONG(i * height / monitor.GetLeftLeds() + height / monitor.GetLeftLeds()) };
-		rotPt[1] = { LONG(x), LONG(i * height / monitor.GetLeftLeds()) };
-		rotPt[2] = { LONG(x + 10), LONG(i * height / monitor.GetLeftLeds() + height / monitor.GetLeftLeds()) };
+	for (UINT i = 0; i < monitor.GetBottomLeds(); i++) {
+		StretchBlt(hdc,
+			monitor.GetClockwiseBottom() ? x + i * width / monitor.GetBottomLeds() : x + width - i * width / monitor.GetBottomLeds(), y + height - BMP_LED_DISPLAY_HEIGHT,
+			BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT,
+			hdcBmpLED,
+			0, 0,
+			bmpLED.bmWidth, bmpLED.bmHeight,
+			SRCCOPY);
 	}
-	else {
-		rotPt[0] = { LONG(x + 10), LONG(i * height / monitor.GetLeftLeds()) };
-		rotPt[1] = { LONG(x + 10), LONG(i * height / monitor.GetLeftLeds() + height / monitor.GetLeftLeds()) };
-		rotPt[2] = { LONG(x), LONG(i * height / monitor.GetLeftLeds()) };
-	}*/
-	//PlgBlt(hdc, rotPt, hdcBmpArrow, 0, 0, bmpArrow.bmWidth, bmpArrow.bmHeight, NULL, NULL, NULL);
-
+	if (monitor.GetBottomLeds()) {
+		if (monitor.GetClockwiseBottom()) {
+			rotPt[0] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN) };
+			rotPt[1] = { LONG(x + width / 2 - BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN) };
+			rotPt[2] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN - BMP_ARROW_DISPLAY_HEIGHT) };
+		}
+		else {
+			rotPt[0] = { LONG(x + width / 2 - BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN - BMP_ARROW_DISPLAY_HEIGHT) };
+			rotPt[1] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN - BMP_ARROW_DISPLAY_HEIGHT) };
+			rotPt[2] = { LONG(x + width / 2 - BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN) };
+		}
+		PlgBlt(hdc, rotPt, hdcBmpArrow, 0, 0, bmpArrow.bmWidth, bmpArrow.bmHeight, NULL, NULL, NULL);
+	}
 
 	DeleteDC(hdcBmpArrow);
 	DeleteObject(hBmpArrow);
