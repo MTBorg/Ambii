@@ -40,6 +40,7 @@ SetupWnd::SetupWnd(CONST std::vector<Monitor>& selectedMonitors)
 */
 LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	SetupWnd * pObj = (SetupWnd*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+	HWND hTabCtrl;
 	switch (msg) {
 	case WM_CREATE:
 		SetWindowLongPtr(hWnd, GWLP_USERDATA,
@@ -50,8 +51,26 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		case m_CONTROLS_ID::CANCEL_BUTTON:
 			PostMessage(hWnd, WM_CLOSE, NULL, NULL);
 			break;
+		case m_CONTROLS_ID::APPLY_BUTTON:
+			hTabCtrl = GetDlgItem(hWnd, m_CONTROLS_ID::TAB_CTRL); //TODO: GetDlgItem returns NULL on release build
+			for (UINT i = 0; i < (UINT)TabCtrl_GetItemCount(hTabCtrl); i++) {
+				//Get the tab control item
+				TCITEM tcItem = { 0 };
+				tcItem.mask = TCIF_PARAM;
+				if (!TabCtrl_GetItem(hTabCtrl, i, &tcItem)) {
+					//TODO: Handle error
+				}
+
+				MonitorTab *monitorTab = NULL;
+				monitorTab = (MonitorTab*)tcItem.lParam;
+
+				if (!monitorTab->GetSettings()) { //TODO: Try/Catch statement
+					//MessageBox(hWnd, L"Invalid Input!", L"Error", MB_ICONERROR); //TODO: This freezes the program //TODO: Give better error message
+					break;
+				}
+			}
+			break;
 		case m_CONTROLS_ID::SAVE_BUTTON:
-			HWND hTabCtrl;
 			hTabCtrl = GetDlgItem(hWnd, m_CONTROLS_ID::TAB_CTRL); //TODO: GetDlgItem returns NULL on release build
 			for (UINT i = 0; i < (UINT)TabCtrl_GetItemCount(hTabCtrl); i++) {
 				//Get the tab control item
