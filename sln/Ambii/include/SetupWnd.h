@@ -24,10 +24,11 @@ private:
 	enum m_CONTROLS_ID {
 		TAB_CTRL = 1,
 		SAVE_BUTTON,
-		CANCEL_BUTTON
+		CANCEL_BUTTON,
+		APPLY_BUTTON
 	};
     std::vector<MonitorTab> m_monitorTabs;
-	SetupGUI m_setupGUI;
+ 	SetupGUI m_setupGUI;
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg,
 		WPARAM lParam, LPARAM wParam);

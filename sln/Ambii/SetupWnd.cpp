@@ -100,10 +100,12 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		for (UINT i = 0; i < pObj->m_monitorTabs.size(); i++) {
 			bModified = pObj->m_monitorTabs.at(i).Modified();
 			if (bModified) {
-				if (MessageBox(hWnd, L"Settings has been changed, discard changes?", L"Warning",
+
+				//TODO: This message causes the program to freeze. POSSIBLE SOLUTION: Make the window message loop wait for the message box loop to return.
+				/*if (MessageBox(hWnd, L"Settings has been changed, discard changes?", L"Warning",
 					MB_OKCANCEL | MB_ICONASTERISK) == IDOK) {
 					DestroyWindow(hWnd);
-				}
+				}*/
 				break;
 			}
 		}
@@ -223,12 +225,28 @@ VOID SetupWnd::InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y, CONS
 		NULL);
 	SendMessage(hCancelButton, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
 
+	HWND hApplyButton = CreateWindow(
+		WC_BUTTON, L"Apply",
+		WS_CHILD | WS_VISIBLE | BS_CENTER,
+		x + 200, y,
+		width, height,
+		hWndParent,
+		(HMENU)m_CONTROLS_ID::APPLY_BUTTON,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hApplyButton, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+
 	if (hSaveButton == NULL) {
 		throw L"Exception in function InitButtons. Exception: Failed to create button \"Save & Exit\" (NULL handle).";
 	}
 
 	if (hCancelButton == NULL) {
 		throw L"Exception in function InitButtons. Exception: Failed to create button \"Cancel\" (NULL handle).";
+	}
+
+	if (hApplyButton == NULL) {
+		throw L"Exception in function InitButtons. Exception: Failed to create button \"Apply\" (NULL handle).";
 	}
 }
 

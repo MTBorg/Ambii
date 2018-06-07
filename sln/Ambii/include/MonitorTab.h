@@ -13,8 +13,7 @@
 
 #include "Monitor.h"
 
-/*
-	Class responsible for handling all the controls of the monitor tabs.
+/*	Class responsible for handling all the controls of the monitor tabs.
 */
 class MonitorTab {
 private:
