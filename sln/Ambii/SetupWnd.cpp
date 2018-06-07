@@ -184,7 +184,7 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 
 		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
 
-		InitButtons(hWndParent, clientRect.right / 2 - BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		InitButtons(hWndParent, clientRect.right / 2 - 1.5 * BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 	}
 	catch (LPCWSTR str){
 		throw str;
@@ -217,7 +217,7 @@ VOID SetupWnd::InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y, CONS
 	HWND hCancelButton = CreateWindow(
 		WC_BUTTON, L"Cancel",
 		WS_CHILD | WS_VISIBLE | BS_CENTER,
-		x + 100, y,
+		x + width, y,
 		width, height,
 		hWndParent,
 		(HMENU)m_CONTROLS_ID::CANCEL_BUTTON,
@@ -228,7 +228,7 @@ VOID SetupWnd::InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y, CONS
 	HWND hApplyButton = CreateWindow(
 		WC_BUTTON, L"Apply",
 		WS_CHILD | WS_VISIBLE | BS_CENTER,
-		x + 200, y,
+		x + 2 * width, y,
 		width, height,
 		hWndParent,
 		(HMENU)m_CONTROLS_ID::APPLY_BUTTON,
