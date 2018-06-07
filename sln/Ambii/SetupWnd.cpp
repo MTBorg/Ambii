@@ -125,6 +125,7 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 					MB_OKCANCEL | MB_ICONASTERISK) == IDOK) {
 					DestroyWindow(hWnd);
 				}*/
+				DestroyWindow(hWnd); //TODO: Temporary solution to make the close button work until the bug above has been fixed
 				break;
 			}
 		}
