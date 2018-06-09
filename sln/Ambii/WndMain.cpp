@@ -81,6 +81,7 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 			//If multithreadings is activated create a new thread
 			if (pObj->m_settings.m_bMultiThreading) {
 				pObj->m_pUpdateThread = new UpdateThread(hWnd, pObj->m_settings, hMutexSettings);
+				pObj->m_pUpdateThread->Create();
 			}
 		}
 		catch (LPCWSTR errorMsg) {

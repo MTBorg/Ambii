@@ -11,11 +11,7 @@
 #include "OutputThread.h"
 
 /*
-	Constructor for the class. Allocates memory for the thread.
-
-	@param rMonitor: A refrence to the monitor the thread is responsible for.
-	@param hWndMain: A handle to the main window.
-	@param rSettings: A reference to the settings object of the program.
+	//TODO: Comment
 */
 MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWndMain, CONST Settings &rSettings)
 	: m_rMonitor(rMonitor), m_hWndMain(hWndMain), m_rSettings(rSettings), m_arrPixels(NULL)
@@ -23,12 +19,10 @@ MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWndMain, CONST
 }
 
 /*
-	Runs the thread which gets the pixels data off the monitor and calculates and displays the output.
+	//TODO: Comment
 */
 VOID MonitorThread::Run() {
 	m_rMonitor.GetPixels(m_arrPixels);
-
-
 }
 
 /*

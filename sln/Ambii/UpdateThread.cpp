@@ -11,30 +11,28 @@
 #include <time.h>
 
 /*
-	Constructor for the class. Responsible for intializing values and push the monitors into the member vector.
-
-	@param hWnd: A handle to the window.
-	@param rSettings: A reference to the settings object of the program.
-	@param hMutexSettings: A handle to a mutex object used to synchronize data between this thread and the main thread.
+	//TODO: Comment
 */
 UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HANDLE hMutexSettings)
 	: m_hWnd(hWnd), m_rSettings(rSettings), m_hMutexSettings(hMutexSettings)
 {
-	UINT nLeds = 0;
+	m_monitorThreads.clear();
+	m_monitorThreads.reserve(rSettings.m_usedMonitors.size());
+	UINT nLeds = 0; //Count the total amount of output values
 	for (CONST auto& monitor : rSettings.m_usedMonitors) {
-		nLeds += monitor.GetLeftLeds();
-		nLeds += monitor.GetRightLeds();
-		nLeds += monitor.GetTopLeds();
-		nLeds += monitor.GetBottomLeds();
+		nLeds += monitor.GetLeftLeds() + monitor.GetRightLeds() + monitor.GetTopLeds() + monitor.GetBottomLeds();
+		m_monitorThreads.push_back(MonitorThread(monitor, hWnd, rSettings));
 	}
 	m_outputValues = std::make_unique<RGBQUAD[]>(nLeds);
 }
 
 /*
-	Runs the update thread that gets the pixels data on displays the screen and caluculates and displays the output.
-
-	@Remark: Note that UpdateSubThreads() has to be called before this function to allocate memory for the sub-threads (monitor threads).
+	//TODO: Comment
 */
 VOID UpdateThread::Run() {
-	
+	HDC hdcWnd = GetDC(m_hWnd);
+	HDC hdcMem = CreateCompatibleDC(hdcWnd);
+
+	DeleteDC(hdcMem);
+	ReleaseDC(m_hWnd, hdcWnd);
 }
