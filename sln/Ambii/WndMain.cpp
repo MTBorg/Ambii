@@ -81,8 +81,6 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 			//If multithreadings is activated create a new thread
 			if (pObj->m_settings.m_bMultiThreading) {
 				pObj->m_pUpdateThread = new UpdateThread(hWnd, pObj->m_settings, hMutexSettings);
-				pObj->m_pUpdateThread->UpdateSubThreads();
-				pObj->m_pUpdateThread->Start();
 			}
 		}
 		catch (LPCWSTR errorMsg) {
@@ -110,21 +108,18 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 		}
 			break;
 		case m_MENU_ITEM::EDIT_SETTINGS:
-			pObj->m_pUpdateThread->Stop();
 			EnableWindow(hWnd, FALSE);
 			if (!SettingsWnd::Create(hWnd, pObj->m_settings)) {
 				MessageBox(hWnd, L"Error creating settings window!", L"Error!", MB_ICONERROR);
 			}
 			break;
 		case m_MENU_ITEM::EDIT_SETUP:
-			pObj->m_pUpdateThread->Stop();
 			EnableWindow(hWnd, FALSE);
 			if (!pObj->m_setupWnd.Create(hWnd, pObj->m_settings.m_usedMonitors)) {
 				MessageBox(hWnd, L"Error creating setup window!", L"Error!", MB_ICONERROR);
 			}
 			break;
 		case m_MENU_ITEM::SERIAL_SELECT:
-			pObj->m_pUpdateThread->Stop();
 			static PortSettingsWnd PortSettingsWnd;
 			PortSettingsWnd.Create(hWnd, pObj->m_settings.m_portNum);
 			break;
@@ -135,11 +130,6 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 		break;
 	case WM_PARENTNOTIFY:
 		SerialHandler::SetBaudRate(pObj->m_settings.m_portNum, pObj->m_settings.m_nBaudRate); //TODO: This should not be here
-
-		if (pObj->m_settings.m_bMultiThreading) {
-			pObj->m_pUpdateThread->UpdateSubThreads();
-			pObj->m_pUpdateThread->Start();
-		}
 
 		//Bring window to foreground
 		EnableWindow(hWnd, TRUE);
@@ -153,7 +143,6 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 			MessageBox(hWnd, errorMsg.c_str(), L"Error!", MB_ICONERROR);
 		}
 
-		pObj->m_pUpdateThread->Stop();
 		WaitForSingleObject(pObj->m_hUpdateThread, INFINITE); //Wait for the update thread to finish
 		CloseHandle(hMutexSettings);
 		PostQuitMessage(0);
