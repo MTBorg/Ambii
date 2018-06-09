@@ -25,7 +25,7 @@ private:
 	CONST HWND m_hWnd;
 	CONST Settings &m_rSettings;
 	std::vector<MonitorThread> m_vpMonitorThreads;
-	std::unique_ptr<RGBQUAD> m_output;
+	std::unique_ptr<RGBQUAD[]> m_outputValues;
 	CONST HANDLE m_hMutexSettings;
 
 	VOID Run();

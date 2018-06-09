@@ -20,7 +20,14 @@
 UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HANDLE hMutexSettings)
 	: m_hWnd(hWnd), m_rSettings(rSettings), m_hMutexSettings(hMutexSettings)
 {
-
+	UINT nLeds = 0;
+	for (CONST auto& monitor : rSettings.m_usedMonitors) {
+		nLeds += monitor.GetLeftLeds();
+		nLeds += monitor.GetRightLeds();
+		nLeds += monitor.GetTopLeds();
+		nLeds += monitor.GetBottomLeds();
+	}
+	m_outputValues = std::make_unique<RGBQUAD[]>(nLeds);
 }
 
 /*
