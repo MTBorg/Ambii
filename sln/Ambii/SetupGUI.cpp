@@ -80,12 +80,6 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 0));
 	SelectObject(hdc, hBrush);
 
-	RECT monitorRect;
-	monitorRect.left = x;
-	monitorRect.right = x + width;
-	monitorRect.top = y;
-	monitorRect.bottom = y + height;
-
 	//Draw the monitor edges
 	Rectangle(hdc, x, y, x + MONITOR_BORDER_WIDTH, y + height); //Left edge
 	Rectangle(hdc, x, y, x + width, y + MONITOR_BORDER_WIDTH); //Top edge
@@ -215,6 +209,12 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	DeleteObject(hBmpLED);
 
 	DeleteObject(hBrush);
+
+	RECT monitorRect;
+	monitorRect.left = x;
+	monitorRect.right = x + width;
+	monitorRect.top = y;
+	monitorRect.bottom = y + height;
 
 	DrawText(hdc, monitor.GetMonitorName().c_str(), lstrlen(monitor.GetMonitorName().c_str()), &monitorRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
