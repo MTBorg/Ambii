@@ -24,18 +24,13 @@ class UpdateThread : public Thread {
 private:
 	CONST HWND m_hWnd;
 	CONST Settings &m_rSettings;
-	std::vector<MonitorThread*> m_vpMonitorThreads;
+	std::vector<MonitorThread> m_vpMonitorThreads;
 	std::unique_ptr<RGBQUAD> m_output;
 	CONST HANDLE m_hMutexSettings;
-	BOOL m_bStopped = TRUE;
 
 	VOID Run();
 public:
 	UpdateThread(CONST HWND hWndMain, CONST Settings &pSettings, CONST HANDLE hMutexSettings);
-	
-	VOID Stop();
-	VOID Start();
-
 };
 
 #endif
