@@ -24,16 +24,6 @@ UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HAN
 }
 
 /*
-	Destructor of the class. Deallocates all dynamic memory.
-*/
-UpdateThread::~UpdateThread() {
-	for (auto& pMonitorThread : m_vpMonitorThreads) {
-		delete pMonitorThread;
-		pMonitorThread = NULL;
-	}
-}
-
-/*
 	Runs the update thread that gets the pixels data on displays the screen and caluculates and displays the output.
 
 	@Remark: Note that UpdateSubThreads() has to be called before this function to allocate memory for the sub-threads (monitor threads).
@@ -92,21 +82,4 @@ VOID UpdateThread::Stop() {
 VOID UpdateThread::Start() {
 	m_bStopped = FALSE;
 	Create();
-}
-
-/*
-	Updates the thread's subthreads.
-*/
-VOID UpdateThread::UpdateSubThreads() {
-	for (auto& pMonitorThread : m_vpMonitorThreads) {
-		delete pMonitorThread;
-		pMonitorThread = NULL;
-	}
-
-	m_vpMonitorThreads.clear();
-	m_vpMonitorThreads.reserve(m_rSettings.m_usedMonitors.size());
-
-	for (UINT i = 0; i < m_rSettings.m_usedMonitors.size(); i++) {
-		m_vpMonitorThreads.push_back(new MonitorThread(m_rSettings.m_usedMonitors.at(i), m_hWnd, m_rSettings));
-	}
 }
