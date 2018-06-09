@@ -32,12 +32,9 @@ private:
 	VOID Run();
 public:
 	UpdateThread(CONST HWND hWndMain, CONST Settings &pSettings, CONST HANDLE hMutexSettings);
-	VOID UpdateSubThreads();
 	
 	VOID Stop();
 	VOID Start();
-
-	~UpdateThread();
 
 };
 
