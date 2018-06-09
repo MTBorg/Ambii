@@ -12,6 +12,7 @@
 
 #include <Windows.h>
 #include <vector>
+#include <memory>
 
 #include "Settings.h"
 #include "MonitorThread.h"
@@ -24,6 +25,7 @@ private:
 	CONST HWND m_hWnd;
 	CONST Settings &m_rSettings;
 	std::vector<MonitorThread*> m_vpMonitorThreads;
+	std::unique_ptr<RGBQUAD> m_output;
 	CONST HANDLE m_hMutexSettings;
 	BOOL m_bStopped = TRUE;
 

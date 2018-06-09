@@ -20,14 +20,6 @@
 MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWndMain, CONST Settings &rSettings)
 	: m_rMonitor(rMonitor), m_hWndMain(hWndMain), m_rSettings(rSettings), m_arrPixels(NULL)
 {
-	AllocPixels();
-}
-
-/*
-	Destructor for the class. Deallocates member m_arrPixels.
-*/
-MonitorThread::~MonitorThread(){
-	DeAllocPixels();
 }
 
 /*
@@ -36,34 +28,7 @@ MonitorThread::~MonitorThread(){
 VOID MonitorThread::Run() {
 	m_rMonitor.GetPixels(m_arrPixels);
 
-	//Create a thread to calculate and display the output
-	HANDLE hOutputThread = NULL;
-	OutputThread outputThread(m_hWndMain, m_rMonitor, m_arrPixels, m_rSettings);
-	hOutputThread = outputThread.Create();
 
-	if (m_rSettings.m_bDisplayMonitors)
-		DisplayMonitor();
-
-	//Wait for the thread to finish
-	WaitForSingleObject(hOutputThread, INFINITE);
-
-	//Close the handle to the output thread
-	CloseHandle(hOutputThread);
-}
-
-/*
-	Allocates memory for the pixel array.
-*/
-VOID MonitorThread::AllocPixels() {
-	m_arrPixels = new RGBQUAD[m_rMonitor.GetWidth() * m_rMonitor.GetHeight()];
-}
-
-/*
-	Deallocates the memory for the pixel array.
-*/
-VOID MonitorThread::DeAllocPixels() {
-	delete[] m_arrPixels;
-	m_arrPixels = NULL;
 }
 
 /*

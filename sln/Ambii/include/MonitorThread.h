@@ -27,12 +27,9 @@ private:
 	RGBQUAD * m_arrPixels;
 
 	VOID Run();
-	VOID AllocPixels();
-	VOID DeAllocPixels();
 	VOID DisplayMonitor();
 public:
 	MonitorThread(CONST Monitor &pMonitor, CONST HWND hWndMain, CONST Settings &rSettings);
-	~MonitorThread();
 };
 
 #endif
