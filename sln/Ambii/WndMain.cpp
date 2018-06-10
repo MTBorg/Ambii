@@ -109,6 +109,7 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 		}
 			break;
 		case m_MENU_ITEM::EDIT_SETTINGS:
+			pObj->m_pUpdateThread->Stop();
 			EnableWindow(hWnd, FALSE);
 			if (!SettingsWnd::Create(hWnd, pObj->m_settings)) {
 				MessageBox(hWnd, L"Error creating settings window!", L"Error!", MB_ICONERROR);
@@ -131,6 +132,8 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 		break;
 	case WM_PARENTNOTIFY:
 		SerialHandler::SetBaudRate(pObj->m_settings.m_portNum, pObj->m_settings.m_nBaudRate); //TODO: This should not be here
+
+		pObj->m_pUpdateThread->Create();
 
 		//Bring window to foreground
 		EnableWindow(hWnd, TRUE);

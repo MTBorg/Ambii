@@ -1,7 +1,7 @@
 /*
 	MonitorThread.cpp
 
-	Source file for class MonitorThread
+	Source file for class MonitorThread.
 
 	@author: Martin Terneborg
 */
@@ -13,27 +13,29 @@
 /*
 	//TODO: Comment
 */
-MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWndMain, CONST Settings &rSettings)
-	: m_rMonitor(rMonitor), m_hWndMain(hWndMain), m_rSettings(rSettings), m_arrPixels(NULL)
+MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Settings &rSettings, CONST HDC hdc)
+	: m_rMonitor(rMonitor), m_hWnd(hWnd), m_rSettings(rSettings), m_hdc(hdc)
 {
+	m_arrPixels = std::make_unique<RGBQUAD[]>(rMonitor.GetWidth() * rMonitor.GetHeight());
 }
 
 /*
 	//TODO: Comment
 */
 VOID MonitorThread::Run() {
-	m_rMonitor.GetPixels(m_arrPixels);
+	m_rMonitor.GetPixels(m_arrPixels.get());
+
+	DisplayMonitor();
 }
 
 /*
 	Displays the monitor associated with the thread to the window.
 */
 VOID MonitorThread::DisplayMonitor() {
-	HDC hdcWnd = GetDC(m_hWndMain);
 	HDC hdcMonitor = CreateDC(m_rMonitor.GetDisplayDeviceName().c_str(), NULL, NULL, NULL);
 
 	RECT clientRect;
-	GetClientRect(m_hWndMain, &clientRect);
+	GetClientRect(m_hWnd, &clientRect);
 
 	//Set up the bitmapinfo header
 	BITMAPINFO bmi = { 0 };
@@ -47,14 +49,14 @@ VOID MonitorThread::DisplayMonitor() {
 	bmi.bmiHeader.biYPelsPerMeter = GetDeviceCaps(hdcMonitor, VERTRES) * 1000 / GetDeviceCaps(hdcMonitor, VERTSIZE);
 
 	//Display the screen
-	SetStretchBltMode(hdcWnd, STRETCH_HALFTONE);
-	StretchDIBits(hdcWnd, m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size(), 0,
+	SetStretchBltMode(m_hdc, STRETCH_HALFTONE);
+	StretchDIBits(m_hdc,
+		m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size(), 0, //Horizontal and vertical position of destionation
 		clientRect.right / m_rSettings.m_usedMonitors.size(), clientRect.bottom, //Width and height of destination
-		0, 0,
+		0, 0, //Horizontal and vertical position of source
 		m_rMonitor.GetWidth(), m_rMonitor.GetHeight(), //Width and height of source
-		m_arrPixels,
+		m_arrPixels.get(),
 		&bmi, DIB_RGB_COLORS, SRCCOPY); //Draw to the window
 
-	ReleaseDC(m_hWndMain, hdcWnd);
 	DeleteDC(hdcMonitor);
 }
