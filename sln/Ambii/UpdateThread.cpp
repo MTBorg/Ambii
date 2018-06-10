@@ -14,7 +14,7 @@
 	//TODO: Comment
 */
 UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HANDLE hMutexSettings)
-	: m_hWnd(hWnd), m_rSettings(rSettings), m_hMutexSettings(hMutexSettings)
+	: m_hWnd(hWnd), m_rSettings(rSettings), m_hMutexSettings(hMutexSettings), m_stopped(TRUE)
 {
 	m_monitorThreads.clear();
 	m_monitorThreads.reserve(rSettings.m_usedMonitors.size());
@@ -30,9 +30,30 @@ UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HAN
 	//TODO: Comment
 */
 VOID UpdateThread::Run() {
+	m_stopped = FALSE;
+
 	HDC hdcWnd = GetDC(m_hWnd);
 	HDC hdcMem = CreateCompatibleDC(hdcWnd);
 
+	while (1) {
+		WaitForSingleObject(m_hMutexSettings, INFINITE);
+
+
+
+		ReleaseMutex(m_hMutexSettings);
+
+		if (m_stopped) {
+			break;
+		}
+	}
+
 	DeleteDC(hdcMem);
 	ReleaseDC(m_hWnd, hdcWnd);
+}
+
+/*
+	//TODO: Comment
+*/
+VOID UpdateThread::Stop() {
+	m_stopped = TRUE;
 }

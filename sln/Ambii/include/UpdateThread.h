@@ -27,10 +27,13 @@ private:
 	std::vector<MonitorThread> m_monitorThreads;
 	std::unique_ptr<RGBQUAD[]> m_outputValues;
 	CONST HANDLE m_hMutexSettings;
+	BOOL m_stopped;
 
 	VOID Run();
 public:
 	UpdateThread(CONST HWND hWndMain, CONST Settings &pSettings, CONST HANDLE hMutexSettings);
+
+	VOID Stop();
 };
 
 #endif
