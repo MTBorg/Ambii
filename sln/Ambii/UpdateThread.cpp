@@ -41,7 +41,7 @@ VOID UpdateThread::Run() {
 	}
 
 	m_outputValues = std::make_unique<RGBQUAD[]>(nLeds);
-
+		
 	std::unique_ptr<HANDLE[]> monitorThreadHandles = std::make_unique<HANDLE[]>(m_monitorThreads.size());
 
 	while (TRUE) {

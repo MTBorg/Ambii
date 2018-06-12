@@ -30,6 +30,10 @@ private:
 
 	VOID Run();
 	VOID DisplayMonitor();
+	VOID CalculateLedsLeft();
+	VOID CalculateLedsRight();
+	VOID CalculateLedsTop();
+	VOID CalculateLedsBottom();
 public:
 	MonitorThread(CONST Monitor &pMonitor, CONST HWND hWndMain, CONST Settings &rSettings, CONST HDC hdc);
 };

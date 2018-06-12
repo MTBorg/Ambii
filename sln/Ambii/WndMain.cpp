@@ -116,6 +116,7 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 			}
 			break;
 		case m_MENU_ITEM::EDIT_SETUP:
+			pObj->m_pUpdateThread->Stop();
 			EnableWindow(hWnd, FALSE);
 			if (!pObj->m_setupWnd.Create(hWnd, pObj->m_settings.m_usedMonitors)) {
 				MessageBox(hWnd, L"Error creating setup window!", L"Error!", MB_ICONERROR);
@@ -147,6 +148,7 @@ LRESULT CALLBACK WndMain::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 			MessageBox(hWnd, errorMsg.c_str(), L"Error!", MB_ICONERROR);
 		}
 
+		pObj->m_pUpdateThread->Stop();
 		WaitForSingleObject(pObj->m_hUpdateThread, INFINITE); //Wait for the update thread to finish
 		CloseHandle(hMutexSettings);
 		PostQuitMessage(0);

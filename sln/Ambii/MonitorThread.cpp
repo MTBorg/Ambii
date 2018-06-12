@@ -60,3 +60,31 @@ VOID MonitorThread::DisplayMonitor() {
 
 	DeleteDC(hdcMonitor);
 }
+
+/*
+	//TODO: Comment
+*/
+VOID MonitorThread::CalculateLedsLeft() {
+
+}
+
+/*
+	//TODO: Comment
+*/
+VOID MonitorThread::CalculateLedsRight() {
+
+}
+
+/*
+	//TODO: Comment
+*/
+VOID MonitorThread::CalculateLedsTop() {
+
+}
+
+/*
+	//TODO: Comment
+*/
+VOID MonitorThread::CalculateLedsBottom() {
+
+}
