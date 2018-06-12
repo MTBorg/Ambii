@@ -218,3 +218,31 @@ VOID MonitorThread::CalculateLedsBottom() {
 		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; ////RGBQUAD quad is defined as {b,g,r, reserved}
 	}
 }
+
+/*
+	//TODO: Comment
+*/
+VOID MonitorThread::DisplayLedsLeft() {
+
+}
+
+/*
+	//TODO: Comment
+*/
+VOID MonitorThread::DisplayLedsRight() {
+
+}
+
+/*
+	//TODO: Comment
+*/
+VOID MonitorThread::DisplayLedsTop() {
+
+}
+
+/*
+	//TODO: Comment
+*/
+VOID MonitorThread::DisplayLedsBottom() {
+
+}
