@@ -65,26 +65,156 @@ VOID MonitorThread::DisplayMonitor() {
 	//TODO: Comment
 */
 VOID MonitorThread::CalculateLedsLeft() {
+	RECT clientRect;
+	GetClientRect(m_hWnd, &clientRect);
 
+	UINT monitorWidth = m_rMonitor.GetWidth();
+	UINT monitorHeight = m_rMonitor.GetHeight();
+
+	for (UINT i = 0; i < m_rMonitor.GetLeftLeds(); i++) {
+		UINT rSum = 0, gSum = 0, bSum = 0;
+		for (UINT x = 0; x < m_rSettings.m_sampleSize; x++) {
+			for (UINT y = 0; y < m_rSettings.m_sampleSize; y++) {
+				RGBQUAD p;
+				//If clockwise, the values need to be calculated in a bottom-top order
+				if (m_rSettings.m_bClockwise) {
+					p = GetPixelFromArr(
+						x, monitorHeight - i * monitorHeight / m_rMonitor.GetLeftLeds() - y,
+						m_arrPixels, monitorWidth);
+				}
+				else { //Otherwise the order is top-bottom
+					p = GetPixelFromArr(x, i * monitorHeight / m_rMonitor.GetLeftLeds() + y,
+						m_arrPixels, monitorWidth);
+				}
+				rSum += p.rgbRed;
+				gSum += p.rgbGreen;
+				bSum += p.rgbBlue;
+			}
+		}
+
+		//Calculate the average of the color channels
+		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
+		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
+		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+	}
 }
 
 /*
 	//TODO: Comment
 */
 VOID MonitorThread::CalculateLedsRight() {
+	RECT clientRect;
+	GetClientRect(m_hWnd, &clientRect);
 
+	UINT monitorWidth = m_rMonitor.GetWidth();
+	UINT monitorHeight = m_rMonitor.GetHeight();
+
+	for (UINT i = 0; i < m_rMonitor.GetRightLeds(); i++) {
+		UINT rSum = 0, gSum = 0, bSum = 0;
+		for (UINT x = m_rMonitor.GetWidth() - 1; x > m_rMonitor.GetWidth() - 1 - m_rSettings.m_sampleSize; x--) {
+			for (UINT y = 0; y < m_rSettings.m_sampleSize; y++) {
+				RGBQUAD p;
+				//If clockwise, the values need to be calculated in a top-bottom order
+				if (m_rSettings.m_bClockwise) {
+					p = GetPixelFromArr(
+						x, i * monitorHeight / m_rMonitor.GetRightLeds() + y,
+						m_arrPixels, monitorWidth);
+				}
+				else { //Otherwise the order is bottom-top
+					p = GetPixelFromArr(
+						x, monitorHeight - (i + 1) * monitorHeight / m_rMonitor.GetRightLeds() + y,
+						m_arrPixels, monitorWidth);
+				}
+				rSum += p.rgbRed;
+				gSum += p.rgbGreen;
+				bSum += p.rgbBlue;
+			}
+		}
+
+		//Calculate the average of the color channels
+		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
+		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
+		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+	}
 }
 
 /*
 	//TODO: Comment
 */
 VOID MonitorThread::CalculateLedsTop() {
+	RECT clientRect;
+	GetClientRect(m_hWnd, &clientRect);
 
+	UINT monitorWidth = m_rMonitor.GetWidth();
+	UINT monitorHeight = m_rMonitor.GetHeight();
+
+	for (UINT i = 0; i < m_rMonitor.GetTopLeds(); i++) {
+		UINT rSum = 0, gSum = 0, bSum = 0;
+		for (UINT x = 0; x < m_rSettings.m_sampleSize; x++) {
+			for (UINT y = 0; y < m_rSettings.m_sampleSize; y++) {
+				RGBQUAD p;
+				//If clockwise, the output need to be calculated in a left-right order
+				if (m_rSettings.m_bClockwise) {
+					p = GetPixelFromArr(
+						i * monitorWidth / m_rMonitor.GetTopLeds(), y,
+						m_arrPixels, monitorWidth);
+				}
+				else { //Otherwise the order is right-left
+					p = GetPixelFromArr(
+						monitorWidth - (i + 1) * monitorWidth / m_rMonitor.GetTopLeds(), y,
+						m_arrPixels, monitorWidth);
+				}
+				rSum += p.rgbRed;
+				gSum += p.rgbGreen;
+				bSum += p.rgbBlue;
+			}
+		}
+
+		//Calculate the average of the color channels
+		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
+		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
+		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+	}
 }
 
 /*
 	//TODO: Comment
 */
 VOID MonitorThread::CalculateLedsBottom() {
+	if (m_rMonitor.GetBottomLeds() == 0)
+		return;
 
+	RECT clientRect;
+	GetClientRect(m_hWnd, &clientRect);
+
+	UINT monitorWidth = m_rMonitor.GetWidth();
+	UINT monitorHeight = m_rMonitor.GetHeight();
+
+	for (UINT i = 0; i < m_rMonitor.GetBottomLeds(); i++) {
+		UINT rSum = 0, gSum = 0, bSum = 0;
+		for (UINT x = 0; x < m_rSettings.m_sampleSize; x++) {
+			for (UINT y = m_rMonitor.GetHeight() - 1; y > m_rMonitor.GetHeight() - 1 - m_rSettings.m_sampleSize; y--) {
+				RGBQUAD p;
+				//If clockwise, the values need to be calculated in a right-left order
+				if (m_rSettings.m_bClockwise) {
+					p = GetPixelFromArr(
+						monitorWidth - (i + 1) * monitorWidth / m_rMonitor.GetBottomLeds(), y,
+						m_arrPixels, monitorWidth);
+				}
+				else { //Otherwise the order is left-right
+					p = GetPixelFromArr(
+						i * monitorWidth / m_rMonitor.GetBottomLeds() + x, y,
+						m_arrPixels, monitorWidth);
+				}
+				rSum += p.rgbRed;
+				gSum += p.rgbGreen;
+				bSum += p.rgbBlue;
+			}
+		}
+
+		//Calculate the average of the color channels
+		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
+		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
+		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; ////RGBQUAD quad is defined as {b,g,r, reserved}
+	}
 }
