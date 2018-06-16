@@ -27,6 +27,7 @@ private:
 	CONST Settings &m_rSettings;
 	CONST HDC m_hdc;
 	std::unique_ptr<RGBQUAD[]> m_arrPixels;
+	RGBQUAD * CONST m_output;
 
 	VOID Run();
 	VOID DisplayMonitor();
@@ -38,8 +39,9 @@ private:
 	VOID DisplayLedsRight();
 	VOID DisplayLedsTop();
 	VOID DisplayLedsBottom();
+	inline RGBQUAD GetPixelFromArr(CONST UINT x, CONST UINT y, CONST RGBQUAD *CONST arrPixels, CONST UINT width) { return arrPixels[y * width + x]};
 public:
-	MonitorThread(CONST Monitor &pMonitor, CONST HWND hWndMain, CONST Settings &rSettings, CONST HDC hdc);
+	MonitorThread(CONST Monitor &pMonitor, CONST HWND hWndMain, CONST Settings &rSettings, CONST HDC hdc, RGBQUAD * CONST output);
 };
 
 #endif

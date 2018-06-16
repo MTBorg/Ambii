@@ -13,8 +13,8 @@
 /*
 	//TODO: Comment
 */
-MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Settings &rSettings, CONST HDC hdc)
-	: m_rMonitor(rMonitor), m_hWnd(hWnd), m_rSettings(rSettings), m_hdc(hdc)
+MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Settings &rSettings, CONST HDC hdc, RGBQUAD * CONST output)
+	: m_rMonitor(rMonitor), m_hWnd(hWnd), m_rSettings(rSettings), m_hdc(hdc), m_output(output)
 {
 	m_arrPixels = std::make_unique<RGBQUAD[]>(rMonitor.GetWidth() * rMonitor.GetHeight());
 }
@@ -80,11 +80,11 @@ VOID MonitorThread::CalculateLedsLeft() {
 				if (m_rSettings.m_bClockwise) {
 					p = GetPixelFromArr(
 						x, monitorHeight - i * monitorHeight / m_rMonitor.GetLeftLeds() - y,
-						m_arrPixels, monitorWidth);
+						m_arrPixels.get(), monitorWidth);
 				}
 				else { //Otherwise the order is top-bottom
 					p = GetPixelFromArr(x, i * monitorHeight / m_rMonitor.GetLeftLeds() + y,
-						m_arrPixels, monitorWidth);
+						m_arrPixels.get(), monitorWidth);
 				}
 				rSum += p.rgbRed;
 				gSum += p.rgbGreen;
@@ -95,7 +95,7 @@ VOID MonitorThread::CalculateLedsLeft() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
 	}
 }
 
@@ -118,12 +118,12 @@ VOID MonitorThread::CalculateLedsRight() {
 				if (m_rSettings.m_bClockwise) {
 					p = GetPixelFromArr(
 						x, i * monitorHeight / m_rMonitor.GetRightLeds() + y,
-						m_arrPixels, monitorWidth);
+						m_arrPixels.get(), monitorWidth);
 				}
 				else { //Otherwise the order is bottom-top
 					p = GetPixelFromArr(
 						x, monitorHeight - (i + 1) * monitorHeight / m_rMonitor.GetRightLeds() + y,
-						m_arrPixels, monitorWidth);
+						m_arrPixels.get(), monitorWidth);
 				}
 				rSum += p.rgbRed;
 				gSum += p.rgbGreen;
@@ -134,7 +134,7 @@ VOID MonitorThread::CalculateLedsRight() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
 	}
 }
 
@@ -157,12 +157,12 @@ VOID MonitorThread::CalculateLedsTop() {
 				if (m_rSettings.m_bClockwise) {
 					p = GetPixelFromArr(
 						i * monitorWidth / m_rMonitor.GetTopLeds(), y,
-						m_arrPixels, monitorWidth);
+						m_arrPixels.get(), monitorWidth);
 				}
 				else { //Otherwise the order is right-left
 					p = GetPixelFromArr(
 						monitorWidth - (i + 1) * monitorWidth / m_rMonitor.GetTopLeds(), y,
-						m_arrPixels, monitorWidth);
+						m_arrPixels.get(), monitorWidth);
 				}
 				rSum += p.rgbRed;
 				gSum += p.rgbGreen;
@@ -173,7 +173,7 @@ VOID MonitorThread::CalculateLedsTop() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
 	}
 }
 
@@ -199,12 +199,12 @@ VOID MonitorThread::CalculateLedsBottom() {
 				if (m_rSettings.m_bClockwise) {
 					p = GetPixelFromArr(
 						monitorWidth - (i + 1) * monitorWidth / m_rMonitor.GetBottomLeds(), y,
-						m_arrPixels, monitorWidth);
+						m_arrPixels.get(), monitorWidth);
 				}
 				else { //Otherwise the order is left-right
 					p = GetPixelFromArr(
 						i * monitorWidth / m_rMonitor.GetBottomLeds() + x, y,
-						m_arrPixels, monitorWidth);
+						m_arrPixels.get(), monitorWidth);
 				}
 				rSum += p.rgbRed;
 				gSum += p.rgbGreen;
@@ -215,7 +215,7 @@ VOID MonitorThread::CalculateLedsBottom() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		arrOutput[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; ////RGBQUAD quad is defined as {b,g,r, reserved}
+		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; ////RGBQUAD quad is defined as {b,g,r, reserved}
 	}
 }
 
