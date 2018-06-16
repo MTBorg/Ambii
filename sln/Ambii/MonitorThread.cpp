@@ -10,6 +10,8 @@
 
 #include "OutputThread.h"
 
+#define OUTPUT_SIZE 15
+
 /*
 	//TODO: Comment
 */
