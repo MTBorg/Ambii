@@ -225,17 +225,12 @@ VOID MonitorThread::CalculateLedsBottom() {
 	//TODO: Comment
 */
 VOID MonitorThread::DisplayLedsLeft() {
-	if (m_rMonitor.GetLeftLeds() == 0)
-		return;
-
-	HDC hdcWnd = GetDC(m_hWnd);
-
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetLeftLeds(); i++) {
 		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
-		SelectObject(hdcWnd, hBrush);
+		SelectObject(m_hdc, hBrush);
 		UINT x = m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size();
 
 		UINT y;
@@ -246,28 +241,21 @@ VOID MonitorThread::DisplayLedsLeft() {
 			y = i * clientRect.bottom / m_rMonitor.GetLeftLeds();
 		}
 
-		Rectangle(hdcWnd, x, y, x + OUTPUT_SIZE, y + OUTPUT_SIZE);
+		Rectangle(m_hdc, x, y, x + OUTPUT_SIZE, y + OUTPUT_SIZE);
 		DeleteObject(hBrush);
 	}
-
-	ReleaseDC(m_hWnd, hdcWnd);
 }
 
 /*
 	//TODO: Comment
 */
 VOID MonitorThread::DisplayLedsRight() {
-	if (m_rMonitor.GetRightLeds() == 0)
-		return;
-
-	HDC hdcWnd = GetDC(m_hWnd);
-
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetRightLeds(); i++) {
 		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
-		SelectObject(hdcWnd, hBrush);
+		SelectObject(m_hdc, hBrush);
 		UINT x = (m_rMonitor.GetPosX() + 1) * clientRect.right / m_rSettings.m_usedMonitors.size();
 
 		UINT y;
@@ -278,28 +266,21 @@ VOID MonitorThread::DisplayLedsRight() {
 			y = clientRect.bottom - (i + 1) * clientRect.bottom / m_rMonitor.GetRightLeds();
 		}
 
-		Rectangle(hdcWnd, x - OUTPUT_SIZE, y, x, y + OUTPUT_SIZE);
+		Rectangle(m_hdc, x - OUTPUT_SIZE, y, x, y + OUTPUT_SIZE);
 		DeleteObject(hBrush);
 	}
-
-	ReleaseDC(m_hWnd, hdcWnd);
 }
 
 /*
 	//TODO: Comment
 */
 VOID MonitorThread::DisplayLedsTop() {
-	if (m_rMonitor.GetTopLeds() == 0)
-		return;
-
-	HDC hdcWnd = GetDC(m_hWnd);
-
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetTopLeds(); i++) {
 		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
-		SelectObject(hdcWnd, hBrush);
+		SelectObject(m_hdc, hBrush);
 
 		UINT x;
 		if (m_rSettings.m_bClockwise == TRUE) {
@@ -310,28 +291,21 @@ VOID MonitorThread::DisplayLedsTop() {
 		}
 
 
-		Rectangle(hdcWnd, x, 0, x + OUTPUT_SIZE, OUTPUT_SIZE);
+		Rectangle(m_hdc, x, 0, x + OUTPUT_SIZE, OUTPUT_SIZE);
 		DeleteObject(hBrush);
 	}
-
-	ReleaseDC(m_hWnd, hdcWnd);
 }
 
 /*
 	//TODO: Comment
 */
 VOID MonitorThread::DisplayLedsBottom() {
-	if (m_rMonitor.GetBottomLeds() == 0)
-		return;
-
-	HDC hdcWnd = GetDC(m_hWnd);
-
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetBottomLeds(); i++) {
 		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
-		SelectObject(hdcWnd, hBrush);
+		SelectObject(m_hdc, hBrush);
 
 		UINT x;
 		if (m_rSettings.m_bClockwise == TRUE) {
@@ -341,9 +315,7 @@ VOID MonitorThread::DisplayLedsBottom() {
 			x = i * clientRect.right / m_rMonitor.GetBottomLeds();
 		}
 
-		Rectangle(hdcWnd, x, clientRect.bottom - OUTPUT_SIZE, x + OUTPUT_SIZE, clientRect.bottom);
+		Rectangle(m_hdc, x, clientRect.bottom - OUTPUT_SIZE, x + OUTPUT_SIZE, clientRect.bottom);
 		DeleteObject(hBrush);
 	}
-
-	ReleaseDC(m_hWnd, hdcWnd);
 }
