@@ -15,8 +15,10 @@
 /*
 	//TODO: Comment
 */
-MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Settings &rSettings, CONST HDC hdc, CONST UINT drawWidth, CONST UINT drawHeight, RGBQUAD * CONST output)
-	: m_rMonitor(rMonitor), m_hWnd(hWnd), m_rSettings(rSettings), m_hdc(hdc), m_drawWidth(drawWidth), m_drawHeight(drawHeight), m_output(output)
+MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Settings &rSettings, CONST HDC hdc, CONST UINT drawWidth, CONST UINT drawHeight,
+	RGBQUAD *CONST outputLeft, RGBQUAD *CONST outputRight, RGBQUAD *CONST outputTop, RGBQUAD *CONST outputBottom)
+	: m_rMonitor(rMonitor), m_hWnd(hWnd), m_rSettings(rSettings), m_hdc(hdc), m_drawWidth(drawWidth), m_drawHeight(drawHeight),
+	m_outputLeft(outputLeft), m_outputRight(outputRight), m_outputTop(outputTop), m_outputBottom(outputBottom)
 {
 	m_arrPixels = std::make_unique<RGBQUAD[]>(rMonitor.GetWidth() * rMonitor.GetHeight());
 }
@@ -111,7 +113,7 @@ VOID MonitorThread::CalculateLedsLeft() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+		m_outputLeft[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
 	}
 }
 
@@ -150,7 +152,7 @@ VOID MonitorThread::CalculateLedsRight() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
+		m_outputRight[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
 	}
 }
 
@@ -189,7 +191,7 @@ VOID MonitorThread::CalculateLedsTop() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
+		m_outputTop[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
 	}
 }
 
@@ -231,7 +233,7 @@ VOID MonitorThread::CalculateLedsBottom() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
+		m_outputBottom[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
 	}
 }
 
@@ -247,7 +249,7 @@ VOID MonitorThread::DisplayLedsLeft() {
 		UINT y = m_drawHeight * m_rMonitor.GetPosY() + i * (m_drawHeight - OUTPUT_SIZE) / (m_rMonitor.GetLeftLeds() - 1);
 
 		CONST UINT index = m_rMonitor.GetClockwiseLeft() ? m_rMonitor.GetLeftLeds() - 1 - i : i;
-		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[index].rgbRed, m_output[index].rgbGreen, m_output[index].rgbBlue));
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_outputLeft[index].rgbRed, m_outputLeft[index].rgbGreen, m_outputLeft[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
 		Rectangle(m_hdc, x, y, x + OUTPUT_SIZE, y + OUTPUT_SIZE);
@@ -267,7 +269,7 @@ VOID MonitorThread::DisplayLedsRight() {
 		UINT y = m_drawHeight * m_rMonitor.GetPosY() + i * (m_drawHeight - OUTPUT_SIZE) / (m_rMonitor.GetRightLeds() - 1);
 
 		CONST UINT index = m_rMonitor.GetClockwiseRight() ? i : m_rMonitor.GetRightLeds() - 1 - i;
-		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[index].rgbRed, m_output[index].rgbGreen, m_output[index].rgbBlue));
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_outputRight[index].rgbRed, m_outputRight[index].rgbGreen, m_outputRight[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
 		Rectangle(m_hdc, x - OUTPUT_SIZE, y, x, y + OUTPUT_SIZE);
@@ -285,11 +287,11 @@ VOID MonitorThread::DisplayLedsTop() {
 	for (UINT i = 0; i < m_rMonitor.GetTopLeds(); i++) {
 		UINT x = m_drawWidth * m_rMonitor.GetPosX() + i * (m_drawWidth - OUTPUT_SIZE) / (m_rMonitor.GetTopLeds() - 1);
 
-		CONST UINT index = m_rMonitor.GetTopLeds() ? i : m_rMonitor.GetTopLeds() - 1 - i;
-		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[index].rgbRed, m_output[index].rgbGreen, m_output[index].rgbBlue));
+		CONST UINT index = m_rMonitor.GetClockwiseLeft() ? i : m_rMonitor.GetTopLeds() - 1 - i;
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_outputTop[index].rgbRed, m_outputTop[index].rgbGreen, m_outputTop[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
-		Rectangle(m_hdc, x, m_drawWidth * m_rMonitor.GetPosY(), x + OUTPUT_SIZE, OUTPUT_SIZE);
+		Rectangle(m_hdc, x, m_drawHeight * m_rMonitor.GetPosY(), x + OUTPUT_SIZE, m_drawHeight * m_rMonitor.GetPosY() + OUTPUT_SIZE);
 		DeleteObject(hBrush);
 	}
 }
@@ -305,7 +307,7 @@ VOID MonitorThread::DisplayLedsBottom() {
 		UINT x = m_drawWidth * m_rMonitor.GetPosX() + i * (m_drawWidth - OUTPUT_SIZE) / (m_rMonitor.GetBottomLeds() - 1);
 
 		CONST UINT index = m_rMonitor.GetClockwiseBottom() ? m_rMonitor.GetBottomLeds() - 1 - i : i;
-		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[index].rgbRed, m_output[index].rgbGreen, m_output[index].rgbBlue));
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_outputBottom[index].rgbRed, m_outputBottom[index].rgbGreen, m_outputBottom[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
 		Rectangle(m_hdc, x, m_drawHeight * (m_rMonitor.GetPosY() + 1) - OUTPUT_SIZE, x + OUTPUT_SIZE - 1, m_drawHeight * (m_rMonitor.GetPosY() + 1));

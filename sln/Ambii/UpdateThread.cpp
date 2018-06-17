@@ -48,28 +48,34 @@ VOID UpdateThread::Run() {
 	CONST UINT drawHeight = clientRect.bottom / yMax;
 
 	std::map<UINT8, RGBQUAD*> outputMap;
-	std::vector<std::unique_ptr<RGBQUAD[]>> outputVector;
+	std::vector<std::vector<std::unique_ptr<RGBQUAD[]>>> outputVector;
 	outputVector.resize(m_rSettings.m_usedMonitors.size());
 	for (UINT i = 0; i < m_rSettings.m_usedMonitors.size(); i++) {
 		Monitor monitor = m_rSettings.m_usedMonitors.at(i);
-		outputVector.at(i) = std::make_unique<RGBQUAD[]>(monitor.GetLeftLeds() + monitor.GetRightLeds() + monitor.GetTopLeds() + monitor.GetBottomLeds());
+		outputVector.at(i).resize(4);
+		outputVector.at(i)[0] = std::make_unique<RGBQUAD[]>(monitor.GetLeftLeds());
+		outputVector.at(i)[1] = std::make_unique<RGBQUAD[]>(monitor.GetRightLeds());
+		outputVector.at(i)[2] = std::make_unique<RGBQUAD[]>(monitor.GetTopLeds());
+		outputVector.at(i)[3] = std::make_unique<RGBQUAD[]>(monitor.GetBottomLeds());
+
 		if (monitor.GetLeftLeds() > 0) {
-			outputMap[monitor.GetPosLeft()] = &outputVector.at(i)[0];
+			outputMap[monitor.GetPosLeft()] = outputVector.at(i)[0].get();
 		}
 
 		if (monitor.GetRightLeds() > 0) {
-			outputMap[monitor.GetPosRight()] = &outputVector.at(i)[monitor.GetLeftLeds()];
+			outputMap[monitor.GetPosRight()] = outputVector.at(i)[1].get();
 		}
 
 		if (monitor.GetTopLeds() > 0) {
-			outputMap[monitor.GetPosTop()] = &outputVector.at(i)[monitor.GetLeftLeds() + monitor.GetRightLeds()];
+			outputMap[monitor.GetPosTop()] = outputVector.at(i)[2].get();
 		}
 
 		if (monitor.GetBottomLeds() > 0) {
-			outputMap[monitor.GetPosBottom()] = &outputVector.at(i)[monitor.GetLeftLeds() + monitor.GetRightLeds() + monitor.GetTopLeds()];
+			outputMap[monitor.GetPosBottom()] = outputVector.at(i)[3].get();
 		}
 
-		m_monitorThreads.push_back(MonitorThread(m_rSettings.m_usedMonitors.at(i), m_hWnd, m_rSettings, hdcMem, drawWidth, drawHeight, outputVector.at(i).get()));
+		m_monitorThreads.push_back(MonitorThread(m_rSettings.m_usedMonitors.at(i), m_hWnd, m_rSettings, hdcMem, drawWidth, drawHeight,
+			outputVector.at(i)[0].get(), outputVector.at(i)[1].get(), outputVector.at(i)[2].get(), outputVector.at(i)[3].get()));
 	}
 
 	std::unique_ptr<HANDLE[]> monitorThreadHandles = std::make_unique<HANDLE[]>(m_monitorThreads.size());
