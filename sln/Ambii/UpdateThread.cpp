@@ -9,6 +9,7 @@
 #include "UpdateThread.h"
 
 #include <time.h>
+#include <map>
 
 /*
 	//TODO: Comment
@@ -34,14 +35,32 @@ VOID UpdateThread::Run() {
 
 	m_monitorThreads.clear();
 	m_monitorThreads.reserve(m_rSettings.m_usedMonitors.size());
-	UINT nLeds = 0; //Count the total amount of output values
-	for (CONST auto& monitor : m_rSettings.m_usedMonitors) {
-		nLeds += monitor.GetLeftLeds() + monitor.GetRightLeds() + monitor.GetTopLeds() + monitor.GetBottomLeds();
-		m_monitorThreads.push_back(MonitorThread(monitor, m_hWnd, m_rSettings, hdcMem));
+
+	std::map<UINT8, RGBQUAD*> outputMap;
+	std::vector<std::unique_ptr<RGBQUAD[]>> outputVector;
+	outputVector.resize(m_rSettings.m_usedMonitors.size());
+	for (UINT i = 0; i < m_rSettings.m_usedMonitors.size(); i++) {
+		Monitor monitor = m_rSettings.m_usedMonitors.at(i);
+		outputVector.at(i) = std::make_unique<RGBQUAD[]>(monitor.GetLeftLeds() + monitor.GetRightLeds() + monitor.GetTopLeds() + monitor.GetBottomLeds());
+		if (monitor.GetLeftLeds() > 0) {
+			outputMap[monitor.GetPosLeft()] = &outputVector.at(i)[0];
+		}
+
+		if (monitor.GetRightLeds() > 0) {
+			outputMap[monitor.GetPosRight()] = &outputVector.at(i)[monitor.GetLeftLeds()];
+		}
+
+		if (monitor.GetTopLeds() > 0) {
+			outputMap[monitor.GetPosTop()] = &outputVector.at(i)[monitor.GetLeftLeds() + monitor.GetRightLeds()];
+		}
+
+		if (monitor.GetBottomLeds() > 0) {
+			outputMap[monitor.GetPosBottom()] = &outputVector.at(i)[monitor.GetLeftLeds() + monitor.GetRightLeds() + monitor.GetTopLeds()];
+		}
+
+		m_monitorThreads.push_back(MonitorThread(m_rSettings.m_usedMonitors.at(i), m_hWnd, m_rSettings, hdcMem, outputVector.at(i).get()));
 	}
 
-	m_outputValues = std::make_unique<RGBQUAD[]>(nLeds);
-		
 	std::unique_ptr<HANDLE[]> monitorThreadHandles = std::make_unique<HANDLE[]>(m_monitorThreads.size());
 
 	while (TRUE) {

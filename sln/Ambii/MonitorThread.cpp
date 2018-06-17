@@ -27,7 +27,22 @@ MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Set
 VOID MonitorThread::Run() {
 	m_rMonitor.GetPixels(m_arrPixels.get());
 
-	DisplayMonitor();
+	if(m_rSettings.m_bDisplayMonitors){
+		DisplayMonitor();
+	}
+
+
+	CalculateLedsLeft();
+	CalculateLedsRight();
+	CalculateLedsTop();
+	CalculateLedsBottom();
+
+	if (m_rSettings.m_bDisplayOutput) {
+		DisplayLedsLeft();
+		DisplayLedsRight();
+		DisplayLedsTop();
+		DisplayLedsBottom();
+	}
 }
 
 /*
@@ -229,7 +244,7 @@ VOID MonitorThread::DisplayLedsLeft() {
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetLeftLeds(); i++) {
-		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[i].rgbRed, m_output[i].rgbGreen, m_output[i].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 		UINT x = m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size();
 
@@ -254,7 +269,7 @@ VOID MonitorThread::DisplayLedsRight() {
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetRightLeds(); i++) {
-		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[i].rgbRed, m_output[i].rgbGreen, m_output[i].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 		UINT x = (m_rMonitor.GetPosX() + 1) * clientRect.right / m_rSettings.m_usedMonitors.size();
 
@@ -279,7 +294,7 @@ VOID MonitorThread::DisplayLedsTop() {
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetTopLeds(); i++) {
-		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[i].rgbRed, m_output[i].rgbGreen, m_output[i].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
 		UINT x;
@@ -304,7 +319,7 @@ VOID MonitorThread::DisplayLedsBottom() {
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetBottomLeds(); i++) {
-		HBRUSH hBrush = CreateSolidBrush(RGB(arrOutputs[i].rgbRed, arrOutputs[i].rgbGreen, arrOutputs[i].rgbBlue));
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[i].rgbRed, m_output[i].rgbGreen, m_output[i].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
 		UINT x;
