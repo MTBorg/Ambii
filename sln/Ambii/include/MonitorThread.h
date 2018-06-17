@@ -26,6 +26,7 @@ private:
 	CONST HWND m_hWnd;
 	CONST Settings &m_rSettings;
 	CONST HDC m_hdc;
+	CONST UINT m_drawWidth, m_drawHeight;
 	std::unique_ptr<RGBQUAD[]> m_arrPixels;
 	RGBQUAD * CONST m_output;
 
@@ -42,12 +43,7 @@ private:
 	inline RGBQUAD GetPixelFromArr(CONST UINT x, CONST UINT y, CONST RGBQUAD *CONST arrPixels, CONST UINT width) { return arrPixels[y * width + x]; };
 public:
 	MonitorThread(CONST Monitor &pMonitor, CONST HWND hWndMain, CONST Settings &rSettings, CONST HDC hdc,
-					RGBQUAD * CONST output);
-
-	/*inline VOID SetOutputLeft(RGBQUAD * outputLeft) { m_outputLeft = outputLeft; };
-	inline VOID SetOutputRight(RGBQUAD * outputRight) { m_outputRight = outputRight; };
-	inline VOID SetOutputTop(RGBQUAD * outputTop) { m_outputTop = outputTop; };
-	inline VOID SetOutputBottom(RGBQUAD * outputBottom) { m_outputBottom = outputBottom; };*/
+					CONST UINT drawWidth, CONST UINT drawHeight, RGBQUAD * CONST output);
 };
 
 #endif

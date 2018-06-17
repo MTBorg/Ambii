@@ -36,6 +36,17 @@ VOID UpdateThread::Run() {
 	m_monitorThreads.clear();
 	m_monitorThreads.reserve(m_rSettings.m_usedMonitors.size());
 
+	//Find the max horizontal/vertical position to determine the width/height of the memory DCs
+	UINT xMax = 0, yMax = 0;
+	for (CONST auto& monitor : m_rSettings.m_usedMonitors) {
+		xMax = xMax < monitor.GetPosX() ? monitor.GetPosX() : xMax;
+		yMax = yMax < monitor.GetPosY() ? monitor.GetPosY() : yMax;
+	}
+	xMax++;
+	yMax++;
+	CONST UINT drawWidth = clientRect.right / xMax;
+	CONST UINT drawHeight = clientRect.bottom / yMax;
+
 	std::map<UINT8, RGBQUAD*> outputMap;
 	std::vector<std::unique_ptr<RGBQUAD[]>> outputVector;
 	outputVector.resize(m_rSettings.m_usedMonitors.size());
@@ -58,7 +69,7 @@ VOID UpdateThread::Run() {
 			outputMap[monitor.GetPosBottom()] = &outputVector.at(i)[monitor.GetLeftLeds() + monitor.GetRightLeds() + monitor.GetTopLeds()];
 		}
 
-		m_monitorThreads.push_back(MonitorThread(m_rSettings.m_usedMonitors.at(i), m_hWnd, m_rSettings, hdcMem, outputVector.at(i).get()));
+		m_monitorThreads.push_back(MonitorThread(m_rSettings.m_usedMonitors.at(i), m_hWnd, m_rSettings, hdcMem, drawWidth, drawHeight, outputVector.at(i).get()));
 	}
 
 	std::unique_ptr<HANDLE[]> monitorThreadHandles = std::make_unique<HANDLE[]>(m_monitorThreads.size());

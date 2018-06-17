@@ -10,13 +10,13 @@
 
 #include "OutputThread.h"
 
-#define OUTPUT_SIZE 15
+#define OUTPUT_SIZE 30
 
 /*
 	//TODO: Comment
 */
-MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Settings &rSettings, CONST HDC hdc, RGBQUAD * CONST output)
-	: m_rMonitor(rMonitor), m_hWnd(hWnd), m_rSettings(rSettings), m_hdc(hdc), m_output(output)
+MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Settings &rSettings, CONST HDC hdc, CONST UINT drawWidth, CONST UINT drawHeight, RGBQUAD * CONST output)
+	: m_rMonitor(rMonitor), m_hWnd(hWnd), m_rSettings(rSettings), m_hdc(hdc), m_drawWidth(drawWidth), m_drawHeight(drawHeight), m_output(output)
 {
 	m_arrPixels = std::make_unique<RGBQUAD[]>(rMonitor.GetWidth() * rMonitor.GetHeight());
 }
@@ -30,7 +30,6 @@ VOID MonitorThread::Run() {
 	if(m_rSettings.m_bDisplayMonitors){
 		DisplayMonitor();
 	}
-
 
 	CalculateLedsLeft();
 	CalculateLedsRight();
@@ -68,8 +67,8 @@ VOID MonitorThread::DisplayMonitor() {
 	//Display the screen
 	SetStretchBltMode(m_hdc, STRETCH_HALFTONE);
 	StretchDIBits(m_hdc,
-		m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size(), 0, //Horizontal and vertical position of destionation
-		clientRect.right / m_rSettings.m_usedMonitors.size(), clientRect.bottom, //Width and height of destination
+		m_rMonitor.GetPosX() * m_drawWidth, m_drawHeight * m_rMonitor.GetPosY(), //Horizontal and vertical position of destionation
+		m_drawWidth, m_drawHeight, //Width and height of destination
 		0, 0, //Horizontal and vertical position of source
 		m_rMonitor.GetWidth(), m_rMonitor.GetHeight(), //Width and height of source
 		m_arrPixels.get(),
@@ -94,7 +93,7 @@ VOID MonitorThread::CalculateLedsLeft() {
 			for (UINT y = 0; y < m_rSettings.m_sampleSize; y++) {
 				RGBQUAD p;
 				//If clockwise, the values need to be calculated in a bottom-top order
-				if (m_rSettings.m_bClockwise) {
+				if (m_rMonitor.GetClockwiseLeft()) {
 					p = GetPixelFromArr(
 						x, monitorHeight - i * monitorHeight / m_rMonitor.GetLeftLeds() - y,
 						m_arrPixels.get(), monitorWidth);
@@ -132,7 +131,7 @@ VOID MonitorThread::CalculateLedsRight() {
 			for (UINT y = 0; y < m_rSettings.m_sampleSize; y++) {
 				RGBQUAD p;
 				//If clockwise, the values need to be calculated in a top-bottom order
-				if (m_rSettings.m_bClockwise) {
+				if (m_rMonitor.GetClockwiseRight()) {
 					p = GetPixelFromArr(
 						x, i * monitorHeight / m_rMonitor.GetRightLeds() + y,
 						m_arrPixels.get(), monitorWidth);
@@ -151,7 +150,7 @@ VOID MonitorThread::CalculateLedsRight() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
 	}
 }
 
@@ -171,7 +170,7 @@ VOID MonitorThread::CalculateLedsTop() {
 			for (UINT y = 0; y < m_rSettings.m_sampleSize; y++) {
 				RGBQUAD p;
 				//If clockwise, the output need to be calculated in a left-right order
-				if (m_rSettings.m_bClockwise) {
+				if (m_rMonitor.GetClockwiseTop()) {
 					p = GetPixelFromArr(
 						i * monitorWidth / m_rMonitor.GetTopLeds(), y,
 						m_arrPixels.get(), monitorWidth);
@@ -190,7 +189,7 @@ VOID MonitorThread::CalculateLedsTop() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD quad is defined as {b,g,r, reserved}
+		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
 	}
 }
 
@@ -213,7 +212,7 @@ VOID MonitorThread::CalculateLedsBottom() {
 			for (UINT y = m_rMonitor.GetHeight() - 1; y > m_rMonitor.GetHeight() - 1 - m_rSettings.m_sampleSize; y--) {
 				RGBQUAD p;
 				//If clockwise, the values need to be calculated in a right-left order
-				if (m_rSettings.m_bClockwise) {
+				if (m_rMonitor.GetClockwiseBottom()) {
 					p = GetPixelFromArr(
 						monitorWidth - (i + 1) * monitorWidth / m_rMonitor.GetBottomLeds(), y,
 						m_arrPixels.get(), monitorWidth);
@@ -232,7 +231,7 @@ VOID MonitorThread::CalculateLedsBottom() {
 		//Calculate the average of the color channels
 		UINT nSampleLeds = m_rSettings.m_sampleSize * m_rSettings.m_sampleSize;
 		BYTE rAvg = rSum / nSampleLeds, gAvg = gSum / nSampleLeds, bAvg = bSum / nSampleLeds;
-		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; ////RGBQUAD quad is defined as {b,g,r, reserved}
+		m_output[i] = RGBQUAD{ bAvg, gAvg, rAvg, 0 }; //RGBQUAD is defined as {b,g,r, reserved}
 	}
 }
 
@@ -243,18 +242,13 @@ VOID MonitorThread::DisplayLedsLeft() {
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
+	UINT x = m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size();
 	for (UINT i = 0; i < m_rMonitor.GetLeftLeds(); i++) {
-		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[i].rgbRed, m_output[i].rgbGreen, m_output[i].rgbBlue));
-		SelectObject(m_hdc, hBrush);
-		UINT x = m_rMonitor.GetPosX() * clientRect.right / m_rSettings.m_usedMonitors.size();
+		UINT y = m_drawHeight * m_rMonitor.GetPosY() + i * (m_drawHeight - OUTPUT_SIZE) / (m_rMonitor.GetLeftLeds() - 1);
 
-		UINT y;
-		if (m_rSettings.m_bClockwise == TRUE) {
-			y = clientRect.bottom - (i + 1) * clientRect.bottom / m_rMonitor.GetLeftLeds();
-		}
-		else {
-			y = i * clientRect.bottom / m_rMonitor.GetLeftLeds();
-		}
+		CONST UINT index = m_rMonitor.GetClockwiseLeft() ? m_rMonitor.GetLeftLeds() - 1 - i : i;
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[index].rgbRed, m_output[index].rgbGreen, m_output[index].rgbBlue));
+		SelectObject(m_hdc, hBrush);
 
 		Rectangle(m_hdc, x, y, x + OUTPUT_SIZE, y + OUTPUT_SIZE);
 		DeleteObject(hBrush);
@@ -268,18 +262,13 @@ VOID MonitorThread::DisplayLedsRight() {
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
+	UINT x = (m_rMonitor.GetPosX() + 1) * clientRect.right / m_rSettings.m_usedMonitors.size();
 	for (UINT i = 0; i < m_rMonitor.GetRightLeds(); i++) {
-		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[i].rgbRed, m_output[i].rgbGreen, m_output[i].rgbBlue));
-		SelectObject(m_hdc, hBrush);
-		UINT x = (m_rMonitor.GetPosX() + 1) * clientRect.right / m_rSettings.m_usedMonitors.size();
+		UINT y = m_drawHeight * m_rMonitor.GetPosY() + i * (m_drawHeight - OUTPUT_SIZE) / (m_rMonitor.GetRightLeds() - 1);
 
-		UINT y;
-		if (m_rSettings.m_bClockwise == TRUE) {
-			y = i * clientRect.bottom / m_rMonitor.GetRightLeds();
-		}
-		else {
-			y = clientRect.bottom - (i + 1) * clientRect.bottom / m_rMonitor.GetRightLeds();
-		}
+		CONST UINT index = m_rMonitor.GetClockwiseRight() ? i : m_rMonitor.GetRightLeds() - 1 - i;
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[index].rgbRed, m_output[index].rgbGreen, m_output[index].rgbBlue));
+		SelectObject(m_hdc, hBrush);
 
 		Rectangle(m_hdc, x - OUTPUT_SIZE, y, x, y + OUTPUT_SIZE);
 		DeleteObject(hBrush);
@@ -294,19 +283,13 @@ VOID MonitorThread::DisplayLedsTop() {
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetTopLeds(); i++) {
-		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[i].rgbRed, m_output[i].rgbGreen, m_output[i].rgbBlue));
+		UINT x = m_drawWidth * m_rMonitor.GetPosX() + i * (m_drawWidth - OUTPUT_SIZE) / (m_rMonitor.GetTopLeds() - 1);
+
+		CONST UINT index = m_rMonitor.GetTopLeds() ? i : m_rMonitor.GetTopLeds() - 1 - i;
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[index].rgbRed, m_output[index].rgbGreen, m_output[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
-		UINT x;
-		if (m_rSettings.m_bClockwise == TRUE) {
-			x = i * clientRect.right / m_rMonitor.GetTopLeds();
-		}
-		else {
-			x = clientRect.right - (i + 1) * clientRect.right / m_rMonitor.GetTopLeds();
-		}
-
-
-		Rectangle(m_hdc, x, 0, x + OUTPUT_SIZE, OUTPUT_SIZE);
+		Rectangle(m_hdc, x, m_drawWidth * m_rMonitor.GetPosY(), x + OUTPUT_SIZE, OUTPUT_SIZE);
 		DeleteObject(hBrush);
 	}
 }
@@ -319,18 +302,13 @@ VOID MonitorThread::DisplayLedsBottom() {
 	GetClientRect(m_hWnd, &clientRect);
 
 	for (UINT i = 0; i < m_rMonitor.GetBottomLeds(); i++) {
-		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[i].rgbRed, m_output[i].rgbGreen, m_output[i].rgbBlue));
+		UINT x = m_drawWidth * m_rMonitor.GetPosX() + i * (m_drawWidth - OUTPUT_SIZE) / (m_rMonitor.GetBottomLeds() - 1);
+
+		CONST UINT index = m_rMonitor.GetClockwiseBottom() ? m_rMonitor.GetBottomLeds() - 1 - i : i;
+		HBRUSH hBrush = CreateSolidBrush(RGB(m_output[index].rgbRed, m_output[index].rgbGreen, m_output[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
-		UINT x;
-		if (m_rSettings.m_bClockwise == TRUE) {
-			x = clientRect.right - (i + 1) * clientRect.right / m_rMonitor.GetBottomLeds();
-		}
-		else {
-			x = i * clientRect.right / m_rMonitor.GetBottomLeds();
-		}
-
-		Rectangle(m_hdc, x, clientRect.bottom - OUTPUT_SIZE, x + OUTPUT_SIZE, clientRect.bottom);
+		Rectangle(m_hdc, x, m_drawHeight * (m_rMonitor.GetPosY() + 1) - OUTPUT_SIZE, x + OUTPUT_SIZE - 1, m_drawHeight * (m_rMonitor.GetPosY() + 1));
 		DeleteObject(hBrush);
 	}
 }
