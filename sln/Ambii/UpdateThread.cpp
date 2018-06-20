@@ -42,8 +42,12 @@ VOID UpdateThread::Run() {
 		xMax = xMax < monitor.GetPosX() ? monitor.GetPosX() : xMax;
 		yMax = yMax < monitor.GetPosY() ? monitor.GetPosY() : yMax;
 	}
+
+	//Add one for easier calculations
 	xMax++;
 	yMax++;
+
+	//Figure out the dimensions of the portions of the client window that the threads will draw to
 	CONST UINT drawWidth = clientRect.right / xMax;
 	CONST UINT drawHeight = clientRect.bottom / yMax;
 
@@ -51,8 +55,11 @@ VOID UpdateThread::Run() {
 	std::vector<std::vector<std::unique_ptr<RGBQUAD[]>>> outputVector;
 	outputVector.resize(m_rSettings.m_usedMonitors.size());
 	for (UINT i = 0; i < m_rSettings.m_usedMonitors.size(); i++) {
+
 		Monitor monitor = m_rSettings.m_usedMonitors.at(i);
-		outputVector.at(i).resize(4);
+
+		outputVector.at(i).resize(4); //Add four monitor sides
+
 		outputVector.at(i)[0] = std::make_unique<RGBQUAD[]>(monitor.GetLeftLeds());
 		outputVector.at(i)[1] = std::make_unique<RGBQUAD[]>(monitor.GetRightLeds());
 		outputVector.at(i)[2] = std::make_unique<RGBQUAD[]>(monitor.GetTopLeds());
@@ -89,6 +96,7 @@ VOID UpdateThread::Run() {
 
 		WaitForMultipleObjects(m_monitorThreads.size(), monitorThreadHandles.get(), TRUE, INFINITE);
 
+		//Draw the monitors/outputs
 		if (m_rSettings.m_bDisplayMonitors || m_rSettings.m_bDisplayOutput) {
 			BitBlt(hdcWnd, 0, 0, clientRect.right, clientRect.bottom, hdcMem, 0, 0, SRCCOPY);
 		}
@@ -106,7 +114,7 @@ VOID UpdateThread::Run() {
 }
 
 /*
-	//TODO: Comment
+	Stop the update thread. The calling thread is blocked until the update thread finishes.
 */
 VOID UpdateThread::Stop() {
 	//Signal to the update thread to stop
