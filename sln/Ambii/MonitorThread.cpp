@@ -261,7 +261,7 @@ VOID MonitorThread::DisplayLedsRight() {
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
-	UINT x = (m_rMonitor.GetPosX() + 1) * clientRect.right / m_rSettings.m_usedMonitors.size();
+	UINT x = (m_rMonitor.GetPosX() + 1) * clientRect.right / m_rSettings.m_usedMonitors.size() - OUTPUT_SIZE;
 	for (UINT i = 0; i < m_rMonitor.GetRightLeds(); i++) {
 		UINT y = m_drawHeight * m_rMonitor.GetPosY() + i * (m_drawHeight - OUTPUT_SIZE) / (m_rMonitor.GetRightLeds() - 1);
 
@@ -269,7 +269,7 @@ VOID MonitorThread::DisplayLedsRight() {
 		HBRUSH hBrush = CreateSolidBrush(RGB(m_outputRight[index].rgbRed, m_outputRight[index].rgbGreen, m_outputRight[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
-		Rectangle(m_hdc, x - OUTPUT_SIZE, y, x, y + OUTPUT_SIZE);
+		Rectangle(m_hdc, x, y, x + OUTPUT_SIZE, y + OUTPUT_SIZE);
 		DeleteObject(hBrush);
 	}
 }
@@ -281,6 +281,7 @@ VOID MonitorThread::DisplayLedsTop() {
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
+	UINT y = m_drawHeight * m_rMonitor.GetPosY();
 	for (UINT i = 0; i < m_rMonitor.GetTopLeds(); i++) {
 		UINT x = m_drawWidth * m_rMonitor.GetPosX() + i * (m_drawWidth - OUTPUT_SIZE) / (m_rMonitor.GetTopLeds() - 1);
 
@@ -288,7 +289,7 @@ VOID MonitorThread::DisplayLedsTop() {
 		HBRUSH hBrush = CreateSolidBrush(RGB(m_outputTop[index].rgbRed, m_outputTop[index].rgbGreen, m_outputTop[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
-		Rectangle(m_hdc, x, m_drawHeight * m_rMonitor.GetPosY(), x + OUTPUT_SIZE, m_drawHeight * m_rMonitor.GetPosY() + OUTPUT_SIZE);
+		Rectangle(m_hdc, x, y, x + OUTPUT_SIZE, y + OUTPUT_SIZE);
 		DeleteObject(hBrush);
 	}
 }
@@ -300,6 +301,7 @@ VOID MonitorThread::DisplayLedsBottom() {
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
+	UINT y = m_drawHeight * (m_rMonitor.GetPosY() + 1) - OUTPUT_SIZE;
 	for (UINT i = 0; i < m_rMonitor.GetBottomLeds(); i++) {
 		UINT x = m_drawWidth * m_rMonitor.GetPosX() + i * (m_drawWidth - OUTPUT_SIZE) / (m_rMonitor.GetBottomLeds() - 1);
 
@@ -307,7 +309,7 @@ VOID MonitorThread::DisplayLedsBottom() {
 		HBRUSH hBrush = CreateSolidBrush(RGB(m_outputBottom[index].rgbRed, m_outputBottom[index].rgbGreen, m_outputBottom[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
-		Rectangle(m_hdc, x, m_drawHeight * (m_rMonitor.GetPosY() + 1) - OUTPUT_SIZE, x + OUTPUT_SIZE - 1, m_drawHeight * (m_rMonitor.GetPosY() + 1));
+		Rectangle(m_hdc, x, y, x + OUTPUT_SIZE - 1, y + OUTPUT_SIZE);
 		DeleteObject(hBrush);
 	}
 }

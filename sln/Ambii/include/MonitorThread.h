@@ -28,7 +28,6 @@ private:
 	CONST HDC m_hdc;
 	CONST UINT m_drawWidth, m_drawHeight;
 	std::unique_ptr<RGBQUAD[]> m_arrPixels;
-	//RGBQUAD * CONST m_output;
 	RGBQUAD *CONST m_outputLeft, *CONST m_outputRight, *CONST m_outputTop, *CONST m_outputBottom;
 
 	VOID Run();
