@@ -287,7 +287,7 @@ VOID MonitorThread::DisplayLedsTop() {
 	for (UINT i = 0; i < m_rMonitor.GetTopLeds(); i++) {
 		UINT x = m_drawWidth * m_rMonitor.GetPosX() + i * (m_drawWidth - OUTPUT_SIZE) / (m_rMonitor.GetTopLeds() - 1);
 
-		CONST UINT index = m_rMonitor.GetClockwiseLeft() ? i : m_rMonitor.GetTopLeds() - 1 - i;
+		CONST UINT index = m_rMonitor.GetClockwiseTop() ? i : m_rMonitor.GetTopLeds() - 1 - i;
 		HBRUSH hBrush = CreateSolidBrush(RGB(m_outputTop[index].rgbRed, m_outputTop[index].rgbGreen, m_outputTop[index].rgbBlue));
 		SelectObject(m_hdc, hBrush);
 
