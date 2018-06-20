@@ -199,9 +199,6 @@ VOID MonitorThread::CalculateLedsTop() {
 	//TODO: Comment
 */
 VOID MonitorThread::CalculateLedsBottom() {
-	if (m_rMonitor.GetBottomLeds() == 0)
-		return;
-
 	RECT clientRect;
 	GetClientRect(m_hWnd, &clientRect);
 
