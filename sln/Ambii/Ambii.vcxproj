@@ -215,7 +215,6 @@
     <ClInclude Include="include\Monitor.h" />
     <ClInclude Include="include\MonitorTab.h" />
     <ClInclude Include="include\MonitorThread.h" />
-    <ClInclude Include="include\OutputThread.h" />
     <ClInclude Include="include\PortSettingsWnd.h" />
     <ClInclude Include="include\RegistryHandler.h" />
     <ClInclude Include="include\SerialHandler.h" />
@@ -231,7 +230,6 @@
     <ClCompile Include="Monitor.cpp" />
     <ClCompile Include="MonitorTab.cpp" />
     <ClCompile Include="MonitorThread.cpp" />
-    <ClCompile Include="OutputThread.cpp" />
     <ClCompile Include="PortSettingsWnd.cpp" />
     <ClCompile Include="RegistryHandler.cpp" />
     <ClCompile Include="SerialHandler.cpp" />

@@ -29,9 +29,6 @@
     <ClInclude Include="include\MonitorThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OutputThread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\PortSettingsWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -71,9 +68,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MonitorThread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OutputThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PortSettingsWnd.cpp">
