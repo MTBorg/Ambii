@@ -53,8 +53,13 @@ VOID UpdateThread::Run() {
 	CONST UINT drawWidth = clientRect.right / xMax;
 	CONST UINT drawHeight = clientRect.bottom / yMax;
 
-	std::map<UINT8, RGBQUAD*> outputMap;
-	std::map<UINT8, RGBQUAD*>::iterator outputIterator;
+	typedef struct {
+		RGBQUAD* values;
+		UINT valueCount;
+	}outputStruct;
+
+	std::map<UINT8, outputStruct> outputMap;
+	std::map<UINT8, outputStruct>::iterator outputIterator;
 	std::vector<std::vector<std::unique_ptr<RGBQUAD[]>>> outputVector;
 	outputVector.resize(m_rSettings.m_usedMonitors.size());
 	for (UINT i = 0; i < m_rSettings.m_usedMonitors.size(); i++) {
@@ -69,19 +74,19 @@ VOID UpdateThread::Run() {
 		outputVector.at(i)[3] = std::make_unique<RGBQUAD[]>(monitor.GetBottomLeds());
 
 		if (monitor.GetLeftLeds() > 0) {
-			outputMap[monitor.GetPosLeft()] = outputVector.at(i)[0].get();
+			outputMap[monitor.GetPosLeft()] = outputStruct{ outputVector.at(i)[0].get(), monitor.GetLeftLeds() };
 		}
 
 		if (monitor.GetRightLeds() > 0) {
-			outputMap[monitor.GetPosRight()] = outputVector.at(i)[1].get();
+			outputMap[monitor.GetPosRight()] = outputStruct{ outputVector.at(i)[1].get(), monitor.GetRightLeds() };
 		}
 
 		if (monitor.GetTopLeds() > 0) {
-			outputMap[monitor.GetPosTop()] = outputVector.at(i)[2].get();
+			outputMap[monitor.GetPosTop()] = outputStruct{ outputVector.at(i)[2].get(), monitor.GetTopLeds() };
 		}
 
 		if (monitor.GetBottomLeds() > 0) {
-			outputMap[monitor.GetPosBottom()] = outputVector.at(i)[3].get();
+			outputMap[monitor.GetPosBottom()] = outputStruct{ outputVector.at(i)[3].get(), monitor.GetBottomLeds() };
 		}
 
 		m_monitorThreads.push_back(MonitorThread(m_rSettings.m_usedMonitors.at(i), m_hWnd, m_rSettings, hdcMem, drawWidth, drawHeight,
@@ -108,7 +113,7 @@ VOID UpdateThread::Run() {
 		UINT i = 0;
 		outputIterator = outputMap.find(i);
 		while (outputIterator != outputMap.end()) {
-			SerialHandler::WriteToPort((BYTE*)outputIterator->second, 12, m_rSettings.m_portNum); //DEBUG
+			SerialHandler::WriteToPort((BYTE*)outputIterator->second.values, outputIterator->second.valueCount * 4, m_rSettings.m_portNum); //DEBUG
 			i++;
 			outputIterator = outputMap.find(i);
 		}
