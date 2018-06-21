@@ -8,6 +8,8 @@
 
 #include "UpdateThread.h"
 
+#include "SerialHandler.h"
+
 #include <time.h>
 #include <map>
 
@@ -43,7 +45,7 @@ VOID UpdateThread::Run() {
 		yMax = yMax < monitor.GetPosY() ? monitor.GetPosY() : yMax;
 	}
 
-	//Add one for easier calculations
+	//Add one for easier calculations and to avoid division by zero
 	xMax++;
 	yMax++;
 
@@ -52,6 +54,7 @@ VOID UpdateThread::Run() {
 	CONST UINT drawHeight = clientRect.bottom / yMax;
 
 	std::map<UINT8, RGBQUAD*> outputMap;
+	std::map<UINT8, RGBQUAD*>::iterator outputIterator;
 	std::vector<std::vector<std::unique_ptr<RGBQUAD[]>>> outputVector;
 	outputVector.resize(m_rSettings.m_usedMonitors.size());
 	for (UINT i = 0; i < m_rSettings.m_usedMonitors.size(); i++) {
@@ -99,6 +102,15 @@ VOID UpdateThread::Run() {
 		//Draw the monitors/outputs
 		if (m_rSettings.m_bDisplayMonitors || m_rSettings.m_bDisplayOutput) {
 			BitBlt(hdcWnd, 0, 0, clientRect.right, clientRect.bottom, hdcMem, 0, 0, SRCCOPY);
+		}
+
+		//TODO: Need to solve how to find out how many output values to write
+		UINT i = 0;
+		outputIterator = outputMap.find(i);
+		while (outputIterator != outputMap.end()) {
+			SerialHandler::WriteToPort((BYTE*)outputIterator->second, 12, m_rSettings.m_portNum); //DEBUG
+			i++;
+			outputIterator = outputMap.find(i);
 		}
 
 		ReleaseMutex(m_hMutexSettings);
