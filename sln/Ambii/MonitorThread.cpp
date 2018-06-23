@@ -8,8 +8,6 @@
 
 #include "MonitorThread.h"
 
-#include "OutputThread.h"
-
 #define OUTPUT_SIZE 30
 
 /*
