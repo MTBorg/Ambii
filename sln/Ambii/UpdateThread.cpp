@@ -68,23 +68,22 @@ VOID UpdateThread::Run() {
 
 		outputVector.at(i).resize(4); //Add four monitor sides
 
+		//Allocate memory for the output values
 		outputVector.at(i)[0] = std::make_unique<RGBQUAD[]>(monitor.GetLeftLeds());
 		outputVector.at(i)[1] = std::make_unique<RGBQUAD[]>(monitor.GetRightLeds());
 		outputVector.at(i)[2] = std::make_unique<RGBQUAD[]>(monitor.GetTopLeds());
 		outputVector.at(i)[3] = std::make_unique<RGBQUAD[]>(monitor.GetBottomLeds());
 
+		//Create the map
 		if (monitor.GetLeftLeds() > 0) {
 			outputMap[monitor.GetPosLeft()] = outputStruct{ outputVector.at(i)[0].get(), monitor.GetLeftLeds() };
 		}
-
 		if (monitor.GetRightLeds() > 0) {
 			outputMap[monitor.GetPosRight()] = outputStruct{ outputVector.at(i)[1].get(), monitor.GetRightLeds() };
 		}
-
 		if (monitor.GetTopLeds() > 0) {
 			outputMap[monitor.GetPosTop()] = outputStruct{ outputVector.at(i)[2].get(), monitor.GetTopLeds() };
 		}
-
 		if (monitor.GetBottomLeds() > 0) {
 			outputMap[monitor.GetPosBottom()] = outputStruct{ outputVector.at(i)[3].get(), monitor.GetBottomLeds() };
 		}
@@ -109,7 +108,6 @@ VOID UpdateThread::Run() {
 			BitBlt(hdcWnd, 0, 0, clientRect.right, clientRect.bottom, hdcMem, 0, 0, SRCCOPY);
 		}
 
-		//TODO: Need to solve how to find out how many output values to write
 		UINT i = 0;
 		outputIterator = outputMap.find(i);
 		while (outputIterator != outputMap.end()) {
