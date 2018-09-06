@@ -111,7 +111,6 @@ VOID UpdateThread::Run() {
 		UINT i = 0;
 		outputIterator = outputMap.find(i);
 		while (outputIterator != outputMap.end()) {
-			SerialHandler::WriteToPort((BYTE*)outputIterator->second.values, outputIterator->second.valueCount * 4, m_rSettings.m_portNum); //DEBUG
 			i++;
 			outputIterator = outputMap.find(i);
 		}
