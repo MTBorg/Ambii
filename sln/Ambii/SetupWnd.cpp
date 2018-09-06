@@ -10,12 +10,19 @@
 
 #include <CommCtrl.h>
 
+#include "InitCtrls.h"
+
 CONST LPCWSTR SetupWnd::m_TITLE = L"Setup";
 
 #define TAB_HEIGHT 300
 #define GUI_HEIGHT 300
-#define BUTTON_HEIGHT 30
+
 #define BUTTON_WIDTH 100
+#define BUTTON_HEIGHT 20
+
+#define CONTROLTEXT_SAVEANDEXIT L"Save && exit"
+#define CONTROLTEXT_CANCEL L"Cancel"
+#define CONTROLTEXT_APPLY L"Apply"
 
 /*
 	Overloaded constructor.
@@ -204,69 +211,33 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 
 		InitTabCtrl(hWndParent, selectedMonitors, clientRect.right, TAB_HEIGHT);
 
-		InitButtons(hWndParent, clientRect.right / 2 - 1.5 * BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		//TODO: Check for and handle null handles
+
+		//Initialize buttons
+		//Save and exit
+		InitBtnCtrl(hWndParent,
+			clientRect.right / 2 - 1.5 * BUTTON_WIDTH, TAB_HEIGHT + GUI_HEIGHT,
+			BUTTON_WIDTH, BUTTON_HEIGHT,
+			CONTROLTEXT_SAVEANDEXIT,
+			(HMENU)m_CONTROLS_ID::SAVE_BUTTON);
+
+		//Cancel
+		InitBtnCtrl(hWndParent,
+			clientRect.right / 2 - BUTTON_WIDTH / 2, TAB_HEIGHT + GUI_HEIGHT,
+			BUTTON_WIDTH, BUTTON_HEIGHT,
+			CONTROLTEXT_CANCEL,
+			(HMENU)m_CONTROLS_ID::CANCEL_BUTTON);
+
+		//Apply
+		InitBtnCtrl(hWndParent,
+			clientRect.right / 2 + BUTTON_WIDTH / 2, TAB_HEIGHT + GUI_HEIGHT,
+			BUTTON_WIDTH, BUTTON_HEIGHT,
+			CONTROLTEXT_APPLY,
+			(HMENU)m_CONTROLS_ID::APPLY_BUTTON);
+
 	}
 	catch (LPCWSTR str){
 		throw str;
-	}
-}
-
-/*
-	Initializes the "Save & exit" and "Cancel" buttons.
-
-	@param hWndParent: A handle to the parent (setup) window.
-	@param x: Horizontal position of the controls.
-	@param y: Vertical position of the controls.
-	@param width: The width of the buttons.
-	@param height: The height of the buttons.
-
-	@throw A string if any of the buttons wasn't successfully created.
-*/
-VOID SetupWnd::InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y, CONST INT width, CONST INT height) {
-	HWND hSaveButton = CreateWindow(
-		WC_BUTTON, L"Save && Exit",
-		WS_CHILD | WS_VISIBLE | BS_CENTER,
-		x, y,
-		width, height,
-		hWndParent,
-		(HMENU)m_CONTROLS_ID::SAVE_BUTTON,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hSaveButton, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hCancelButton = CreateWindow(
-		WC_BUTTON, L"Cancel",
-		WS_CHILD | WS_VISIBLE | BS_CENTER,
-		x + width, y,
-		width, height,
-		hWndParent,
-		(HMENU)m_CONTROLS_ID::CANCEL_BUTTON,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hCancelButton, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	HWND hApplyButton = CreateWindow(
-		WC_BUTTON, L"Apply",
-		WS_CHILD | WS_VISIBLE | BS_CENTER,
-		x + 2 * width, y,
-		width, height,
-		hWndParent,
-		(HMENU)m_CONTROLS_ID::APPLY_BUTTON,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hApplyButton, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-
-	if (hSaveButton == NULL) {
-		throw L"Exception in function InitButtons. Exception: Failed to create button \"Save & Exit\" (NULL handle).";
-	}
-
-	if (hCancelButton == NULL) {
-		throw L"Exception in function InitButtons. Exception: Failed to create button \"Cancel\" (NULL handle).";
-	}
-
-	if (hApplyButton == NULL) {
-		throw L"Exception in function InitButtons. Exception: Failed to create button \"Apply\" (NULL handle).";
 	}
 }
 
