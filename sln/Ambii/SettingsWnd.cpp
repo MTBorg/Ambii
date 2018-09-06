@@ -247,6 +247,8 @@ BOOL SettingsWnd::Create(CONST HWND hWndParent, CONST Settings &settings) {
 */
 BOOL SettingsWnd::InitControls(CONST HWND hWndParent, CONST Settings &settings) {
 
+	//TODO: Check for and handle null handles
+
 	HWND hTxt;
 	RECT txtRect;
 
