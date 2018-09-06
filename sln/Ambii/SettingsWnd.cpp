@@ -10,6 +10,21 @@
 
 #include <CommCtrl.h>
 
+#include "InitCtrls.h"
+
+#define CONTROLTEXT_MAXREFRESHRATE L"Max refresh rate:"
+#define CONTROLTEXT_SAMPLESIZE L"Sample size:"
+#define CONTROLTEXT_SAVEANDEXIT L"Save && exit"
+#define CONTROLTEXT_CANCEL L"Cancel"
+#define CONTROLTEXT_ONLYPRIMARYMONITOR L"Use only primary monitor"
+#define CONTROLTEXT_MULTITHREADING L"Multithreading"
+#define CONTROLTEXT_BAUDRATE L"Baud rate:"
+#define CONTROLTEXT_CLOCKWISE L"Clockwise"
+
+#define TEXTLIMIT_REFRESHRATE 3
+#define TEXTLIMIT_SAMPLESIZE 3
+#define TEXTLIMIT_BAUDRATE 6
+
 CONST LPCWSTR SettingsWnd::m_TITLE = L"Settings";
 
 /*
@@ -232,107 +247,49 @@ BOOL SettingsWnd::Create(CONST HWND hWndParent, CONST Settings &settings) {
 */
 BOOL SettingsWnd::InitControls(CONST HWND hWndParent, CONST Settings &settings) {
 
-	InitRefreshRate(hWndParent, 0,0, settings.m_maxRefreshRate);
-	InitSampleSize(hWndParent, 0, 25, settings.m_sampleSize);
-	InitBaudRateEdit(hWndParent, 0, 50, settings.m_nBaudRate);
+	HWND hTxt;
+	RECT txtRect;
+
+	//Refresh rate
+	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_MAXREFRESHRATE, 0, 0);
+	GetClientRect(hTxt, &txtRect); //Get the text dimensions
+	HWND hRefRate = InitEditCtrl(hWndParent, txtRect.right, 0, 20, 20, (HMENU)m_CONTROL_ID::REFRESHRATE_EDIT);
+	SendMessage(hRefRate, EM_SETLIMITTEXT, (WPARAM)TEXTLIMIT_REFRESHRATE, NULL);
+	SetDlgItemInt(hWndParent, m_CONTROL_ID::REFRESHRATE_EDIT, settings.m_maxRefreshRate, FALSE);
+
+	//Sample size
+	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_SAMPLESIZE, 0, 25);
+	GetClientRect(hTxt, &txtRect); //Get the text dimensions
+	HWND hSs = InitEditCtrl(hWndParent, txtRect.right, 25, 20, 20, (HMENU)m_CONTROL_ID::SAMPLESIZE_EDIT);
+	SendMessage(hSs, EM_SETLIMITTEXT, (WPARAM)TEXTLIMIT_SAMPLESIZE, NULL);
+	SetDlgItemInt(hWndParent, m_CONTROL_ID::SAMPLESIZE_EDIT, settings.m_sampleSize, FALSE);
+
+	//Baud rate
+	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_BAUDRATE, 0, 50);
+	GetClientRect(hTxt, &txtRect); //Get the text dimensions
+	HWND hBaud = InitEditCtrl(hWndParent, txtRect.right, 50, 20, 20, (HMENU)m_CONTROL_ID::BAUDRATE_EDIT);
+	SendMessage(hBaud, EM_SETLIMITTEXT, (WPARAM)TEXTLIMIT_BAUDRATE, NULL);
+	SetDlgItemInt(hWndParent, m_CONTROL_ID::BAUDRATE_EDIT, settings.m_nBaudRate, FALSE);
 
 	InitMonitorList(hWndParent, 0, 80, settings.m_usedMonitors);
 	
 	RECT clientRect;
 	GetClientRect(hWndParent, &clientRect);
 	InitButtons(hWndParent, clientRect.right / 2 - 100, clientRect.bottom - 40);
-	InitPrimaryCheckBox(hWndParent, 0, 180, settings.m_bUsePrimaryMonitor);
-	InitMultithreadingCheckBox(hWndParent, 0, 200, settings.m_bMultiThreading);
-	InitClockwiseCheckBox(hWndParent, 0, 220, settings.m_bClockwise);
+
+	//Only primary monitor
+	HWND hPrimaryMonitor = InitCheckboxCtrl(hWndParent, 0, 180, CONTROLTEXT_ONLYPRIMARYMONITOR, (HMENU)m_CONTROL_ID::PRIMARYMONITOR_CHECKBOX);
+	SendMessage(hPrimaryMonitor, BM_SETCHECK, (WPARAM)settings.m_bUsePrimaryMonitor ? TRUE : FALSE, NULL);
+
+	//Multithreading
+	HWND hMultithreading = InitCheckboxCtrl(hWndParent, 0, 200, CONTROLTEXT_MULTITHREADING, (HMENU)m_CONTROL_ID::MULTITHREADING_CHECKBOX);
+	SendMessage(hMultithreading, BM_SETCHECK, (WPARAM)settings.m_bMultiThreading ? TRUE : FALSE, NULL);
+
+	//Clockwise
+	HWND hClockwise = InitCheckboxCtrl(hWndParent, 0, 220, CONTROLTEXT_CLOCKWISE, (HMENU)m_CONTROL_ID::CLOCKWISE_CHECKBOX);
+	SendMessage(hClockwise, BM_SETCHECK, (WPARAM)settings.m_bClockwise ? TRUE : FALSE, NULL);
+
 	return TRUE;
-}
-
-/*
-	Creates the "Max refresh rate" edit and text control.
-
-	@param hWndParent: A handle to the parent (settings) window.
-	@param x: The horizontal position of the controls.
-	@param y: The vertical position of the controls.
-	@param refreshRate: The current refresh rate.
-*/
-VOID SettingsWnd::InitRefreshRate(CONST HWND hWndParent, CONST INT x, CONST INT y, CONST UINT8 refreshRate){
-	//Create the text
-	INT textWidth = 82;
-	HWND hText = CreateWindow(
-		WC_STATIC, L"Max refresh rate:",
-		WS_CHILD | WS_VISIBLE |  SS_CENTER | SS_SIMPLE,
-		x, y,
-		textWidth, 20,
-		hWndParent,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	//Create the edit control
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + textWidth + 10, y,
-		25, 17,
-		hWndParent, 
-		(HMENU)m_CONTROL_ID::REFRESHRATE_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-
-	//Set value, font and text limit of the edit control
-	SendMessage(hEdit, WM_SETFONT,
-		(WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)3, NULL);
-	SetDlgItemInt(hWndParent, m_CONTROL_ID::REFRESHRATE_EDIT, refreshRate, FALSE);
-
-	if (hEdit == NULL) {
-		throw L"Error initializing control: MaxRefreshEdit!";
-	}
-}
-
-/*
-	Creates the "Sample size" edit and text control.
-
-	@param hWndParent: A handle to the parent (settings) window.
-	@param x: The horizontal position of the controls.
-	@param y: The vertical position of the controls.
-	@param sampleSize: The sample size.
-*/
-VOID SettingsWnd::InitSampleSize(CONST HWND hWndParent, CONST INT x, CONST INT y, CONST UINT sampleSize) {
-	//Create the text
-	INT textWidth = 82;
-	HWND hText = CreateWindow(
-		WC_STATIC, L"Sample size:",
-		WS_CHILD | WS_VISIBLE | SS_CENTER | SS_SIMPLE,
-		x, y,
-		textWidth, 20,
-		hWndParent,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	//Create the edit control
-	HWND hEdit = CreateWindow(
-		WC_EDIT, L"",
-		WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-		x + textWidth + 5, y,
-		25, 18,
-		hWndParent,
-		(HMENU)m_CONTROL_ID::SAMPLESIZE_EDIT,
-		GetModuleHandle(NULL),
-		NULL);
-
-	//Set value, font and text limit of the edit control.
-	SendMessage(hEdit, WM_SETFONT,
-		(WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hEdit, EM_SETLIMITTEXT, (WPARAM)3, NULL);
-	SetDlgItemInt(hWndParent, m_CONTROL_ID::SAMPLESIZE_EDIT, sampleSize, FALSE);
-
-	if (hEdit == NULL) {
-		throw L"Error initializing edit-control: Sample size!";
-	}
 }
 
 /*
@@ -436,133 +393,4 @@ VOID SettingsWnd::InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y) {
 		throw L"Exception in function InitButtons. Exception: Failed to create button "
 			+ std::wstring(L"\"Cancel\", NULL handle");
 	}
-}
-
-/*
-	Initializes the "Use only primary monitor" checkbox.
-
-	@param hWndParent: A handle to the parent (settings) window.
-	@param x: The horizontal position of the checkbox.
-	@param y: The vertical position of the checkbox.
-	@param checked: Boolean indicating whether the checkbox is checked or not (TRUE=checked).
-*/
-VOID SettingsWnd::InitPrimaryCheckBox(CONST HWND hWndParent, CONST INT x, CONST INT y, 
-	CONST BOOL checked) {
-	HWND hCheckBox = CreateWindow(
-		WC_BUTTON, L"Use only primary monitor",
-		WS_CHILD | WS_VISIBLE | BS_CHECKBOX | BS_AUTOCHECKBOX,
-		x, y,
-		135, 20,
-		hWndParent,
-		(HMENU)m_CONTROL_ID::PRIMARYMONITOR_CHECKBOX,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hCheckBox, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hCheckBox, BM_SETCHECK,
-		checked ? BST_CHECKED : BST_UNCHECKED, NULL);
-
-	if (hCheckBox == NULL) {
-		throw L"Exception in function InitPrimaryCheckBox. Exception: Failed to create checkbox " +
-			std::wstring(L"\"Use primary monitor\", NULL handle");
-	}
-}
-
-
-/*
-	Initializes the "Multithreading" checkbox.
-
-	@param hWndParent: A handle to the parent (settings) window.
-	@param x: The horizontal position of the checkbox.
-	@param y: The vertical position of the checkbox.
-	@param checked: Boolean indicating whether the checkbox is checked or not (TRUE=checked).
-*/
-VOID SettingsWnd::InitMultithreadingCheckBox(CONST HWND hWndParent, CONST INT x, CONST INT y,
-	CONST BOOL checked) {
-	HWND hCheckBox = CreateWindow(
-		WC_BUTTON, L"Multithreading",
-		WS_CHILD | WS_VISIBLE | BS_CHECKBOX | BS_AUTOCHECKBOX,
-		x, y,
-		135, 20,
-		hWndParent,
-		(HMENU)m_CONTROL_ID::MULTITHREADING_CHECKBOX,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hCheckBox, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hCheckBox, BM_SETCHECK,
-		checked ? BST_CHECKED : BST_UNCHECKED, NULL);
-
-	if (hCheckBox == NULL) {
-		throw L"Exception in function InitPrimaryCheckBox. Exception: Failed to create checkbox " +
-			std::wstring(L"\"Multithreading\", NULL handle");
-	}
-}
-
-
-/*
-	Initializes the "Baud rate" edit and text control.
-
-	@param hWndParent: A handle to the parent (settings) window.
-	@param x: The horizontal position of the controls.
-	@param y: The vertical position of the controls.
-	@param baudRate: The current baudrate.
-*/
-VOID SettingsWnd::InitBaudRateEdit(CONST HWND hWndParent, CONST UINT x, CONST UINT y,
-	CONST UINT baudRate) {
-	const auto textWidth = 70;
-	const auto margin = 0;
-	HWND hText = CreateWindow(
-		WC_STATIC, L"Baud rate: ",
-		WS_CHILD | WS_VISIBLE | SS_SIMPLE,
-		x, y,
-		textWidth, 25,
-		hWndParent,
-		NULL,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-
-	HWND hBaudRateEdit = CreateWindow(
-			WC_EDIT, L"",
-			WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NUMBER,
-			x + textWidth + margin, y,
-			45, 17,
-			hWndParent,
-			(HMENU)m_CONTROL_ID::BAUDRATE_EDIT,
-			GetModuleHandle(NULL),
-			NULL);
-	SendMessage(hBaudRateEdit, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hBaudRateEdit, EM_SETLIMITTEXT, 6, NULL);
-	SetDlgItemInt(hWndParent, m_CONTROL_ID::BAUDRATE_EDIT, baudRate, FALSE);
-
-	if (hBaudRateEdit == NULL)
-		throw L"Exception in function InitBaudRateEdit(): Handle is NULL";
-}
-
-
-/*
-	Initializes the "Clockwise" checkbox.
-
-	@param hWndParent: A handle to the parent (settings) window.
-	@param x: The horizontal position of the checkbox.
-	@param y: The vertical position of the checkbox.
-	@param checked: Boolean indicating whether the checkbox is checked or not (TRUE=checked).
-*/
-VOID SettingsWnd::InitClockwiseCheckBox(CONST HWND hWndParent, CONST UINT x, CONST UINT y,
-	CONST BOOL checked) {
-	HWND hCheckBox = CreateWindow(
-		WC_BUTTON, L"Clockwise",
-		WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-		x, y,
-		135, 20,
-		hWndParent,
-		(HMENU)m_CONTROL_ID::CLOCKWISE_CHECKBOX,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hCheckBox, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-	SendMessage(hCheckBox, BM_SETCHECK, 
-		checked ? BST_CHECKED : BST_UNCHECKED, NULL);
-
-	if (hCheckBox == NULL)
-		throw L"Exception in function InitClockwiseCheckBox(): Handle is NULL";
 }
