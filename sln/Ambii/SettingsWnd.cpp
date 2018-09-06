@@ -275,7 +275,21 @@ BOOL SettingsWnd::InitControls(CONST HWND hWndParent, CONST Settings &settings) 
 	
 	RECT clientRect;
 	GetClientRect(hWndParent, &clientRect);
-	InitButtons(hWndParent, clientRect.right / 2 - 100, clientRect.bottom - 40);
+
+	CONST auto BUTTONWIDTH = 100, BUTTONHEIGHT = 20;
+	//Save and exit
+	HWND hSaveExit = InitBtnCtrl(hWndParent,
+		clientRect.right / 2 - BUTTONWIDTH, clientRect.bottom - BUTTONHEIGHT,
+		BUTTONWIDTH, BUTTONHEIGHT,
+		CONTROLTEXT_SAVEANDEXIT,
+		(HMENU)m_CONTROL_ID::SAVE_BUTTON);
+
+	//Cancel
+	HWND hCancel = InitBtnCtrl(hWndParent,
+		clientRect.right / 2, clientRect.bottom - BUTTONHEIGHT,
+		BUTTONWIDTH, BUTTONHEIGHT,
+		CONTROLTEXT_CANCEL,
+		(HMENU)m_CONTROL_ID::CANCEL_BUTTON);
 
 	//Only primary monitor
 	HWND hPrimaryMonitor = InitCheckboxCtrl(hWndParent, 0, 180, CONTROLTEXT_ONLYPRIMARYMONITOR, (HMENU)m_CONTROL_ID::PRIMARYMONITOR_CHECKBOX);
@@ -349,48 +363,5 @@ VOID SettingsWnd::InitMonitorList(CONST HWND hWndParent, CONST INT x, CONST INT 
 				break;
 			}
 		}	
-	}
-}
-
-/*
-	Initializes the "Save & Exit" and "Cancel" buttons.
-
-	@param hWndParent: A handle to the parent (settings) window.
-	@param x: The horizontal position of the buttons.
-	@param y: The vertical position of the buttons.
-*/
-VOID SettingsWnd::InitButtons(CONST HWND hWndParent, CONST INT x, CONST INT y) {
-	CONST UINT8 margin = 10, width = 75, height = 30;
-
-	HWND hSaveBtn = CreateWindow(
-		WC_BUTTON, L"Save && Exit",
-		WS_CHILD | WS_VISIBLE | BS_CENTER,
-		x, y,
-		width, height,
-		hWndParent,
-		(HMENU)m_CONTROL_ID::SAVE_BUTTON,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hSaveBtn, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	if (hSaveBtn == NULL) {
-		throw L"Exception in function InitButtons. Exception: Failed to create button "
-			+ std::wstring(L"\"Save \& Exit\", NULL handle");
-	}
-
-	HWND hCancelBtn = CreateWindow(
-		WC_BUTTON, L"Cancel",
-		WS_CHILD | WS_VISIBLE | BS_CENTER,
-		x + width + margin, y,
-		width, height,
-		hWndParent,
-		(HMENU)m_CONTROL_ID::CANCEL_BUTTON,
-		GetModuleHandle(NULL),
-		NULL);
-	SendMessage(hCancelBtn, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
-
-	if (hCancelBtn == NULL) {
-		throw L"Exception in function InitButtons. Exception: Failed to create button "
-			+ std::wstring(L"\"Cancel\", NULL handle");
 	}
 }
