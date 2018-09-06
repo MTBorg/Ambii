@@ -212,6 +212,7 @@
     <Text Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\InitCtrls.h" />
     <ClInclude Include="include\Monitor.h" />
     <ClInclude Include="include\MonitorTab.h" />
     <ClInclude Include="include\MonitorThread.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="include\WndMain.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InitCtrls.cpp" />
     <ClCompile Include="Monitor.cpp" />
     <ClCompile Include="MonitorTab.cpp" />
     <ClCompile Include="MonitorThread.cpp" />
