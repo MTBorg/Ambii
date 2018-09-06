@@ -9,7 +9,7 @@
 /*
 	Creates a static control with text.
 
-	@param hWndParent: A handle to a parent window
+	@param hWndParent: A handle to the parent window
 	@param text: The text of the control.
 	@param x: The horizontal position of the control.
 	@param y: The vertical position of the control.
@@ -45,7 +45,7 @@ CONST HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x,
 /*
 	Creates an edit control.
 
-	@param hWndParent: A handle to a parent window
+	@param hWndParent: A handle to the parent window
 	@param x: The horizontal position of the control.
 	@param y: The vertical position of the control.
 	@param width: The width of the control.
@@ -72,7 +72,7 @@ CONST HWND InitEditCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST
 /*
 	Creates a checkbox(button) control.
 
-	@param hWndParent: A handle to a parent window
+	@param hWndParent: A handle to the parent window
 	@param x: The horizontal position of the control.
 	@param y: The vertical position of the control.
 	@param text: The text to be displayed next to the checkbox.
@@ -102,4 +102,30 @@ CONST HWND InitCheckboxCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, C
 	SendMessage(hCheckbox, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
 
 	return hCheckbox;
+}
+
+/*
+	Creates a button control.
+	
+	@param hWndParent: A handle to the parent window
+	@param x: The horizontal position of the control.
+	@param y: The vertical position of the control.
+	@param width: The width of the control.
+	@param height: The height of the control.
+	@param text: The text to be displayed in the button.
+	@param id: The id of the control.
+*/
+CONST HWND InitBtnCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height, CONST LPCWSTR text, CONST HMENU id) {
+	HWND hBtn = CreateWindow(
+		WC_BUTTON, text,
+		WS_CHILD | WS_VISIBLE | BS_CENTER,
+		x, y,
+		width, height,
+		hWndParent,
+		id,
+		GetModuleHandle(NULL),
+		NULL);
+	SendMessage(hBtn, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);
+
+	return hBtn;
 }
