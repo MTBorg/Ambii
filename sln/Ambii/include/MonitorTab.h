@@ -37,9 +37,6 @@ private:
 	Monitor * m_monitor;
 
 	BOOL InitControls();
-	CONST HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x, CONST UINT y);
-	CONST HWND InitEditCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height, CONST HMENU id);
-	CONST HWND MonitorTab::InitCheckboxCtrl(CONST HWND hWndParent, CONST UINT x, CONST UINT y, CONST LPCWSTR text, CONST HMENU id);
 public:
 	VOID Show();
 	VOID Hide();
