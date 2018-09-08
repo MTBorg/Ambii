@@ -11,7 +11,20 @@
 #define OUTPUT_SIZE 30
 
 /*
-	//TODO: Comment
+	Overloaded constructor.
+
+	@param rMonitor: A reference to the monitor this thread is associated with.
+	@param hWnd: A handle to the main window.
+	@param rSettings: A reference to a settings object containing the settings for the program.
+	@param hdc: A HDC object to display the monitor and output in.
+	@param drawWidth: The width of the area that the thread should draw in.
+	@param drawHeight: The height of the area thtat the thread should draw in.
+	@param outputLeft: An array where the output values of the left side of the monitor will be written.
+	@param outputRight: An array where the output values of the right side of the monitor will be written.
+	@param outputTop: An array where the output values of the top side of the monitor will be written.
+	@param outputBottom: An array where the output values of the bottom side of the monitor will be written.
+
+	@remarks The thread does not allocate memory or create the hdc itself, this needs to be done before constructing and running the thread.
 */
 MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Settings &rSettings, CONST HDC hdc, CONST UINT drawWidth, CONST UINT drawHeight,
 	RGBQUAD *CONST outputLeft, RGBQUAD *CONST outputRight, RGBQUAD *CONST outputTop, RGBQUAD *CONST outputBottom)
@@ -22,7 +35,7 @@ MonitorThread::MonitorThread(CONST Monitor &rMonitor, CONST HWND hWnd, CONST Set
 }
 
 /*
-	//TODO: Comment
+	Runs (starts) thread.
 */
 VOID MonitorThread::Run() {
 	m_rMonitor.GetPixels(m_arrPixels.get());
@@ -78,7 +91,7 @@ VOID MonitorThread::DisplayMonitor() {
 }
 
 /*
-	//TODO: Comment
+	Calculates the LED output values on the left side of the monitor.
 */
 VOID MonitorThread::CalculateLedsLeft() {
 	RECT clientRect;
@@ -116,7 +129,7 @@ VOID MonitorThread::CalculateLedsLeft() {
 }
 
 /*
-	//TODO: Comment
+	Calculates the LED output values on the right side of the monitor.
 */
 VOID MonitorThread::CalculateLedsRight() {
 	RECT clientRect;
@@ -155,7 +168,7 @@ VOID MonitorThread::CalculateLedsRight() {
 }
 
 /*
-	//TODO: Comment
+	Calculates the LED output values on the top side of the monitor.
 */
 VOID MonitorThread::CalculateLedsTop() {
 	RECT clientRect;
@@ -194,7 +207,7 @@ VOID MonitorThread::CalculateLedsTop() {
 }
 
 /*
-	//TODO: Comment
+	Calculates the LED output values on the bottom side of the monitor.
 */
 VOID MonitorThread::CalculateLedsBottom() {
 	RECT clientRect;
@@ -233,7 +246,7 @@ VOID MonitorThread::CalculateLedsBottom() {
 }
 
 /*
-	//TODO: Comment
+	Displays the LED output values on the left side of the monitor.
 */
 VOID MonitorThread::DisplayLedsLeft() {
 	RECT clientRect;
@@ -253,7 +266,7 @@ VOID MonitorThread::DisplayLedsLeft() {
 }
 
 /*
-	//TODO: Comment
+	Displays the LED output values on the right side of the monitor.
 */
 VOID MonitorThread::DisplayLedsRight() {
 	RECT clientRect;
@@ -273,7 +286,7 @@ VOID MonitorThread::DisplayLedsRight() {
 }
 
 /*
-	//TODO: Comment
+	Displays the LED output values on the top side of the monitor.
 */
 VOID MonitorThread::DisplayLedsTop() {
 	RECT clientRect;
@@ -292,8 +305,8 @@ VOID MonitorThread::DisplayLedsTop() {
 	}
 }
 
-/*
-	//TODO: Comment
+/*		
+	Displays the LED output values on the bottom side of the monitor.
 */
 VOID MonitorThread::DisplayLedsBottom() {
 	RECT clientRect;
