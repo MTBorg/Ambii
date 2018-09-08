@@ -14,7 +14,11 @@
 #include <map>
 
 /*
-	//TODO: Comment
+	Overloaded constructor.
+
+	@param hWnd: A handle to the main window.
+	@param rSettings: A refrence to the settings object for the program.
+	@param hMutexSettings: A handle to the mutex object used to synchronize this thread with the main thread.
 */
 UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HANDLE hMutexSettings)
 	: m_hWnd(hWnd), m_rSettings(rSettings), m_hMutexSettings(hMutexSettings), m_stopped(TRUE)
@@ -22,7 +26,7 @@ UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HAN
 }
 
 /*
-	//TODO: Comment
+	Runs (starts) the thread.
 */
 VOID UpdateThread::Run() {
 	m_stopped = FALSE;
