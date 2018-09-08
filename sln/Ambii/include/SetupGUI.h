@@ -1,5 +1,9 @@
 /*
-	//TODO: Comment
+	SetupGUI.h
+
+	Header file for class SetupGUI.
+
+	@author: Martin Terneborg
 */
 #ifndef SETUPGUI_H
 #define SETUPGUI_H
@@ -11,7 +15,7 @@
 #include "MonitorTab.h"
 
 /*
-	//TODO: Comment
+	Class responsible for drawing the setup GUI.
 */
 class SetupGUI {
 private:
