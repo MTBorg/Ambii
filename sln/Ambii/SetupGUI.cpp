@@ -28,7 +28,13 @@ SetupGUI::SetupGUI(CONST std::vector<Monitor>& selectedMonitors)
 }
 
 /*
-	//TODO: Comment
+	Draws the gui.
+
+	@param hWndParent: A handle to the parent window.
+	@param x: The horizontal position of the GUI.
+	@param y: The vertical position of the GUI.
+	@param width: The width of the GUI.
+	@parwam height: The height of the GUI.
 */
 VOID SetupGUI::Draw(CONST HWND hWndParent, CONST UINT x, CONST UINT y,
 	CONST UINT width, CONST UINT height) {
@@ -74,7 +80,14 @@ VOID SetupGUI::Draw(CONST HWND hWndParent, CONST UINT x, CONST UINT y,
 }
 
 /*
-	//TODO: Comment
+	Draws a monitor in the GUI.
+
+	@param hdc: The hdc object of the GUI.
+	@param monitor: A reference to the monitor to be drawn.
+	@param x: The horizontal position to draw the monitor at.
+	@param y: The vertical position to draw the monitor at.
+	@param width: The drawing width of the monitor.
+	@param height: The drawing height of the monitor.
 */
 VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, CONST UINT y, CONST UINT width, CONST UINT height) {
 	HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 0));
