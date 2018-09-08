@@ -1,5 +1,9 @@
 /*
-	//TODO: Comment
+	InitCtrls.h
+
+	Header file for common functions used to the create controls.
+
+	@author: Martin Terneborg
 */
 
 #ifndef INITCTRLS_H
