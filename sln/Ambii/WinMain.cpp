@@ -18,6 +18,10 @@
 #define UNICODE
 #endif
 
+/*
+	The entry point for the program.
+	Read microsoft documentation for parameter info.	
+*/
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 	INT nCmdShow) {
 	HWND hWndMain;
