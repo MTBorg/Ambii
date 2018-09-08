@@ -233,7 +233,9 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 }
 
 /*
-	//TODO: Comment
+	Loads a bitmap from the current directory.
+
+	@param fileName: The filename of the bitmap file.
 */
 CONST HBITMAP SetupGUI::LoadBMPFromCD(CONST LPCWSTR fileName) {
 	WCHAR buffer[MAX_PATH];
