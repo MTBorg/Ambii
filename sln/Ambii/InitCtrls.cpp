@@ -1,5 +1,9 @@
 /*
-	//TODO: Comment
+	InitCtrls.cpp
+
+	Source file for file InitCtrls.h
+
+	@author: Martin Terneborg
 */
 
 #include "InitCtrls.h"
