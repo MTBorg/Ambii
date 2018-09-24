@@ -186,12 +186,12 @@ VOID MonitorTab::Hide() {
 }
 
 /*
-	Gets the settings in the monitor tab and copies them (if the input is valid)
+	Applies the settings in the monitor tab
 	to the monitor reference passed to the constructor of the monitor tab.
 
 	@return TRUE if all settings are retrieved successfully, otherwise FALSE.
 */
-BOOL MonitorTab::GetSettings() {
+BOOL MonitorTab::ApplySettings() {
 	BOOL resultSuccess = TRUE, getSuccess = TRUE;
 
 	UINT nLedsLeft = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_LEFT_EDIT, &getSuccess, FALSE);

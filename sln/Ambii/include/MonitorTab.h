@@ -41,7 +41,7 @@ public:
 	VOID Show();
 	VOID Hide();
 	BOOL Create(CONST HWND hTabCtrl, Monitor * CONST monitor);
-	BOOL GetSettings();
+	BOOL ApplySettings();
 	BOOL Modified();
 };
 

@@ -282,7 +282,7 @@ VOID SetupWnd::ApplySettings(CONST HWND hWnd) {
 		MonitorTab *monitorTab = NULL;
 		monitorTab = (MonitorTab*)tcItem.lParam;
 
-		if (!monitorTab->GetSettings()) { //TODO: Try/Catch statement
+		if (!monitorTab->ApplySettings()) { //TODO: Try/Catch statement
 			//MessageBox(hWnd, L"Invalid Input!", L"Error", MB_ICONERROR); //TODO: This freezes the program //TODO: Give better error message
 			break;
 		}
