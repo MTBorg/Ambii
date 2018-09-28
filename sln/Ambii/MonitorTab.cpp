@@ -261,6 +261,78 @@ BOOL MonitorTab::ApplySettings() {
 }
 
 /*
+	TESTING
+*/
+BOOL MonitorTab::GetSettings(Monitor &monitor) {
+	BOOL resultSuccess = TRUE, getSuccess = TRUE;
+
+	UINT nLedsLeft = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_LEFT_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT nLedsRight = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_RIGHT_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT nLedsTop = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT nLedsBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posX = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posY = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posLeft = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_LEFT_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posRight = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posTop = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	UINT posBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, &getSuccess, FALSE);
+	resultSuccess &= getSuccess;
+
+	DWORD clockwiseLeft = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_LEFT), BM_GETCHECK, NULL, NULL);
+	DWORD clockwiseRight = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_RIGHT), BM_GETCHECK, NULL, NULL);
+	DWORD clockwiseTop = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_TOP), BM_GETCHECK, NULL, NULL);
+	DWORD clockwiseBottom = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_BOTTOM), BM_GETCHECK, NULL, NULL);
+
+	//Make sure that no position is the same as any other
+	BOOL equalCheck = ((posLeft == posRight) || (posLeft == posTop) || (posLeft == posBottom)) && (posLeft != 0);
+	equalCheck |= ((posRight == posTop) || (posRight == posBottom)) && (posRight != 0);
+	equalCheck |= (posTop == posBottom) && (posTop != 0);
+	if (equalCheck) { //TODO: This should not just return FALSE
+		return FALSE;
+	}
+
+	//If the input is valid
+	if (resultSuccess) {
+		monitor.SetLeftLeds(nLedsLeft);
+		monitor.SetRightLeds(nLedsRight);
+		monitor.SetTopLeds(nLedsTop);
+		monitor.SetBottomLeds(nLedsBottom);
+		monitor.SetPosX(posX);
+		monitor.SetPosY(posY);
+		monitor.SetPosLeft(posLeft);
+		monitor.SetPosRight(posRight);
+		monitor.SetPosTop(posTop);
+		monitor.SetPosBottom(posBottom);
+		monitor.SetClockwiseLeft(clockwiseLeft);
+		monitor.SetClockwiseRight(clockwiseRight);
+		monitor.SetClockwiseTop(clockwiseTop);
+		monitor.SetClockwiseBottom(clockwiseBottom);
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
+}
+
+/*
 	Checks if any of the controls in the tab has been modified.
 
 	@return TRUE if any of the controls have been modified, otherwise FALSE;

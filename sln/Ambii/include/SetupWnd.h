@@ -37,7 +37,7 @@ private:
 		std::vector<Monitor>& selectedMonitors);
 	VOID InitTabCtrl(CONST HWND hWndParent,
 		std::vector<Monitor>& selectedMonitors, CONST UINT width, CONST UINT height);
-	VOID ApplySettings(CONST HWND hWnd);
+	BOOL ApplySettings(CONST HWND hWnd);
 public:
 	SetupWnd(CONST std::vector<Monitor>& selectedMonitors);
 	BOOL Create(CONST HWND hWndParent, 

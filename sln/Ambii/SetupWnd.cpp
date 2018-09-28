@@ -59,7 +59,9 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 			PostMessage(hWnd, WM_CLOSE, NULL, NULL);
 			break;
 		case m_CONTROLS_ID::APPLY_BUTTON:
-			pObj->ApplySettings(hWnd);
+			if (!pObj->ApplySettings(hWnd)) {
+				MessageBox(hWnd, L"One or more monitor sides containing LEDs has the same position as some other monitor sides", L"Warning", MB_ICONASTERISK);
+			}
 			break;
 		case m_CONTROLS_ID::SAVE_BUTTON:
 			pObj->ApplySettings(hWnd);
@@ -85,6 +87,7 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		RECT clientRect;
 		GetClientRect(hWnd, &clientRect);
 		pObj->m_setupGUI.Draw(hWnd, 0, TAB_HEIGHT, clientRect.right, GUI_HEIGHT);
+		return DefWindowProc(hWnd, msg, wParam, lParam);
 		break;
 	case WM_CLOSE: 
 		BOOL bModified;
@@ -114,7 +117,8 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	default:
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
-	return 0;
+	//return DefWindowProc(hWnd, msg, wParam, lParam);
+	//return 0;
 }
 
 /*
@@ -151,6 +155,8 @@ BOOL SetupWnd::Create(CONST HWND hWndParent, std::vector<Monitor>& selectedMonit
 	SetWindowPos(hWnd, NULL, NULL, NULL, wndRect.right - wndRect.left, wndRect.bottom - wndRect.top + captionHeight, SWP_NOMOVE | SWP_NOZORDER);
 
 	InitControls(hWnd, selectedMonitors);	
+
+	MessageBox(hWnd, L"awdawd", L"awdawd", MB_ICONERROR);
 
 	UpdateWindow(hWnd);
 	ShowWindow(hWnd, SW_SHOW);
@@ -222,7 +228,7 @@ VOID SetupWnd::InitControls(CONST HWND hWndParent, std::vector<Monitor>& selecte
 VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selectedMonitors, CONST UINT width, CONST UINT height) {
 	RECT clientRect;
 	GetClientRect(hWndParent, &clientRect);
-	
+
 	HWND hTabCtrl = CreateWindowEx(
 		WS_EX_STATICEDGE,
 		WC_TABCONTROL, L"Monitors",
@@ -269,8 +275,12 @@ VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selected
 
 	@param hWnd: A handle to the window containing the tab control.
 */
-VOID SetupWnd::ApplySettings(CONST HWND hWnd) {
+BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 	HWND hTabCtrl = GetDlgItem(hWnd, m_CONTROLS_ID::TAB_CTRL); //TODO: GetDlgItem returns NULL on release build
+	
+	std::vector<Monitor> newMonitors;
+	newMonitors.reserve(m_monitorTabs.size());
+
 	for (UINT i = 0; i < (UINT)TabCtrl_GetItemCount(hTabCtrl); i++) {
 		//Get the tab control itekm
 		TCITEM tcItem = { 0 };
@@ -282,11 +292,34 @@ VOID SetupWnd::ApplySettings(CONST HWND hWnd) {
 		MonitorTab *monitorTab = NULL;
 		monitorTab = (MonitorTab*)tcItem.lParam;
 
-		if (!monitorTab->ApplySettings()) { //TODO: Try/Catch statement
-			//MessageBox(hWnd, L"Invalid Input!", L"Error", MB_ICONERROR); //TODO: This freezes the program //TODO: Give better error message
-			break;
+		Monitor monitor = monitorTab->GetMonitor();
+		if (!monitorTab->GetSettings(monitor)) {
+			int a = 3; //DEBUG 
+		}
+		else {
+			newMonitors.push_back(monitor);
+		}
+
+	}
+
+	//Go through all the monitors and make sure that no monitor side containing LEDs has the same position
+	//as any other monitor also containig LEDs.
+	for (UINT i = 0; i < newMonitors.size(); i++) {
+		for (UINT j = 0; j < newMonitors.size(); j++) {
+			if (i != j) {
+				Monitor m1 = newMonitors.at(i), m2 = newMonitors.at(j);
+				if (
+					((m1.GetPosLeft()	== m2.GetPosLeft()) && m1.GetLeftLeds() > 0) ||
+					((m1.GetPosRight()== m2.GetPosRight())  && m1.GetRightLeds() > 0) ||
+					((m1.GetPosTop()	== m2.GetPosTop()) && m1.GetTopLeds() > 0) ||
+					((m1.GetPosBottom()== m2.GetPosBottom()) && m1.GetBottomLeds() > 0)) {
+					return FALSE;
+				}
+			}
 		}
 	}
+
+	return TRUE;
 }
 /*
 	Registers the window.
