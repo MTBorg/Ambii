@@ -303,17 +303,20 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 
 	}
 
-	//Go through all the monitors and make sure that no monitor side containing LEDs has the same position
-	//as any other monitor also containig LEDs.
+	//Go through all the monitors and make sure that no position value has the same value as some other position value
+	//(For the monitor sides this only applies to those who contain LEDs)
 	for (UINT i = 0; i < newMonitors.size(); i++) {
 		for (UINT j = 0; j < newMonitors.size(); j++) {
 			if (i != j) {
 				Monitor m1 = newMonitors.at(i), m2 = newMonitors.at(j);
 				if (
-					((m1.GetPosLeft()	== m2.GetPosLeft()) && m1.GetLeftLeds() > 0) ||
-					((m1.GetPosRight()== m2.GetPosRight())  && m1.GetRightLeds() > 0) ||
-					((m1.GetPosTop()	== m2.GetPosTop()) && m1.GetTopLeds() > 0) ||
-					((m1.GetPosBottom()== m2.GetPosBottom()) && m1.GetBottomLeds() > 0)){ //TODO: This should also check horizontal/vertical position
+					((m1.GetPosLeft() == m2.GetPosLeft())		&& m1.GetLeftLeds()		> 0)	||
+					((m1.GetPosRight() == m2.GetPosRight())		&& m1.GetRightLeds()	> 0)	||
+					((m1.GetPosTop() == m2.GetPosTop())			&& m1.GetTopLeds()		> 0)	||
+					((m1.GetPosBottom() == m2.GetPosBottom())	&& m1.GetBottomLeds()	> 0)	||
+					(m1.GetPosX()		== m2.GetPosX()) || 
+					(m1.GetPosY()		== m2.GetPosY()))
+				{ 
 					return FALSE;
 				}
 			}
