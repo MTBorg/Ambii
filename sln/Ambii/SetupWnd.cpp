@@ -64,7 +64,10 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 			}
 			break;
 		case m_CONTROLS_ID::SAVE_BUTTON:
-			pObj->ApplySettings(hWnd);
+			if (!pObj->ApplySettings(hWnd)) {
+				MessageBox(hWnd, L"One or more monitor sides containing LEDs has the same position as some other monitor sides", L"Warning", MB_ICONASTERISK);
+			}
+			
 			DestroyWindow(hWnd);
 			break;
 		}
@@ -155,8 +158,6 @@ BOOL SetupWnd::Create(CONST HWND hWndParent, std::vector<Monitor>& selectedMonit
 	SetWindowPos(hWnd, NULL, NULL, NULL, wndRect.right - wndRect.left, wndRect.bottom - wndRect.top + captionHeight, SWP_NOMOVE | SWP_NOZORDER);
 
 	InitControls(hWnd, selectedMonitors);	
-
-	MessageBox(hWnd, L"awdawd", L"awdawd", MB_ICONERROR);
 
 	UpdateWindow(hWnd);
 	ShowWindow(hWnd, SW_SHOW);
@@ -312,10 +313,26 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 					((m1.GetPosLeft()	== m2.GetPosLeft()) && m1.GetLeftLeds() > 0) ||
 					((m1.GetPosRight()== m2.GetPosRight())  && m1.GetRightLeds() > 0) ||
 					((m1.GetPosTop()	== m2.GetPosTop()) && m1.GetTopLeds() > 0) ||
-					((m1.GetPosBottom()== m2.GetPosBottom()) && m1.GetBottomLeds() > 0)) {
+					((m1.GetPosBottom()== m2.GetPosBottom()) && m1.GetBottomLeds() > 0)){ //TODO: This should also check horizontal/vertical position
 					return FALSE;
 				}
 			}
+		}
+	}
+
+	//Apply the settings
+	for (UINT i = 0; i < (UINT)TabCtrl_GetItemCount(hTabCtrl); i++) {
+		//Get the tab control itekm
+		TCITEM tcItem = { 0 };
+		tcItem.mask = TCIF_PARAM;
+		if (!TabCtrl_GetItem(hTabCtrl, i, &tcItem)) {
+			//TODO: Handle error
+		}
+
+		MonitorTab *monitorTab = NULL;
+		monitorTab = (MonitorTab*)tcItem.lParam;
+		if (!monitorTab->ApplySettings()) {
+			return FALSE;
 		}
 	}
 

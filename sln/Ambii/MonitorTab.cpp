@@ -187,76 +187,18 @@ VOID MonitorTab::Hide() {
 
 /*
 	Applies the settings in the monitor tab
-	to the monitor reference passed to the constructor of the monitor tab.
+	to the monitor pointer passed to the constructor of the monitor tab.
 
 	@return TRUE if all settings are retrieved successfully, otherwise FALSE.
 */
 BOOL MonitorTab::ApplySettings() {
-	BOOL resultSuccess = TRUE, getSuccess = TRUE;
-
-	UINT nLedsLeft = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_LEFT_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT nLedsRight = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_RIGHT_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT nLedsTop = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT nLedsBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT posX = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT posY = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT posLeft = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_LEFT_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT posRight = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT posTop = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	UINT posBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, &getSuccess, FALSE);
-	resultSuccess &= getSuccess;
-
-	DWORD clockwiseLeft = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_LEFT), BM_GETCHECK, NULL, NULL);
-	DWORD clockwiseRight = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_RIGHT), BM_GETCHECK, NULL, NULL);
-	DWORD clockwiseTop = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_TOP), BM_GETCHECK, NULL, NULL);
-	DWORD clockwiseBottom = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_BOTTOM), BM_GETCHECK, NULL, NULL);
-
-	//Make sure that no position is the same as any other
-	BOOL equalCheck = ((posLeft == posRight) || (posLeft == posTop) || (posLeft == posBottom)) && (posLeft != 0);
-	equalCheck |= ((posRight == posTop) || (posRight == posBottom)) && (posRight != 0);
-	equalCheck |= (posTop == posBottom) && (posTop != 0);
-	if (equalCheck) { //TODO: This should not just return FALSE
+	Monitor monitor = *m_monitor;
+	if (!GetSettings(monitor)) {
 		return FALSE;
-	}
-
-	//If the input is valid
-	if (resultSuccess) {
-		m_monitor->SetLeftLeds(nLedsLeft);
-		m_monitor->SetRightLeds(nLedsRight);
-		m_monitor->SetTopLeds(nLedsTop);
-		m_monitor->SetBottomLeds(nLedsBottom);
-		m_monitor->SetPosX(posX);
-		m_monitor->SetPosY(posY);
-		m_monitor->SetPosLeft(posLeft);
-		m_monitor->SetPosRight(posRight);
-		m_monitor->SetPosTop(posTop);
-		m_monitor->SetPosBottom(posBottom);
-		m_monitor->SetClockwiseLeft(clockwiseLeft);
-		m_monitor->SetClockwiseRight(clockwiseRight);
-		m_monitor->SetClockwiseTop(clockwiseTop);
-		m_monitor->SetClockwiseBottom(clockwiseBottom);
-		return TRUE;
 	}
 	else {
-		return FALSE;
+		*m_monitor = monitor;
+		return TRUE;
 	}
 }
 
@@ -302,10 +244,11 @@ BOOL MonitorTab::GetSettings(Monitor &monitor) {
 	DWORD clockwiseBottom = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_BOTTOM), BM_GETCHECK, NULL, NULL);
 
 	//Make sure that no position is the same as any other
-	BOOL equalCheck = ((posLeft == posRight) || (posLeft == posTop) || (posLeft == posBottom)) && (posLeft != 0);
+	BOOL equalCheck = FALSE;
+	equalCheck |= ((posLeft == posRight) || (posLeft == posTop) || (posLeft == posBottom)) && (posLeft != 0);
 	equalCheck |= ((posRight == posTop) || (posRight == posBottom)) && (posRight != 0);
 	equalCheck |= (posTop == posBottom) && (posTop != 0);
-	if (equalCheck) { //TODO: This should not just return FALSE
+	if (equalCheck) {
 		return FALSE;
 	}
 
