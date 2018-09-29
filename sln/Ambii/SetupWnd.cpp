@@ -287,7 +287,7 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 		TCITEM tcItem = { 0 };
 		tcItem.mask = TCIF_PARAM;
 		if (!TabCtrl_GetItem(hTabCtrl, i, &tcItem)) {
-			//TODO: Handle error
+			throw L"Failed to retrieve tab.";
 		}
 
 		MonitorTab *monitorTab = NULL;
@@ -295,7 +295,7 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 
 		Monitor monitor = monitorTab->GetMonitor();
 		if (!monitorTab->GetSettings(monitor)) {
-			int a = 3; //DEBUG 
+			return FALSE;
 		}
 		else {
 			newMonitors.push_back(monitor);
@@ -329,7 +329,7 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 		TCITEM tcItem = { 0 };
 		tcItem.mask = TCIF_PARAM;
 		if (!TabCtrl_GetItem(hTabCtrl, i, &tcItem)) {
-			//TODO: Handle error
+			throw L"Failed to retrieve tab.";
 		}
 
 		MonitorTab *monitorTab = NULL;
