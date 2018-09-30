@@ -314,8 +314,7 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 					((m1.GetPosRight() == m2.GetPosRight())		&& m1.GetRightLeds()	> 0)	||
 					((m1.GetPosTop() == m2.GetPosTop())			&& m1.GetTopLeds()		> 0)	||
 					((m1.GetPosBottom() == m2.GetPosBottom())	&& m1.GetBottomLeds()	> 0)	||
-					(m1.GetPosX()		== m2.GetPosX()) || 
-					(m1.GetPosY()		== m2.GetPosY()))
+					((m1.GetPosX()	== m2.GetPosX())			&& m1.GetPosY() == m2.GetPosY()))
 				{ 
 					return FALSE;
 				}
