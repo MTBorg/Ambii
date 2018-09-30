@@ -282,8 +282,9 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 	std::vector<Monitor> newMonitors;
 	newMonitors.reserve(m_monitorTabs.size());
 
+	//Retrieve all the settings from the tabs.
 	for (UINT i = 0; i < (UINT)TabCtrl_GetItemCount(hTabCtrl); i++) {
-		//Get the tab control itekm
+		//Get the tab control item
 		TCITEM tcItem = { 0 };
 		tcItem.mask = TCIF_PARAM;
 		if (!TabCtrl_GetItem(hTabCtrl, i, &tcItem)) {
@@ -324,7 +325,7 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 
 	//Apply the settings
 	for (UINT i = 0; i < (UINT)TabCtrl_GetItemCount(hTabCtrl); i++) {
-		//Get the tab control itekm
+		//Get the tab control item
 		TCITEM tcItem = { 0 };
 		tcItem.mask = TCIF_PARAM;
 		if (!TabCtrl_GetItem(hTabCtrl, i, &tcItem)) {
