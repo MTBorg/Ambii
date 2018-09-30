@@ -291,8 +291,7 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 			throw L"Failed to retrieve tab.";
 		}
 
-		MonitorTab *monitorTab = NULL;
-		monitorTab = (MonitorTab*)tcItem.lParam;
+		MonitorTab *monitorTab = (MonitorTab*)tcItem.lParam;
 
 		Monitor monitor = monitorTab->GetMonitor();
 		if (!monitorTab->GetSettings(monitor)) {
@@ -332,8 +331,7 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 			throw L"Failed to retrieve tab.";
 		}
 
-		MonitorTab *monitorTab = NULL;
-		monitorTab = (MonitorTab*)tcItem.lParam;
+		MonitorTab *monitorTab = (MonitorTab*)tcItem.lParam;
 		if (!monitorTab->ApplySettings()) {
 			return FALSE;
 		}
