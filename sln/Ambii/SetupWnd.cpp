@@ -261,7 +261,7 @@ VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selected
 		tcItem.lParam = (LONG)&m_monitorTabs.at(i);
 
 		if (TabCtrl_InsertItem(hTabCtrl, i, &tcItem) == -1) {
-			//TODO: Handle error
+			throw L"Exception in function InitTabCtrl. Exception: Failed to insert tab control item.";
 		}
 	}
 
@@ -275,6 +275,8 @@ VOID SetupWnd::InitTabCtrl(CONST HWND hWndParent, std::vector<Monitor>& selected
 	Applies the settings entered.
 
 	@param hWnd: A handle to the window containing the tab control.
+
+	@return True if all settings are applied successfully, otherwise FALSE.
 */
 BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 	HWND hTabCtrl = GetDlgItem(hWnd, m_CONTROLS_ID::TAB_CTRL); //TODO: GetDlgItem returns NULL on release build
@@ -310,11 +312,11 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 			if (i != j) {
 				Monitor m1 = newMonitors.at(i), m2 = newMonitors.at(j);
 				if (
-					((m1.GetPosLeft() == m2.GetPosLeft())		&& m1.GetLeftLeds()		> 0)	||
-					((m1.GetPosRight() == m2.GetPosRight())		&& m1.GetRightLeds()	> 0)	||
-					((m1.GetPosTop() == m2.GetPosTop())			&& m1.GetTopLeds()		> 0)	||
+					((m1.GetPosLeft()	== m2.GetPosLeft())		&& m1.GetLeftLeds()		> 0)	||
+					((m1.GetPosRight()	== m2.GetPosRight())	&& m1.GetRightLeds()	> 0)	||
+					((m1.GetPosTop()	== m2.GetPosTop())		&& m1.GetTopLeds()		> 0)	||
 					((m1.GetPosBottom() == m2.GetPosBottom())	&& m1.GetBottomLeds()	> 0)	||
-					((m1.GetPosX()	== m2.GetPosX())			&& m1.GetPosY() == m2.GetPosY()))
+					((m1.GetPosX()		== m2.GetPosX())		&& m1.GetPosY() == m2.GetPosY()))
 				{ 
 					return FALSE;
 				}
@@ -339,6 +341,7 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 
 	return TRUE;
 }
+
 /*
 	Registers the window.
 
