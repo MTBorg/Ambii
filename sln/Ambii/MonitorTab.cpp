@@ -189,7 +189,7 @@ VOID MonitorTab::Hide() {
 	Applies the settings in the monitor tab
 	to the monitor pointer passed to the constructor of the monitor tab.
 
-	@return TRUE if all settings are retrieved successfully, otherwise FALSE.
+	@return TRUE if all settings are applied successfully, otherwise FALSE.
 */
 BOOL MonitorTab::ApplySettings() {
 	Monitor monitor = *m_monitor;
@@ -203,7 +203,13 @@ BOOL MonitorTab::ApplySettings() {
 }
 
 /*
-	TESTING
+	Returns the current settings entered into the tab (without applying them).
+
+	@param monitor: A reference to the monitor object to write to save the settings to.
+
+	@return TRUE if all settings were retrieved successfully, otherwise FALSE.
+
+	@remark: This function does not save values not considered settings (i.e. monitor/display device name and monitor handle).
 */
 BOOL MonitorTab::GetSettings(Monitor &monitor) {
 	BOOL resultSuccess = TRUE, getSuccess = TRUE;
