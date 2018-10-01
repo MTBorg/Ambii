@@ -223,13 +223,14 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 
 	DeleteObject(hBrush);
 
+	CONST auto MONITORNAME_MARGIN_X = 30, MONITORNAME_MARGIN_Y = 20;
 	RECT monitorRect;
-	monitorRect.left = x;
-	monitorRect.right = x + width;
-	monitorRect.top = y;
-	monitorRect.bottom = y + height;
+	monitorRect.left = x + MONITORNAME_MARGIN_X;
+	monitorRect.right = x + width - MONITORNAME_MARGIN_X;
+	monitorRect.top = y + MONITORNAME_MARGIN_Y;
+	monitorRect.bottom = y + height - MONITORNAME_MARGIN_Y;
 
-	DrawText(hdc, monitor.GetMonitorName().c_str(), lstrlen(monitor.GetMonitorName().c_str()), &monitorRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	DrawText(hdc, monitor.GetMonitorName().c_str(), lstrlen(monitor.GetMonitorName().c_str()), &monitorRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_WORD_ELLIPSIS);
 }
 
 /*
