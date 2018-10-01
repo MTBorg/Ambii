@@ -6,6 +6,7 @@
 
 #include <CommCtrl.h>
 #include <Strsafe.h>
+#include <string>
 
 #define MONITOR_BORDER_WIDTH 4
 
@@ -130,6 +131,11 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 			SRCCOPY);
 	}
 	if (monitor.GetLeftLeds()) {
+
+		//Print the left monitor side position
+		std::wstring strLeftPos = std::to_wstring(monitor.GetPosLeft());
+		TextOut(hdc, x, y + height / 2, strLeftPos.c_str(), strLeftPos.length());
+
 		if (monitor.GetClockwiseLeft()) {
 			rotPt[0] = { LONG(x + ARROW_MARGIN), LONG(y + height / 2 + BMP_ARROW_DISPLAY_HEIGHT / 2) };
 			rotPt[1] = { LONG(x + ARROW_MARGIN), LONG(y + height / 2 - BMP_ARROW_DISPLAY_HEIGHT / 2) };
@@ -155,6 +161,11 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 				SRCCOPY);
 	}
 	if (monitor.GetRightLeds()) {
+
+		//Print the right monitor side position
+		std::wstring strRightPos = std::to_wstring(monitor.GetPosRight());
+		TextOut(hdc, x + width, y + height / 2, strRightPos.c_str(), strRightPos.length());
+
 		if (monitor.GetClockwiseRight()) {
 			rotPt[0] = { LONG(x + width - ARROW_MARGIN), LONG(y + height / 2 - BMP_ARROW_DISPLAY_HEIGHT / 2) };
 			rotPt[1] = { LONG(x + width - ARROW_MARGIN), LONG(y + height / 2 + BMP_ARROW_DISPLAY_HEIGHT / 2) };
@@ -179,6 +190,10 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 			SRCCOPY);
 	}	
 	if (monitor.GetTopLeds()) {
+		//Print the top monitor side position
+		std::wstring strTopPos = std::to_wstring(monitor.GetPosTop());
+		TextOut(hdc, x + width / 2, y, strTopPos.c_str(), strTopPos.length());
+
 		if (monitor.GetClockwiseTop()) {
 			rotPt[0] = { LONG(x + width / 2 - BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + ARROW_MARGIN)};
 			rotPt[1] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + ARROW_MARGIN)};
@@ -203,6 +218,11 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 			SRCCOPY);
 	}
 	if (monitor.GetBottomLeds()) {
+
+		//Print the bottom monitor side position //TODO: This gets printed outside the window for the monitors at the bottom
+		std::wstring strBotPos = std::to_wstring(monitor.GetPosBottom());
+		TextOut(hdc, x + width / 2, y + height, strBotPos.c_str(), strBotPos.length());
+
 		if (monitor.GetClockwiseBottom()) {
 			rotPt[0] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN) };
 			rotPt[1] = { LONG(x + width / 2 - BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN) };
