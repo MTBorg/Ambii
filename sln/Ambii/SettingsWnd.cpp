@@ -139,9 +139,6 @@ BOOL SettingsWnd::GetSettings(CONST HWND hWnd, Settings * CONST settings) {
 		NULL, NULL) == BST_CHECKED ? BST_CHECKED : BST_UNCHECKED;
 	BOOL bMultiThreading = SendMessage(GetDlgItem(hWnd, m_CONTROL_ID::MULTITHREADING_CHECKBOX), BM_GETCHECK,
 		NULL, NULL) == BST_CHECKED ? BST_CHECKED : BST_UNCHECKED;
-	HWND hTest = GetDlgItem(hWnd, m_CONTROL_ID::CLOCKWISE_CHECKBOX);
-	BOOL bClockwise = SendMessage(GetDlgItem(hWnd, m_CONTROL_ID::CLOCKWISE_CHECKBOX),
-		BM_GETCHECK, NULL, NULL);
 
 	//Get the selected monitors
 	std::vector<Monitor> allMonitors = Monitor::GetMonitors();
@@ -182,15 +179,13 @@ BOOL SettingsWnd::GetSettings(CONST HWND hWnd, Settings * CONST settings) {
 		}
 	}
 
-	//If every settings was retrieved successfully
+	//If every setting was retrieved successfully
 	if (sampleSizeSuccess && refreshRateSuccess && baudRateSuccess) {
 		settings->m_maxRefreshRate = refreshRate;
 		settings->m_sampleSize = sampleSize;
 		settings->m_bMultiThreading = bMultiThreading;
 		settings->m_bUsePrimaryMonitor = bPrimaryMonitor;
 		settings->m_nBaudRate = baudRate;
-		settings->m_bClockwise = bClockwise;
-
 		settings->m_usedMonitors.clear();
 		settings->m_usedMonitors = selectedMonitors;
 		return TRUE;
@@ -300,10 +295,6 @@ BOOL SettingsWnd::InitControls(CONST HWND hWndParent, CONST Settings &settings) 
 	//Multithreading
 	HWND hMultithreading = InitCheckboxCtrl(hWndParent, 0, 200, CONTROLTEXT_MULTITHREADING, (HMENU)m_CONTROL_ID::MULTITHREADING_CHECKBOX);
 	SendMessage(hMultithreading, BM_SETCHECK, (WPARAM)settings.m_bMultiThreading ? TRUE : FALSE, NULL);
-
-	//Clockwise
-	HWND hClockwise = InitCheckboxCtrl(hWndParent, 0, 220, CONTROLTEXT_CLOCKWISE, (HMENU)m_CONTROL_ID::CLOCKWISE_CHECKBOX);
-	SendMessage(hClockwise, BM_SETCHECK, (WPARAM)settings.m_bClockwise ? TRUE : FALSE, NULL);
 
 	return TRUE;
 }

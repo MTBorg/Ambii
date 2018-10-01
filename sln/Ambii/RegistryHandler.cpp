@@ -32,7 +32,6 @@ CONST LPCWSTR RegistryHandler::m_valueNames::MULTITHREADING = L"Multithreading";
 CONST LPCWSTR RegistryHandler::m_valueNames::USEONLYPRIMARY = L"Use only primary monitor";
 CONST LPCWSTR RegistryHandler::m_valueNames::PORTNUM = L"Port number";
 CONST LPCWSTR RegistryHandler::m_valueNames::BAUDRATE = L"Baud Rate";
-CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE = L"Clockwise";
 CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_LEFT = L"Left side clockwise";
 CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_RIGHT = L"Right side clockwise";
 CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_TOP = L"Top side clockwise";
@@ -148,7 +147,6 @@ VOID RegistryHandler::StoreSettings(Settings& settings) {
 
 		StoreValueBool(hKeyApp, m_valueNames::MULTITHREADING, settings.m_bMultiThreading);
 		StoreValueBool(hKeyApp, m_valueNames::USEONLYPRIMARY, settings.m_bUsePrimaryMonitor);
-		StoreValueBool(hKeyApp, m_valueNames::CLOCKWISE, settings.m_bClockwise);
 
 		for (UINT i = 0; i < settings.m_usedMonitors.size(); i++) {
 			StoreMonitor(hKeyApp, settings.m_usedMonitors.at(i));
@@ -208,7 +206,6 @@ BOOL RegistryHandler::GetSettings(Settings& settings) {
 
 		BOOL bMultiThreading = GetValueBool(hKeyApp, NULL, m_valueNames::MULTITHREADING);
 		BOOL bUseOnlyPrimary = GetValueBool(hKeyApp, NULL, m_valueNames::USEONLYPRIMARY);
-		BOOL bClockwise = GetValueBool(hKeyApp, NULL, m_valueNames::CLOCKWISE);
 
 		//Enumerate the subkeys (monitors)
 		//TODO: This should not use MAX_PATH
@@ -246,7 +243,6 @@ BOOL RegistryHandler::GetSettings(Settings& settings) {
 		settings.m_nBaudRate = baudRate;
 		settings.m_bDisplayMonitors = FALSE;
 		settings.m_bDisplayOutput = FALSE;
-		settings.m_bClockwise = bClockwise;
 	}
 	catch (std::wstring errorMsg) {
 		//Close retrieved handles
