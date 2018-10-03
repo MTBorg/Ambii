@@ -15,8 +15,8 @@
 CONST LPCWSTR SetupWnd::m_TITLE = L"Setup";
 
 #define TAB_HEIGHT 300
-#define GUI_HEIGHT 300
-#define WIDTH_WND_START 800
+#define GUI_HEIGHT 500 
+#define WIDTH_WND 800
 
 #define BUTTON_WIDTH 100
 #define BUTTON_HEIGHT 20
