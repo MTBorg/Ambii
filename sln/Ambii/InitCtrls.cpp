@@ -20,7 +20,7 @@
 
 	@return A handle to the newly created control or NULL if the creation failed.
 */
-CONST HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x, CONST UINT y) {
+CONST HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x, CONST UINT y, CONST HMENU id) {
 
 	//Create a DC in memory to hold the font
 	HDC hdcMem = CreateCompatibleDC(NULL);
@@ -38,7 +38,7 @@ CONST HWND InitTextCtrl(CONST HWND hWndParent, CONST LPCWSTR text, CONST UINT x,
 		x, y,
 		textSize.cx, textSize.cy,
 		hWndParent,
-		NULL,
+		id,
 		GetModuleHandle(NULL),
 		NULL);
 	SendMessage(hText, WM_SETFONT, (WPARAM)GetStockObject(DEFAULT_GUI_FONT), NULL);

@@ -157,25 +157,25 @@ BOOL MonitorTab::InitControls() {
 	//LEDs
 	//////////////////////////////////////////////////
 	//Left
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_LEDS_LEFT, LED_TEXT_X, 0 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_LEDS_LEFT, LED_TEXT_X, 0 * TEXTLINE_HEIGHT, NULL);
 	HWND hLedsLeft = InitEditCtrl(m_hDisplayCtrl, LED_EDIT_X, 0 * TEXTLINE_HEIGHT, LED_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::LEDS_LEFT_EDIT);
 	SendMessage(hLedsLeft, EM_SETLIMITTEXT, 3, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_LEFT_EDIT, m_monitor->GetLeftLeds(), FALSE);
 
 	//Right
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_LEDS_RIGHT, LED_TEXT_X, 1 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_LEDS_RIGHT, LED_TEXT_X, 1 * TEXTLINE_HEIGHT, NULL);
 	HWND hLedsRight = InitEditCtrl(m_hDisplayCtrl, LED_EDIT_X, 1 * TEXTLINE_HEIGHT, LED_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::LEDS_RIGHT_EDIT);
 	SendMessage(hLedsLeft, EM_SETLIMITTEXT, 3, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_RIGHT_EDIT, m_monitor->GetRightLeds(), FALSE);
 
 	//Top
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_LEDS_TOP, LED_TEXT_X, 2 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_LEDS_TOP, LED_TEXT_X, 2 * TEXTLINE_HEIGHT, NULL);
 	HWND hLedsTop = InitEditCtrl(m_hDisplayCtrl, LED_EDIT_X, 2 * TEXTLINE_HEIGHT, LED_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::LEDS_TOP_EDIT);
 	SendMessage(hLedsLeft, EM_SETLIMITTEXT, 3, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT, m_monitor->GetTopLeds(), FALSE);
 
 	//Bottom
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_LEDS_BOTTOM, LED_TEXT_X, 3 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_LEDS_BOTTOM, LED_TEXT_X, 3 * TEXTLINE_HEIGHT, NULL);
 	HWND hLedsBottom = InitEditCtrl(m_hDisplayCtrl, LED_EDIT_X, 3 * TEXTLINE_HEIGHT, LED_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::LEDS_BOTTOM_EDIT);
 	SendMessage(hLedsLeft, EM_SETLIMITTEXT, 3, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT, m_monitor->GetBottomLeds(), FALSE);
@@ -185,37 +185,37 @@ BOOL MonitorTab::InitControls() {
 	//Positions
 	////////////////////////////////////////////
 	//Left
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_LEFT, POSITION_TEXT_X, 0 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_LEFT, POSITION_TEXT_X, 0 * TEXTLINE_HEIGHT, NULL);
 	HWND hPosLeft = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 0 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_LEFT_EDIT);
 	SendMessage(hPosLeft, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_LEFT_EDIT, m_monitor->GetPosLeft(), FALSE);
 
 	//Right
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_RIGHT, POSITION_TEXT_X, 1 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_RIGHT, POSITION_TEXT_X, 1 * TEXTLINE_HEIGHT, NULL);
 	HWND hPosRight = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 1 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_RIGHT_EDIT);
 	SendMessage(hPosRight, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT, m_monitor->GetPosRight(), FALSE);
 
 	//Top
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_TOP, POSITION_TEXT_X, 2 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_TOP, POSITION_TEXT_X, 2 * TEXTLINE_HEIGHT, NULL);
 	HWND hPosTop = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 2 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_TOP_EDIT);
 	SendMessage(hPosTop, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT, m_monitor->GetPosTop(), FALSE);
 
 	//Bottom
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_BOTTOM, POSITION_TEXT_X, 3 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_BOTTOM, POSITION_TEXT_X, 3 * TEXTLINE_HEIGHT, NULL);
 	HWND hPosBottom = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 3 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_BOTTOM_EDIT);
 	SendMessage(hPosBottom, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, m_monitor->GetPosBottom(), FALSE);
 
 	//Horizontal
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_HORZ, POSITION_TEXT_X, 4 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_HORZ, POSITION_TEXT_X, 4 * TEXTLINE_HEIGHT, NULL);
 	HWND hPosHorz = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 4 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_HORZ_EDIT);
 	SendMessage(hPosHorz, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_HORZ_EDIT, m_monitor->GetPosX(), FALSE);
 
 	//Vertical
-	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_VERT, POSITION_TEXT_X, 5 * TEXTLINE_HEIGHT);
+	InitTextCtrl(m_hDisplayCtrl, CTRLTEXT_POSITION_VERT, POSITION_TEXT_X, 5 * TEXTLINE_HEIGHT, NULL);
 	HWND hPosVert = InitEditCtrl(m_hDisplayCtrl, POSITION_EDIT_X, 5 * TEXTLINE_HEIGHT, POSITION_EDIT_WIDTH, TEXTLINE_HEIGHT, (HMENU)m_CONTROL_ID::POSITION_VERT_EDIT);
 	SendMessage(hPosVert, EM_SETLIMITTEXT, 2, NULL);
 	SetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_VERT_EDIT, m_monitor->GetPosY(), FALSE);

@@ -248,21 +248,21 @@ BOOL SettingsWnd::InitControls(CONST HWND hWndParent, CONST Settings &settings) 
 	RECT txtRect;
 
 	//Refresh rate
-	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_MAXREFRESHRATE, 0, 0);
+	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_MAXREFRESHRATE, 0, 0, NULL);
 	GetClientRect(hTxt, &txtRect); //Get the text dimensions
 	HWND hRefRate = InitEditCtrl(hWndParent, txtRect.right, 0, 20, 20, (HMENU)m_CONTROL_ID::REFRESHRATE_EDIT);
 	SendMessage(hRefRate, EM_SETLIMITTEXT, (WPARAM)TEXTLIMIT_REFRESHRATE, NULL);
 	SetDlgItemInt(hWndParent, m_CONTROL_ID::REFRESHRATE_EDIT, settings.m_maxRefreshRate, FALSE);
 
 	//Sample size
-	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_SAMPLESIZE, 0, 25);
+	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_SAMPLESIZE, 0, 25, NULL);
 	GetClientRect(hTxt, &txtRect); //Get the text dimensions
 	HWND hSs = InitEditCtrl(hWndParent, txtRect.right, 25, 20, 20, (HMENU)m_CONTROL_ID::SAMPLESIZE_EDIT);
 	SendMessage(hSs, EM_SETLIMITTEXT, (WPARAM)TEXTLIMIT_SAMPLESIZE, NULL);
 	SetDlgItemInt(hWndParent, m_CONTROL_ID::SAMPLESIZE_EDIT, settings.m_sampleSize, FALSE);
 
 	//Baud rate
-	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_BAUDRATE, 0, 50);
+	hTxt = InitTextCtrl(hWndParent, CONTROLTEXT_BAUDRATE, 0, 50, NULL);
 	GetClientRect(hTxt, &txtRect); //Get the text dimensions
 	HWND hBaud = InitEditCtrl(hWndParent, txtRect.right, 50, 20, 20, (HMENU)m_CONTROL_ID::BAUDRATE_EDIT);
 	SendMessage(hBaud, EM_SETLIMITTEXT, (WPARAM)TEXTLIMIT_BAUDRATE, NULL);
