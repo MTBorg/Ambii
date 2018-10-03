@@ -219,9 +219,11 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	}
 	if (monitor.GetBottomLeds()) {
 
-		//Print the bottom monitor side position //TODO: This gets printed outside the window for the monitors at the bottom
+		//Print the bottom monitor side position 
 		std::wstring strBotPos = std::to_wstring(monitor.GetPosBottom());
-		TextOut(hdc, x + width / 2, y + height, strBotPos.c_str(), strBotPos.length());
+		TEXTMETRIC txtMetric;
+		GetTextMetrics(hdc, &txtMetric);
+		TextOut(hdc, x + width / 2, y + height - txtMetric.tmHeight, strBotPos.c_str(), strBotPos.length());
 
 		if (monitor.GetClockwiseBottom()) {
 			rotPt[0] = { LONG(x + width / 2 + BMP_ARROW_DISPLAY_WIDTH / 2), LONG(y + height - ARROW_MARGIN) };
