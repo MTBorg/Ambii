@@ -44,6 +44,60 @@
 #define CLOCKWISE_X (POSITION_EDIT_X + POSITION_EDIT_WIDTH + CLOCKWISE_MARGIN)
 
 /*
+	//TODO: Comment
+*/
+LRESULT CALLBACK DisplayCtrlProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	switch (msg) {
+	case WM_COMMAND:
+		if (HIWORD(wParam) == BN_CLICKED) {
+			MonitorTab::m_CONTROL_ID idClockwise, idLEDS, idPos;
+			BOOL bChecked;
+			switch (LOWORD(wParam)) {
+			case MonitorTab::m_CONTROL_ID::ENABLE_LEFT_CHECKBOX:
+				bChecked = IsDlgButtonChecked(hWnd, MonitorTab::m_CONTROL_ID::ENABLE_LEFT_CHECKBOX);
+				idClockwise = MonitorTab::CLOCKWISE_LEFT;
+				idLEDS = MonitorTab::LEDS_LEFT_EDIT;
+				idPos = MonitorTab::POSITION_LEFT_EDIT;
+				break;
+			case MonitorTab::m_CONTROL_ID::ENABLE_RIGHT_CHECKBOX:
+				bChecked = IsDlgButtonChecked(hWnd, MonitorTab::m_CONTROL_ID::ENABLE_RIGHT_CHECKBOX);
+				idClockwise = MonitorTab::CLOCKWISE_RIGHT;
+				idLEDS = MonitorTab::LEDS_RIGHT_EDIT;
+				idPos = MonitorTab::POSITION_RIGHT_EDIT;
+				break;
+			case MonitorTab::m_CONTROL_ID::ENABLE_TOP_CHECKBOX:
+				bChecked = IsDlgButtonChecked(hWnd, MonitorTab::m_CONTROL_ID::ENABLE_TOP_CHECKBOX);
+				idClockwise = MonitorTab::CLOCKWISE_TOP;
+				idLEDS = MonitorTab::LEDS_TOP_EDIT;
+				idPos = MonitorTab::POSITION_TOP_EDIT;
+				break;
+			case MonitorTab::m_CONTROL_ID::ENABLE_BOTTOM_CHECKBOX:
+				bChecked = IsDlgButtonChecked(hWnd, MonitorTab::m_CONTROL_ID::ENABLE_BOTTOM_CHECKBOX);
+				idClockwise = MonitorTab::CLOCKWISE_BOTTOM;
+				idLEDS = MonitorTab::LEDS_BOTTOM_EDIT;
+				idPos = MonitorTab::POSITION_BOTTOM_EDIT;
+				break;
+			default:
+				return 0;
+			}
+			if (bChecked) {
+				EnableWindow(GetDlgItem(hWnd, idClockwise), TRUE);
+				EnableWindow(GetDlgItem(hWnd, idLEDS), TRUE);
+				EnableWindow(GetDlgItem(hWnd, idPos), TRUE);
+			}
+			else {
+				EnableWindow(GetDlgItem(hWnd, idClockwise), FALSE);
+				EnableWindow(GetDlgItem(hWnd, idLEDS), FALSE);
+				EnableWindow(GetDlgItem(hWnd, idPos), FALSE);
+			}
+		}
+		break;
+	default:
+		return DefWindowProc(hWnd, msg, wParam, lParam);
+	}
+}
+
+/*
 	Creates the monitor tab.
 
 	@param hTabCtrl: Handle to the tab control.
@@ -70,6 +124,8 @@ BOOL MonitorTab::Create(CONST HWND hTabCtrl, Monitor * CONST monitor) {
 		NULL,
 		GetModuleHandle(NULL),
 		NULL);
+
+	SetWindowLongPtr(m_hDisplayCtrl, GWLP_WNDPROC, (LONG)DisplayCtrlProc); //Set window procedure
 
 	if (m_hDisplayCtrl == NULL) {
 		return FALSE;

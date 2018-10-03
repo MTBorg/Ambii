@@ -41,6 +41,7 @@ private:
 	Monitor * m_monitor;
 
 	BOOL InitControls();
+	friend LRESULT CALLBACK DisplayCtrlProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 public:
 	VOID Show();
 	VOID Hide();
