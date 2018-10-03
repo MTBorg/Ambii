@@ -29,13 +29,15 @@
 #define EDITTEXT_CLOCKWISE_TOP L"Top side clockwise"
 #define EDITTEXT_CLOCKWISE_BOTTOM L"Bottom side clockwise"
 
-#define POSITION_TEXT_X 150
-#define POSITION_EDIT_X 250
-#define POSITION_EDIT_WIDTH 25
-#define LED_TEXT_X 0
-#define LED_EDIT_X 65
+#define ENABLE_X 0
+#define LED_TEXT_X 100
+#define LED_EDIT_X (LED_TEXT_X + 65)
 #define LED_EDIT_WIDTH 50
-#define CLOCKWISE_X 300
+#define POSITION_TEXT_X (LED_EDIT_X + LED_EDIT_WIDTH + 10)
+#define POSITION_EDIT_X (POSITION_TEXT_X + 100)
+#define POSITION_EDIT_WIDTH 25
+#define CLOCKWISE_MARGIN 10
+#define CLOCKWISE_X (POSITION_EDIT_X + POSITION_EDIT_WIDTH + CLOCKWISE_MARGIN)
 
 /*
 	Creates the monitor tab.
@@ -84,6 +86,12 @@ BOOL MonitorTab::Create(CONST HWND hTabCtrl, Monitor * CONST monitor) {
 BOOL MonitorTab::InitControls() {
 
 	//TODO: Implement error checking when returning the handles for the controls
+
+	//Enables
+	InitCheckboxCtrl(m_hDisplayCtrl, 0, 0 * TEXTLINE_HEIGHT, L"1", 0);
+	InitCheckboxCtrl(m_hDisplayCtrl, 0,	1 * TEXTLINE_HEIGHT, L"2", 0);
+	InitCheckboxCtrl(m_hDisplayCtrl, 0,	2 * TEXTLINE_HEIGHT, L"3", 0);
+	InitCheckboxCtrl(m_hDisplayCtrl, 0, 3 * TEXTLINE_HEIGHT, L"4", 0);
 
 	//LEDs
 	//////////////////////////////////////////////////
