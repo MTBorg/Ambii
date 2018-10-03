@@ -18,6 +18,9 @@
     <Text Include="TODO.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\Session_log.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Monitor.h">
