@@ -1,6 +1,0 @@
-DD/MM/YYYY
-Created on 03/10/2018
-
---03/10/2018
-Implemented an option for enabling/disabling monitor sides.
-For next session: Continue with making sure the enable/disable setting is saved and loaded.
