@@ -296,6 +296,17 @@ BOOL MonitorTab::ApplySettings() {
 	}
 	else {
 		*m_monitor = monitor;
+		
+		//Clear the modified flags in the edit controls
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_LEFT),	EM_SETMODIFY, FALSE, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_RIGHT),	EM_SETMODIFY, FALSE, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_TOP),	EM_SETMODIFY, FALSE, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_BOTTOM),	EM_SETMODIFY, FALSE, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_LEFT_EDIT),	EM_SETMODIFY, FALSE, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_RIGHT_EDIT),	EM_SETMODIFY, FALSE, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT),	EM_SETMODIFY, FALSE, NULL);
+		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_BOTTOM_EDIT),	EM_SETMODIFY, FALSE, NULL);
+
 		return TRUE;
 	}
 }
