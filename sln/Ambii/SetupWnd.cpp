@@ -104,13 +104,10 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		for (UINT i = 0; i < pObj->m_monitorTabs.size(); i++) {
 			bModified = pObj->m_monitorTabs.at(i).Modified();
 			if (bModified) {
-
-				//TODO: This message causes the program to freeze. POSSIBLE SOLUTION: Make the window message loop wait for the message box loop to return.
-				/*if (MessageBox(hWnd, L"Settings has been changed, discard changes?", L"Warning",
+				if (MessageBox(hWnd, L"Settings has been changed, discard changes?", L"Warning",
 					MB_OKCANCEL | MB_ICONASTERISK) == IDOK) {
 					DestroyWindow(hWnd);
-				}*/
-				DestroyWindow(hWnd); //TODO: Temporary solution to make the close button work until the bug above has been fixed
+				}
 				break;
 			}
 		}

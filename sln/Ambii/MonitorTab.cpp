@@ -395,7 +395,8 @@ BOOL MonitorTab::GetSettings(Monitor &monitor) {
 	@return TRUE if any of the controls have been modified, otherwise FALSE;
 */
 BOOL MonitorTab::Modified() {
-	return 
+	//Check all edit controls
+	BOOL bModified = 
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_LEFT_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_RIGHT_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::LEDS_TOP_EDIT), EM_GETMODIFY, NULL, NULL) ||
@@ -406,4 +407,16 @@ BOOL MonitorTab::Modified() {
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_RIGHT_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_TOP_EDIT), EM_GETMODIFY, NULL, NULL) ||
 		SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT), EM_GETMODIFY, NULL, NULL);
+
+	//Check all checkboxes
+	bModified |=
+		m_monitor->GetClockwiseLeft()	!= IsDlgButtonChecked(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_LEFT)			||
+		m_monitor->GetClockwiseRight()	!= IsDlgButtonChecked(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_RIGHT)		||
+		m_monitor->GetClockwiseTop()	!= IsDlgButtonChecked(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_TOP)			||
+		m_monitor->GetClockwiseBottom() != IsDlgButtonChecked(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_BOTTOM)		||
+		m_monitor->GetEnableLeft()		!= IsDlgButtonChecked(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_LEFT_CHECKBOX)	||
+		m_monitor->GetEnableRight()		!= IsDlgButtonChecked(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_RIGHT_CHECKBOX)	||
+		m_monitor->GetEnableTop()		!= IsDlgButtonChecked(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_TOP_CHECKBOX)	||
+		m_monitor->GetEnableBottom()	!= IsDlgButtonChecked(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_BOTTOM_CHECKBOX);
+	return bModified;
 }
