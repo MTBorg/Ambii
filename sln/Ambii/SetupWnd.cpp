@@ -60,6 +60,7 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 			PostMessage(hWnd, WM_CLOSE, NULL, NULL);
 			break;
 		case m_CONTROLS_ID::APPLY_BUTTON:
+			InvalidateRect(hWnd, NULL, FALSE);
 			if (!pObj->ApplySettings(hWnd)) {
 				MessageBox(hWnd, L"One or more monitor sides containing LEDs has the same position as some other monitor sides", L"Warning", MB_ICONASTERISK);
 			}
@@ -88,10 +89,12 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 		}
 		break;
 	case WM_PAINT:
+		PAINTSTRUCT ps;
 		RECT clientRect;
 		GetClientRect(hWnd, &clientRect);
+		BeginPaint(hWnd, &ps);
 		pObj->m_setupGUI.Draw(hWnd, 0, TAB_HEIGHT, clientRect.right, GUI_HEIGHT);
-		return DefWindowProc(hWnd, msg, wParam, lParam);
+		EndPaint(hWnd, &ps);
 		break;
 	case WM_CLOSE: 
 		BOOL bModified;
@@ -121,8 +124,7 @@ LRESULT CALLBACK SetupWnd::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lP
 	default:
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
-	//return DefWindowProc(hWnd, msg, wParam, lParam);
-	//return 0;
+	return 0;
 }
 
 /*
