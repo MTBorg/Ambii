@@ -326,10 +326,16 @@ BOOL MonitorTab::GetSettings(Monitor &monitor) {
 	UINT posBottom = GetDlgItemInt(m_hDisplayCtrl, m_CONTROL_ID::POSITION_BOTTOM_EDIT, &getSuccess, FALSE);
 	resultSuccess &= getSuccess;
 
+	//TODO: Check for success on these bool values
 	DWORD clockwiseLeft = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_LEFT), BM_GETCHECK, NULL, NULL);
 	DWORD clockwiseRight = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_RIGHT), BM_GETCHECK, NULL, NULL);
 	DWORD clockwiseTop = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_TOP), BM_GETCHECK, NULL, NULL);
 	DWORD clockwiseBottom = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::CLOCKWISE_BOTTOM), BM_GETCHECK, NULL, NULL);
+
+	DWORD enableLeft = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_LEFT_CHECKBOX), BM_GETCHECK, NULL, NULL);
+	DWORD enableRight = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_RIGHT_CHECKBOX), BM_GETCHECK, NULL, NULL);
+	DWORD enableTop = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_TOP_CHECKBOX), BM_GETCHECK, NULL, NULL);
+	DWORD enableBottom = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_BOTTOM_CHECKBOX), BM_GETCHECK, NULL, NULL);
 
 	//Make sure that no position is the same as any other
 	BOOL equalCheck = FALSE;
@@ -356,6 +362,10 @@ BOOL MonitorTab::GetSettings(Monitor &monitor) {
 		monitor.SetClockwiseRight(clockwiseRight);
 		monitor.SetClockwiseTop(clockwiseTop);
 		monitor.SetClockwiseBottom(clockwiseBottom);
+		monitor.SetEnableLeft(enableLeft);
+		monitor.SetEnableRight(enableRight);
+		monitor.SetEnableTop(enableTop);
+		monitor.SetEnableBottom(enableBottom);
 		return TRUE;
 	}
 	else {

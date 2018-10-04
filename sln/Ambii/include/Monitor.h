@@ -25,6 +25,7 @@ private:
 	UINT m_nLedsTop = 0, m_nLedsBottom = 0;
 	UINT m_posLeft = 0, m_posRight = 0, m_posTop = 0, m_posBottom = 0;
 	BOOL m_clockwiseLeft = FALSE, m_clockwiseRight = FALSE, m_clockwiseTop = FALSE, m_clockwiseBottom = FALSE;
+	BOOL m_enableLeft, m_enableRight, m_enableTop, m_enableBottom;
 
 	static BOOL CALLBACK GetMonitorProc(HMONITOR hMonitor, HDC hdcMonitor,
 		LPRECT lprcMonitor, LPARAM dwData);
@@ -50,12 +51,20 @@ public:
 	inline VOID SetDisplayDeviceName(CONST LPCTSTR name) { m_displayDeviceName = name; };
 	inline VOID SetMonitorName(CONST LPCTSTR name) { m_monitorName = name; };
 	inline VOID SetMonitorHandle(CONST HMONITOR hMonitor) {if (hMonitor != NULL) m_hMonitor = hMonitor;};
+	inline VOID SetEnableLeft(CONST BOOL bEnable) { m_enableLeft = bEnable; };
+	inline VOID SetEnableRight(CONST BOOL bEnable) { m_enableRight = bEnable; };
+	inline VOID SetEnableTop(CONST BOOL bEnable) { m_enableTop = bEnable; };
+	inline VOID SetEnableBottom(CONST BOOL bEnable) { m_enableBottom = bEnable; };
 
 	//Get-functions
 	inline BOOL GetClockwiseLeft() CONST { return m_clockwiseLeft; };
 	inline BOOL GetClockwiseRight() CONST { return m_clockwiseRight; };
 	inline BOOL GetClockwiseTop() CONST { return m_clockwiseTop; };
 	inline BOOL GetClockwiseBottom() CONST { return m_clockwiseBottom; };
+	inline BOOL GetEnableLeft() CONST { return m_enableLeft; };
+	inline BOOL GetEnableRight() CONST { return m_enableRight; };
+	inline BOOL GetEnableTop() CONST { return m_enableTop; };
+	inline BOOL GetEnableBottom() CONST { return m_enableBottom; };
 	inline UINT8 GetPosX() CONST { return m_posX; };
 	inline UINT8 GetPosY() CONST { return m_posY; };
 	inline UINT8 GetPosLeft() CONST { return m_posLeft; };

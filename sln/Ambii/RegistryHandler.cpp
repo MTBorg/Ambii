@@ -36,6 +36,11 @@ CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_LEFT = L"Left side clockw
 CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_RIGHT = L"Right side clockwise";
 CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_TOP = L"Top side clockwise";
 CONST LPCWSTR RegistryHandler::m_valueNames::CLOCKWISE_BOTTOM = L"Bottom side clockwise";
+CONST LPCWSTR RegistryHandler::m_valueNames::ENABLE_LEFT = L"Enable left side";
+CONST LPCWSTR RegistryHandler::m_valueNames::ENABLE_RIGHT = L"Enable right side";
+CONST LPCWSTR RegistryHandler::m_valueNames::ENABLE_TOP = L"Enable top side";
+CONST LPCWSTR RegistryHandler::m_valueNames::ENABLE_BOTTOM = L"Enable bottom side";
+
 
 
 /*
@@ -88,21 +93,31 @@ VOID RegistryHandler::StoreMonitor(CONST HKEY hKeyApp, CONST Monitor& monitor) {
 		StoreValueString(hKeyMonitor, m_valueNames::NAME_DISPLAYDEVICE,
 			monitor.GetDisplayDeviceName().c_str(), monitor.GetDisplayDeviceName().length());
 		
+		//LEDS
 		StoreValueDWord(hKeyMonitor, m_valueNames::LEDS_LEFT, monitor.GetLeftLeds());
 		StoreValueDWord(hKeyMonitor, m_valueNames::LEDS_RIGHT, monitor.GetRightLeds());
 		StoreValueDWord(hKeyMonitor, m_valueNames::LEDS_TOP, monitor.GetTopLeds());
 		StoreValueDWord(hKeyMonitor, m_valueNames::LEDS_BOTTOM, monitor.GetBottomLeds());
+
+		//Positions
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_HORZ, monitor.GetPosX());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_VERT, monitor.GetPosY());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_LEFT, monitor.GetPosLeft());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_RIGHT, monitor.GetPosRight());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_TOP, monitor.GetPosTop());
 		StoreValueDWord(hKeyMonitor, m_valueNames::POSITION_BOTTOM, monitor.GetPosBottom());
-
+		
+		//Clockwise
 		StoreValueBool(hKeyMonitor, m_valueNames::CLOCKWISE_LEFT, monitor.GetClockwiseLeft());
 		StoreValueBool(hKeyMonitor, m_valueNames::CLOCKWISE_RIGHT, monitor.GetClockwiseRight());
 		StoreValueBool(hKeyMonitor, m_valueNames::CLOCKWISE_TOP, monitor.GetClockwiseTop());
 		StoreValueBool(hKeyMonitor, m_valueNames::CLOCKWISE_BOTTOM, monitor.GetClockwiseBottom());
+
+		//Monitor side enables
+		StoreValueBool(hKeyMonitor, m_valueNames::ENABLE_LEFT, monitor.GetEnableLeft());
+		StoreValueBool(hKeyMonitor, m_valueNames::ENABLE_RIGHT, monitor.GetEnableRight());
+		StoreValueBool(hKeyMonitor, m_valueNames::ENABLE_TOP, monitor.GetEnableTop());
+		StoreValueBool(hKeyMonitor, m_valueNames::ENABLE_BOTTOM, monitor.GetEnableBottom());
 
 
 		//Close retrieved handle
