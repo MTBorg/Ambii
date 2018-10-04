@@ -259,7 +259,12 @@ BOOL MonitorTab::InitControls() {
 	HWND hCbClockwiseBottom = InitCheckboxCtrl(m_hDisplayCtrl, CLOCKWISE_X, 3 * TEXTLINE_HEIGHT, CTRLTEXT_CLOCKWISE_BOTTOM, (HMENU)m_CONTROL_ID::CLOCKWISE_BOTTOM);
 	SendMessage(hCbClockwiseBottom, BM_SETCHECK, m_monitor->GetClockwiseBottom() ? BST_CHECKED : BST_UNCHECKED, NULL);
 	//////////////////////////////////////////
-
+	
+	//Enable/disable controls
+	SendMessage(m_hDisplayCtrl, WM_COMMAND, HIWORD(BN_CLICKED) | LOWORD(m_CONTROL_ID::ENABLE_LEFT_CHECKBOX), NULL);
+	SendMessage(m_hDisplayCtrl, WM_COMMAND, HIWORD(BN_CLICKED) | LOWORD(m_CONTROL_ID::ENABLE_RIGHT_CHECKBOX), NULL);
+	SendMessage(m_hDisplayCtrl, WM_COMMAND, HIWORD(BN_CLICKED) | LOWORD(m_CONTROL_ID::ENABLE_TOP_CHECKBOX), NULL);	
+	SendMessage(m_hDisplayCtrl, WM_COMMAND, HIWORD(BN_CLICKED) | LOWORD(m_CONTROL_ID::ENABLE_BOTTOM_CHECKBOX), NULL);	
 
 	return TRUE;
 }
