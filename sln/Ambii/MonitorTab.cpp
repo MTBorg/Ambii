@@ -161,10 +161,21 @@ BOOL MonitorTab::InitControls() {
 
 	//Enables
 	//////////////////////////////////////////////////////////////////////////////
-	InitCheckboxCtrl(m_hDisplayCtrl, ENABLE_X,	0 * TEXTLINE_HEIGHT, CTRLTEXT_ENABLE_LEFT,	(HMENU)m_CONTROL_ID::ENABLE_LEFT_CHECKBOX);
-	InitCheckboxCtrl(m_hDisplayCtrl, ENABLE_X,	1 * TEXTLINE_HEIGHT, CTRLTEXT_ENABLE_RIGHT, (HMENU)m_CONTROL_ID::ENABLE_RIGHT_CHECKBOX);
-	InitCheckboxCtrl(m_hDisplayCtrl, ENABLE_X,	2 * TEXTLINE_HEIGHT, CTRLTEXT_ENABLE_TOP,	(HMENU)m_CONTROL_ID::ENABLE_TOP_CHECKBOX);
-	InitCheckboxCtrl(m_hDisplayCtrl, ENABLE_X,	3 * TEXTLINE_HEIGHT, CTRLTEXT_ENABLE_BOTTOM,(HMENU)m_CONTROL_ID::ENABLE_BOTTOM_CHECKBOX);
+	//Left
+	HWND hEnableLeft = InitCheckboxCtrl(m_hDisplayCtrl, ENABLE_X,	0 * TEXTLINE_HEIGHT, CTRLTEXT_ENABLE_LEFT,	(HMENU)m_CONTROL_ID::ENABLE_LEFT_CHECKBOX);
+	SendMessage(hEnableLeft, BM_SETCHECK, m_monitor->GetEnableLeft() ? BST_CHECKED : BST_UNCHECKED, NULL);
+
+	//Right
+	HWND hEnableRight = InitCheckboxCtrl(m_hDisplayCtrl, ENABLE_X,	1 * TEXTLINE_HEIGHT, CTRLTEXT_ENABLE_RIGHT, (HMENU)m_CONTROL_ID::ENABLE_RIGHT_CHECKBOX);
+	SendMessage(hEnableRight, BM_SETCHECK, m_monitor->GetEnableRight() ? BST_CHECKED : BST_UNCHECKED, NULL);
+
+	//Top
+	HWND hEnableTop = InitCheckboxCtrl(m_hDisplayCtrl, ENABLE_X,	2 * TEXTLINE_HEIGHT, CTRLTEXT_ENABLE_TOP,	(HMENU)m_CONTROL_ID::ENABLE_TOP_CHECKBOX);
+	SendMessage(hEnableTop, BM_SETCHECK, m_monitor->GetEnableTop() ? BST_CHECKED : BST_UNCHECKED, NULL);
+
+	//Bottom
+	HWND hEnableBottom = InitCheckboxCtrl(m_hDisplayCtrl, ENABLE_X,	3 * TEXTLINE_HEIGHT, CTRLTEXT_ENABLE_BOTTOM,(HMENU)m_CONTROL_ID::ENABLE_BOTTOM_CHECKBOX);
+	SendMessage(hEnableBottom, BM_SETCHECK, m_monitor->GetEnableBottom() ? BST_CHECKED : BST_UNCHECKED, NULL);
 	////////////////////////////////////////////////////////////////////////////
 
 	//LEDs

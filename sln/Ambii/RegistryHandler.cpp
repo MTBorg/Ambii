@@ -313,6 +313,11 @@ Monitor RegistryHandler::GetMonitor(CONST HKEY hKeyApp, CONST LPCWSTR monitorKey
 		monitor.SetClockwiseRight(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::CLOCKWISE_TOP));
 		monitor.SetClockwiseBottom(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::CLOCKWISE_BOTTOM));
 
+		//Get monitor side enables
+		monitor.SetEnableLeft(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::ENABLE_LEFT));
+		monitor.SetEnableRight(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::ENABLE_RIGHT));
+		monitor.SetEnableTop(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::ENABLE_TOP));
+		monitor.SetEnableBottom(GetValueBool(hKeyApp, monitorKeyName, m_valueNames::ENABLE_BOTTOM));
 	}
 	catch (std::wstring errorMsg) {
 		throw wstring(L"Exception in function GetMonitor. Exception: \n") + errorMsg;
