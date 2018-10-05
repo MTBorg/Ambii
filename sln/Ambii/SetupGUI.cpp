@@ -123,7 +123,7 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	//LEFT side
 	for (UINT i = 0; i < monitor.GetLeftLeds(); i++) {
 		StretchBlt(hdc,
-			x, i * height / monitor.GetLeftLeds(),
+			x, y + (monitor.GetLeftLeds() == 1 ? height / 2 : i * height / (monitor.GetLeftLeds() - 1) - BMP_LED_DISPLAY_HEIGHT / 2),
 			BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT,
 			hdcBmpLED,
 			0, 0,
@@ -153,7 +153,7 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	//RIGHT side
 	for (UINT i = 0; i < monitor.GetRightLeds(); i++) {
 			StretchBlt(hdc,
-				x + width - BMP_LED_DISPLAY_WIDTH, monitor.GetClockwiseRight() ? (y + height - i * height / monitor.GetRightLeds() - BMP_LED_DISPLAY_HEIGHT) : (i * height / monitor.GetRightLeds()),
+				x + width - BMP_LED_DISPLAY_WIDTH, y + (monitor.GetRightLeds() == 1 ? height / 2 : i * height / (monitor.GetRightLeds() - 1) - BMP_LED_DISPLAY_HEIGHT / 2),
 				BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT,
 				hdcBmpLED,
 				0, 0,
@@ -182,7 +182,7 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	//TOP side
 	for (UINT i = 0; i < monitor.GetTopLeds(); i++) {
 		StretchBlt(hdc,
-			monitor.GetClockwiseTop() ? x + i * width / monitor.GetTopLeds() : x + width - i * width / monitor.GetTopLeds(), y,
+			x + (monitor.GetTopLeds() == 1 ? width / 2 : i * width / (monitor.GetTopLeds() - 1)) - BMP_LED_DISPLAY_WIDTH / 2, y,
 			BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT,
 			hdcBmpLED,
 			0, 0,
@@ -210,7 +210,7 @@ VOID SetupGUI::DrawMonitor(CONST HDC hdc, CONST Monitor& monitor, CONST UINT x, 
 	//BOTTOM side
 	for (UINT i = 0; i < monitor.GetBottomLeds(); i++) {
 		StretchBlt(hdc,
-			monitor.GetClockwiseBottom() ? x + i * width / monitor.GetBottomLeds() : x + width - i * width / monitor.GetBottomLeds(), y + height - BMP_LED_DISPLAY_HEIGHT,
+			x + (monitor.GetBottomLeds() == 1 ? width / 2 : i * width / (monitor.GetBottomLeds() - 1)) - BMP_LED_DISPLAY_WIDTH / 2, y + height - BMP_LED_DISPLAY_HEIGHT,
 			BMP_LED_DISPLAY_WIDTH, BMP_LED_DISPLAY_HEIGHT,
 			hdcBmpLED,
 			0, 0,
