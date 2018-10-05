@@ -306,11 +306,33 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 	}
 
 	//Go through all the monitors and make sure that no position value has the same value as some other position value
-	//(For the monitor sides this only applies to those who contain LEDs)
 	for (UINT i = 0; i < newMonitors.size(); i++) {
+
+		//Check for duplicates within the monitor objects themselves
+		Monitor m1 = newMonitors.at(i);
+		if (m1.GetEnableLeft()) {
+			if ((m1.GetPosLeft() == m1.GetPosRight()	&& m1.GetEnableRight())	||
+				(m1.GetPosLeft() == m1.GetPosTop()		&& m1.GetEnableTop())	||
+				(m1.GetPosLeft() == m1.GetPosBottom()	&& m1.GetEnableBottom())) {
+				return FALSE;
+			}
+		}
+		if (m1.GetEnableRight()) {
+			if ((m1.GetPosRight() == m1.GetPosTop()		&& m1.GetEnableTop()) ||
+				(m1.GetPosRight() == m1.GetPosBottom()	&& m1.GetEnableBottom())) {
+				return FALSE;
+			}
+		}
+		if (m1.GetEnableTop()) {
+			if (m1.GetPosTop() == m1.GetPosBottom() && m1.GetEnableBottom()) {
+				return  FALSE;
+			}
+		}
+
+		//Check for duplicates between different monitor objects
 		for (UINT j = 0; j < newMonitors.size(); j++) {
 			if (i != j) {
-				Monitor m1 = newMonitors.at(i), m2 = newMonitors.at(j);
+				Monitor m2 = newMonitors.at(j);
 				if (m1.GetEnableLeft()) {
 					if ((m1.GetPosLeft() == m2.GetPosLeft()		&& m2.GetEnableLeft())	||
 						(m1.GetPosLeft() == m2.GetPosRight()	&& m2.GetEnableRight()) ||

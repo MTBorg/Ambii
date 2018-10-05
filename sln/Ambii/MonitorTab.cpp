@@ -364,15 +364,6 @@ BOOL MonitorTab::GetSettings(Monitor &monitor) {
 	DWORD enableTop = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_TOP_CHECKBOX), BM_GETCHECK, NULL, NULL);
 	DWORD enableBottom = SendMessage(GetDlgItem(m_hDisplayCtrl, m_CONTROL_ID::ENABLE_BOTTOM_CHECKBOX), BM_GETCHECK, NULL, NULL);
 
-	//Make sure that no position is the same as any other
-	BOOL equalCheck = FALSE;
-	equalCheck |= ((posLeft == posRight) || (posLeft == posTop) || (posLeft == posBottom)) && (posLeft != 0);
-	equalCheck |= ((posRight == posTop) || (posRight == posBottom)) && (posRight != 0);
-	equalCheck |= (posTop == posBottom) && (posTop != 0);
-	if (equalCheck) {
-		return FALSE;
-	}
-
 	//If the input is valid
 	if (resultSuccess) {
 		monitor.SetLeftLeds(nLedsLeft);
