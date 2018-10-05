@@ -311,14 +311,37 @@ BOOL SetupWnd::ApplySettings(CONST HWND hWnd) {
 		for (UINT j = 0; j < newMonitors.size(); j++) {
 			if (i != j) {
 				Monitor m1 = newMonitors.at(i), m2 = newMonitors.at(j);
-				if (
-					((m1.GetPosLeft()	== m2.GetPosLeft())		&& m1.GetLeftLeds()		> 0)	||
-					((m1.GetPosRight()	== m2.GetPosRight())	&& m1.GetRightLeds()	> 0)	||
-					((m1.GetPosTop()	== m2.GetPosTop())		&& m1.GetTopLeds()		> 0)	||
-					((m1.GetPosBottom() == m2.GetPosBottom())	&& m1.GetBottomLeds()	> 0)	||
-					((m1.GetPosX()		== m2.GetPosX())		&& m1.GetPosY() == m2.GetPosY()))
-				{ 
-					return FALSE;
+				if (m1.GetEnableLeft()) {
+					if ((m1.GetPosLeft() == m2.GetPosLeft()		&& m2.GetEnableLeft())	||
+						(m1.GetPosLeft() == m2.GetPosRight()	&& m2.GetEnableRight()) ||
+						(m1.GetPosLeft() == m2.GetPosTop()		&& m2.GetEnableTop())	||
+						(m1.GetPosLeft() == m2.GetPosBottom()	&& m2.GetEnableBottom())) {
+						return FALSE;
+					}
+				}
+				if (m1.GetEnableRight()) {
+					if ((m1.GetPosRight() == m2.GetPosLeft()	&& m2.GetEnableLeft())	||
+						(m1.GetPosRight() == m2.GetPosRight()	&& m2.GetEnableRight()) ||
+						(m1.GetPosRight() == m2.GetPosTop()		&& m2.GetEnableTop())	||
+						(m1.GetPosRight() == m2.GetPosBottom()	&& m2.GetEnableBottom())) {
+						return FALSE;
+					}
+				}
+				if (m1.GetEnableTop()) {
+					if ((m1.GetPosTop() == m2.GetPosLeft()	&& m2.GetEnableLeft())	||
+						(m1.GetPosTop() == m2.GetPosRight() && m2.GetEnableRight()) ||
+						(m1.GetPosTop() == m2.GetPosTop()	&& m2.GetEnableTop())	||
+						(m1.GetPosTop() == m2.GetPosBottom()&& m2.GetEnableBottom())) {
+						return FALSE;
+					}
+				}
+				if (m1.GetEnableBottom()) {
+					if ((m1.GetPosBottom() == m2.GetPosLeft()	&& m2.GetEnableLeft())	||
+						(m1.GetPosBottom() == m2.GetPosRight()	&& m2.GetEnableRight()) ||
+						(m1.GetPosBottom() == m2.GetPosTop()	&& m2.GetEnableTop())	||
+						(m1.GetPosBottom() == m2.GetPosBottom() && m2.GetEnableBottom())) {
+						return FALSE;
+					}
 				}
 			}
 		}
