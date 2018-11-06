@@ -29,6 +29,7 @@ UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HAN
 	Runs (starts) the thread.
 */
 VOID UpdateThread::Run() {
+	WaitForSingleObject(m_hMutexSettings, INFINITE);
 	m_stopped = FALSE;
 
 	RECT clientRect;
@@ -104,6 +105,7 @@ VOID UpdateThread::Run() {
 	}
 
 	std::unique_ptr<HANDLE[]> threadHandles = std::make_unique<HANDLE[]>(monitorThreads.size());
+	ReleaseMutex(m_hMutexSettings);
 	while (TRUE) {
 		WaitForSingleObject(m_hMutexSettings, INFINITE);
 
