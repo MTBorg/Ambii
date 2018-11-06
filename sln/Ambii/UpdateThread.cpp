@@ -60,7 +60,11 @@ VOID UpdateThread::Run() {
 	//Calculate the total amount of LEDs
 	UINT nLeds = 0;
 	for (const auto& monitor : m_rSettings.m_usedMonitors) {
-		nLeds += monitor.GetLeftLeds() + monitor.GetRightLeds() + monitor.GetTopLeds() + monitor.GetBottomLeds();
+		nLeds += 
+			(monitor.GetLeftLeds() * monitor.GetEnableLeft()) + 
+			(monitor.GetRightLeds() * monitor.GetEnableRight()) + 
+			(monitor.GetTopLeds() * monitor.GetEnableTop()) + 
+			(monitor.GetBottomLeds() * monitor.GetEnableBottom());
 	}
 
 	std::unique_ptr<RGBQUAD[]> outputVals = std::make_unique<RGBQUAD[]>(nLeds);
@@ -113,7 +117,7 @@ VOID UpdateThread::Run() {
 			BitBlt(hdcWnd, 0, 0, clientRect.right, clientRect.bottom, hdcMem, 0, 0, SRCCOPY);
 		}
 
-		SerialHandler::WriteToPort((BYTE*)outputVals.get(), nLeds * 4, m_rSettings.m_portNum);
+		//SerialHandler::WriteToPort((BYTE*)outputVals.get(), nLeds * 4, m_rSettings.m_portNum);
 
 		ReleaseMutex(m_hMutexSettings);
 

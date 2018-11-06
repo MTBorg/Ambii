@@ -44,10 +44,14 @@ VOID MonitorThread::Run() {
 		DisplayMonitor();
 	}
 
-	CalculateLedsLeft();
-	CalculateLedsRight();
-	CalculateLedsTop();
-	CalculateLedsBottom();
+	if(m_rMonitor.GetEnableLeft())
+		CalculateLedsLeft();
+	if (m_rMonitor.GetEnableRight())
+		CalculateLedsRight();
+	if (m_rMonitor.GetEnableTop())
+		CalculateLedsTop();
+	if (m_rMonitor.GetEnableBottom())
+		CalculateLedsBottom();
 
 	if (m_rSettings.m_bDisplayOutput) {
 		DisplayLedsLeft();
