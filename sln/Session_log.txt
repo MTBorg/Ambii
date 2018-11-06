@@ -9,3 +9,6 @@ For next session: Continue with making sure the enable/disable setting is saved 
 Made registry handle save/load the monitor side enabled setting, fixed a drawing bug in the setup GUI where the GUI wouldn't be redrawn when pressing the apply button,
 and fixed the mechanism for warning about discarding unsaved changes in the setup window.
 For next session: Fixing the drawing of the LED bitmaps in the setup GUI.
+
+--06/11/2018
+Caught up with the project are a long hiatus. Maybe fixed a bug which caused a corrupt heap.
