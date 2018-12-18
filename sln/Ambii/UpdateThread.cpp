@@ -29,6 +29,7 @@ UpdateThread::UpdateThread(CONST HWND hWnd, CONST Settings &rSettings, CONST HAN
 	Runs (starts) the thread.
 */
 VOID UpdateThread::Run() {
+
 	WaitForSingleObject(m_hMutexSettings, INFINITE);
 	m_stopped = FALSE;
 
@@ -119,7 +120,7 @@ VOID UpdateThread::Run() {
 			BitBlt(hdcWnd, 0, 0, clientRect.right, clientRect.bottom, hdcMem, 0, 0, SRCCOPY);
 		}
 
-		//SerialHandler::WriteToPort((BYTE*)outputVals.get(), nLeds * 4, m_rSettings.m_portNum);
+		SerialHandler::WriteToPort((BYTE*)outputVals.get(), nLeds * 4, m_rSettings.m_portNum);
 
 		ReleaseMutex(m_hMutexSettings);
 
