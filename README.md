@@ -1,4 +1,4 @@
-# NOTE: THIS PROJECT HAS BEEN PUT ON ICE FOR AN INDEFINITE AMOUNT OF TIME
+# NOTE: THIS PROJECT IS WIP BUT HAS BEEN PUT ON ICE FOR AN INDEFINITE AMOUNT OF TIME
 
 # About
 Ambii is an ambient lightning system for windows. The goal of the project is to create a fully functional dynamic lighting system using as little hardware as possible. Ambii is written in C++ using the WIN32 API.
